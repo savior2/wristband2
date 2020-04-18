@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">Wristband2</string>
+    <string name="sid_hint">请输入学号：</string>
+    <string name="password_hint">请输入密码：</string>
+    <string name="login_button">登录</string>
+    <string name="forget_text">忘记密码？</string>
+    <string name="reset_text">重置密码</string>
+    <string name="old_password_hint">请输入旧密码：</string>
+    <string name="new_password_hint">请输入新密码：</string>
+    <string name="new_password2_hint">请再次输入新密码：</string>
+    <string name="verify_code_hint">输入验证码</string>
+    <string name="verify_code_button">获取验证码</string>
+    <string name="reset_button">重置</string>
 </resources>
