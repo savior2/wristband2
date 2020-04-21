@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bottom_nav_graph"
+    app:startDestination="@id/navHomeFragment">
+
+    <fragment
+        android:id="@+id/navHomeFragment"
+        android:name="com.zjut.wristband2.fragment.NavHomeFragment"
+        android:label="首页"
+        tools:layout="@layout/fragment_nav_home" />
+    <fragment
+        android:id="@+id/navSportsFragment"
+        android:name="com.zjut.wristband2.fragment.NavSportsFragment"
+        android:label="运动"
+        tools:layout="@layout/fragment_nav_sports" />
+    <fragment
+        android:id="@+id/navDeviceFragment"
+        android:name="com.zjut.wristband2.fragment.NavDeviceFragment"
+        android:label="手环"
+        tools:layout="@layout/fragment_nav_device" />
+</navigation>

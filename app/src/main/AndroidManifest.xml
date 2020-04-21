@@ -17,6 +17,10 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
         <activity
+            android:name=".activity.VersionActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/dialog_no_title" />
+        <activity
             android:name=".activity.HomeActivity"
             android:screenOrientation="portrait" />
         <activity
@@ -30,7 +34,8 @@
             android:theme="@style/DarkTheme" />
         <activity
             android:name=".activity.SplashActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/DarkTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

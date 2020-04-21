@@ -11,4 +11,8 @@
     <string name="verify_code_hint">输入验证码</string>
     <string name="verify_code_button">获取验证码</string>
     <string name="reset_button">重置</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navHomeFragment"
+        android:icon="@drawable/ic_nav_home"
+        android:title="首页" />
+    <item
+        android:id="@+id/navSportsFragment"
+        android:icon="@drawable/ic_nav_run"
+        android:title="运动" />
+    <item
+        android:id="@+id/navDeviceFragment"
+        android:icon="@drawable/ic_nav_device"
+        android:title="手环" />
+</menu>

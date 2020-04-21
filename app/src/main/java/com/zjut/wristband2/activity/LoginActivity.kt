@@ -12,7 +12,7 @@ import com.zjut.wristband2.error.WCode
 import com.zjut.wristband2.task.LoginTask
 import com.zjut.wristband2.task.TaskListener
 import com.zjut.wristband2.util.SpUtil
-import com.zjut.wristband2.util.WidgetUtil.toast
+import com.zjut.wristband2.util.toast
 import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity() {

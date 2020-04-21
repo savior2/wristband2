@@ -12,7 +12,7 @@ import com.zjut.wristband2.error.WCode
 import com.zjut.wristband2.task.ResetPasswordTask
 import com.zjut.wristband2.task.TaskListener
 import com.zjut.wristband2.task.VerifyCodeTask
-import com.zjut.wristband2.util.WidgetUtil.toast
+import com.zjut.wristband2.util.toast
 import kotlinx.android.synthetic.main.activity_forget_password.*
 
 class ForgetPasswordActivity : AppCompatActivity() {
