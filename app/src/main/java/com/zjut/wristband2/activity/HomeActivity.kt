@@ -1,11 +1,11 @@
 package com.zjut.wristband2.activity
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
 import androidx.navigation.Navigation
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
@@ -21,7 +21,7 @@ class HomeActivity : AppCompatActivity() {
         with(toolbar) {
             navigationIcon = getDrawable(R.drawable.ic_menu)
             setNavigationOnClickListener {
-
+                drawerLayout.openDrawer(GravityCompat.START)
             }
         }
 
@@ -40,7 +40,7 @@ class HomeActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.item_feedback -> {
-
+                startActivity(Intent(this, FeedbackActivity::class.java))
             }
             R.id.item_version -> {
                 startActivity(Intent(this, VersionActivity::class.java))

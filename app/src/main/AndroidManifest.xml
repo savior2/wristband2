@@ -17,6 +17,13 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
         <activity
+            android:name=".activity.ModifyPasswordActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/DarkTheme" />
+        <activity
+            android:name=".activity.FeedbackActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".activity.VersionActivity"
             android:screenOrientation="portrait"
             android:theme="@style/dialog_no_title" />
@@ -25,7 +32,6 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.ForgetPasswordActivity"
-            android:label="@string/reset_text"
             android:screenOrientation="portrait"
             android:theme="@style/DarkTheme" />
         <activity

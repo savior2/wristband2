@@ -97,6 +97,38 @@ object WebUtil {
         }
         return WCode.OK
     }
+
+    fun modifyPassword(
+        sid: String,
+        oldPassword: String,
+        newPassword: String
+    ): WCode {
+        if (!isNetworkConnected()) {
+            return WCode.NetworkError
+        }
+        WebBasic.doPost(
+            WebBasic.DOMAIN + WebBasic.MODIFY_PASSWORD_URI,
+            mapOf(
+                "username" to sid,
+                "oldPassword" to oldPassword,
+                "newPassword" to newPassword,
+                "newPassword2" to newPassword
+            )
+        ) {
+            try {
+                val jsonObject = JSONObject(it)
+                when (jsonObject.getString("Code")) {
+                    "0" -> return WCode.OK
+                    "4" -> return WCode.PasswordError
+                }
+            } catch (e: JSONException) {
+                return WCode.JsonParseError
+            } catch (e: Exception) {
+                return WCode.ServerError
+            }
+        }
+        return WCode.OK
+    }
 }
 
 
@@ -112,6 +144,7 @@ private object WebBasic {
     const val LOGIN_URI = "/api/sportsEquipment/getConnectServlet"
     const val VERIFY_CODE_URI = "/api/sportsEquipment/getVertifyCode"
     const val RESET_PASSWORD_URI = "/api/sportsEquipment/resetPassword"
+    const val MODIFY_PASSWORD_URI = "/api/sportsEquipment/modifyPSWServlet"
 
     inline fun doPost(url: String, body: Map<String, String>, callable: (String) -> Unit) {
         val formBody = FormBody.Builder().apply {

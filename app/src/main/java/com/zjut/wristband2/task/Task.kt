@@ -21,3 +21,10 @@ class ResetPasswordTask(
     override fun doInBackground(vararg p0: String?) =
         WebUtil.resetPassword(p0[0]!!, p0[1]!!, p0[2]!!)
 }
+
+class ModifyPasswordTask(
+    private val listener: TaskListener
+) : BasicTask(listener) {
+    override fun doInBackground(vararg p0: String?) =
+        WebUtil.modifyPassword(p0[0]!!, p0[1]!!, p0[2]!!)
+}

@@ -5,14 +5,18 @@
     <string name="login_button">登录</string>
     <string name="forget_text">忘记密码？</string>
     <string name="reset_text">重置密码</string>
+    <string name="modify_text">修改密码</string>
     <string name="old_password_hint">请输入旧密码：</string>
     <string name="new_password_hint">请输入新密码：</string>
     <string name="new_password2_hint">请再次输入新密码：</string>
     <string name="verify_code_hint">输入验证码</string>
     <string name="verify_code_button">获取验证码</string>
     <string name="reset_button">重置</string>
+    <string name="modify_button">修改</string>
+    <string name="sid_text">学号：%s</string>
+    <string name="name_text">姓名：%s</string>
+    <string name="sex_text">性别：%s</string>
+    <string name="version_logo">served by zjut\nv2.0.0</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

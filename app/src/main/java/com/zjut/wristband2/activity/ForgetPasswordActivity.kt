@@ -21,7 +21,12 @@ class ForgetPasswordActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_forget_password)
         setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        toolbar.apply {
+            navigationIcon = getDrawable(R.drawable.ic_menu_back)
+            setNavigationOnClickListener {
+                finish()
+            }
+        }
         getCodeButton.setOnClickListener {
             getVerifyCode()
         }

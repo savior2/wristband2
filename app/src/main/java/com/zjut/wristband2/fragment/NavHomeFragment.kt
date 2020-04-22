@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 
 import com.zjut.wristband2.R
+import kotlinx.android.synthetic.main.fragment_nav_home.*
 
 /**
  * A simple [Fragment] subclass.
@@ -20,8 +21,9 @@ class NavHomeFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_nav_home, container, false)
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        colorProgressBar.setCurrentValues(7000f)
     }
 
 }

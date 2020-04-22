@@ -13,8 +13,12 @@
         <item name="android:src">@drawable/ic_menu_add</item>
     </style>
 
-    <style name="pos_down" parent="Widget.AppCompat.Light.PopupMenu.Overflow">
+    <style name="pos_down" parent="ThemeOverlay.AppCompat.Dark">
         <item name="overlapAnchor">false</item>
+    </style>
+
+    <style name="test" parent="ThemeOverlay.AppCompat">
+
     </style>
 
     <style name="dialog_no_title" parent="Theme.AppCompat.Light.Dialog">

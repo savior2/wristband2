@@ -4,9 +4,12 @@
     <color name="colorPrimaryDark">@color/light_blue</color>
     <color name="colorAccent">#03DAC5</color>
 
+    <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
     <color name="red">#F80C0C</color>
+    <color name="red_trans">#3FF80C0C</color>
     <color name="grey">#9E9C9C</color>
     <color name="light_grey">#D8D7D7</color>
+    <color name="dark_grey">#7E7D7D</color>
     <color name="light_blue">#C8ECF4</color>
 </resources>
