@@ -3,7 +3,6 @@ package com.zjut.wristband2.vm
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
-import com.zjut.wristband2.MyApplication
 import com.zjut.wristband2.R
 import com.zjut.wristband2.util.SpUtil
 
@@ -52,10 +51,50 @@ class HomeActivityVM(private val app: Application, private val handle: SavedStat
             app.getDrawable(R.drawable.ic_profile_girl)
 
 
+    var isConnected: Boolean
+        get() {
+            if (!handle.contains(CONNECT)) {
+                handle.set(
+                    CONNECT,
+                    false
+                )
+            }
+            return handle[CONNECT]!!
+        }
+        set(value) = handle.set(CONNECT, value)
+
+
+    var address: String
+        get() {
+            if (!handle.contains(ADDRESS)) {
+                handle.set(
+                    ADDRESS,
+                    ""
+                )
+            }
+            return handle[ADDRESS]!!
+        }
+        set(value) = handle.set(ADDRESS, value)
+
+    var typeName: String
+        get() {
+            if (!handle.contains(TYPE)) {
+                handle.set(
+                    TYPE,
+                    ""
+                )
+            }
+            return handle[TYPE]!!
+        }
+        set(value) = handle.set(TYPE, value)
+
     companion object {
         private const val SID = "sid"
         private const val NAME = "name"
         private const val SEX = "sex"
+        private const val CONNECT = "connect"
+        private const val ADDRESS = "address"
+        private const val TYPE = "type"
     }
 
 }
