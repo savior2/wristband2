@@ -19,7 +19,7 @@
         <com.shinelw.library.ColorArcProgressBar
             android:id="@+id/colorProgressBar"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             app:back_width="4dp"
             app:front_color1="#00ff00"
             app:front_color2="#ffff00"
@@ -56,6 +56,7 @@
         app:layout_constraintTop_toBottomOf="@id/guideline9" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
