@@ -5,6 +5,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
+import androidx.lifecycle.SavedStateViewModelFactory
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 
@@ -12,6 +15,7 @@ import com.zjut.wristband2.R
 import com.zjut.wristband2.adapter.Item
 import com.zjut.wristband2.adapter.NavBorderAdapter
 import com.zjut.wristband2.adapter.NavHomeAdapter
+import com.zjut.wristband2.vm.HomeActivityVM
 import kotlinx.android.synthetic.main.fragment_nav_home.*
 
 /**
@@ -26,6 +30,8 @@ class NavHomeFragment : Fragment() {
         Item(4, "有氧能力", R.drawable.ic_nav_home_health)
     )
 
+    private lateinit var viewModel: HomeActivityVM
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -35,12 +41,24 @@ class NavHomeFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        colorProgressBar.setCurrentValues(7000f)
+        viewModel = ViewModelProvider(
+            requireActivity(),
+            SavedStateViewModelFactory(requireActivity().application, requireActivity())
+        )[HomeActivityVM::class.java]
+        colorProgressBar.setCurrentValues(viewModel.step.toFloat())
+        colorProgressBar.setOnClickListener {
+            colorProgressBar.setCurrentValues(viewModel.step.toFloat())
+        }
         recyclerView.apply {
             val manager = LinearLayoutManager(requireContext())
             manager.orientation = LinearLayoutManager.VERTICAL
             layoutManager = manager
-            addItemDecoration(DividerItemDecoration(this@NavHomeFragment.requireContext(),DividerItemDecoration.VERTICAL))
+            addItemDecoration(
+                DividerItemDecoration(
+                    this@NavHomeFragment.requireContext(),
+                    DividerItemDecoration.VERTICAL
+                )
+            )
             adapter = NavHomeAdapter(this@NavHomeFragment.requireContext(), array)
         }
     }

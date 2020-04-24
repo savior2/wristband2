@@ -1,10 +1,14 @@
 package com.zjut.wristband2.vm
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.SavedStateHandle
 import com.zjut.wristband2.R
 import com.zjut.wristband2.util.SpUtil
+import com.zjut.wristband2.util.TimeTransfer
+import java.util.*
 
 
 class HomeActivityVM(private val app: Application, private val handle: SavedStateHandle) :
@@ -81,12 +85,38 @@ class HomeActivityVM(private val app: Application, private val handle: SavedStat
             if (!handle.contains(TYPE)) {
                 handle.set(
                     TYPE,
-                    ""
+                    SpUtil.getSp(SpUtil.SpAccount.FILE_NAME).getString(
+                        SpUtil.SpAccount.MAC_ADDRESS,
+                        ""
+                    )
                 )
             }
             return handle[TYPE]!!
         }
         set(value) = handle.set(TYPE, value)
+
+
+    var step: Int
+        get() {
+            if (!handle.contains(STEP)) {
+                var s =
+                    SpUtil.getSp(SpUtil.SpStatistics.FILE_NAME).getInt(SpUtil.SpStatistics.STEP, 0)
+                if (s != 0) {
+                    val t =
+                        SpUtil.getSp(SpUtil.SpStatistics.FILE_NAME)
+                            .getLong(SpUtil.SpStatistics.UTC, 0)
+                    val d = TimeTransfer.utc2Date(t)
+                    val d1 = Date()
+                    if (d.year != d1.year || d.month != d1.month || d.date != d1.date) {
+                        s = 0
+                    }
+                }
+                handle.set(STEP, s)
+            }
+            return handle[STEP]!!
+        }
+        set(value) = handle.set(STEP, value)
+
 
     companion object {
         private const val SID = "sid"
@@ -95,6 +125,7 @@ class HomeActivityVM(private val app: Application, private val handle: SavedStat
         private const val CONNECT = "connect"
         private const val ADDRESS = "address"
         private const val TYPE = "type"
+        private const val STEP = "step"
     }
 
 }

@@ -27,7 +27,7 @@ object SpUtil {
     class SpStatistics {
         companion object {
             const val FILE_NAME = "statistics"
-            const val UTC = "utc"                       //Long
+            const val UTC = "utc"                       //Long(10位时间戳)
             const val STEP = "step"                     //Int
             const val IP_ADDRESS = "ip_address"         //String
         }

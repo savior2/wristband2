@@ -57,6 +57,7 @@ class NavDeviceFragment : Fragment() {
 
     @SuppressLint("SetTextI18n")
     private fun connect() {
+        stopScan()
         recyclerView.visibility = View.GONE
         switch1.isEnabled = false
         deviceTextView.visibility = View.VISIBLE
@@ -67,7 +68,8 @@ class NavDeviceFragment : Fragment() {
                 .setPositiveButton("确定") { _, _ ->
                     viewModel.isConnected = false
                     DeviceUtil.stopDataReceive()
-                    requireActivity().onBackPressed()
+                    toast(this@NavDeviceFragment.requireContext(), "已断开连接！")
+                    disconnect()
                 }
                 .setNegativeButton("取消") { _, _ -> }
                 .create().show()
@@ -80,9 +82,28 @@ class NavDeviceFragment : Fragment() {
         switch1.isEnabled = true
         deviceTextView.visibility = View.GONE
         disconnect.visibility = View.GONE
-        adapter2 = DeviceAdapter(this@NavDeviceFragment.requireContext(), viewModel, array) {
-            requireActivity().onBackPressed()
-        }
+        adapter2 = DeviceAdapter(
+            this@NavDeviceFragment.requireContext(),
+            viewModel,
+            array,
+            object : DeviceAdapter.ConnectListener {
+                @SuppressLint("SetTextI18n")
+                override fun startConnect(item: DeviceItem) {
+                    array.clear()
+                    adapter2.notifyDataSetChanged()
+                    recyclerView.visibility = View.GONE
+                    progressBar2.visibility = View.VISIBLE
+                    onConnect.visibility = View.VISIBLE
+                    onConnect.text = "正在连接：${item.typeName}[${item.address}]...\n请勿切换页面！！！"
+                }
+
+                override fun finishConnect() {
+                    progressBar2.visibility = View.GONE
+                    onConnect.visibility = View.GONE
+                    toast(this@NavDeviceFragment.requireContext(), "连接成功！")
+                    connect()
+                }
+            })
         recyclerView.apply {
             val manager = LinearLayoutManager(requireContext())
             manager.orientation = LinearLayoutManager.VERTICAL
@@ -167,6 +188,8 @@ class NavDeviceFragment : Fragment() {
                 .create().show()
             stopScan()
         } else {
+            array.clear()
+            adapter2.notifyDataSetChanged()
             DeviceUtil.startSearch(MySearchCallback())
         }
     }
@@ -181,7 +204,7 @@ class NavDeviceFragment : Fragment() {
     private fun stopScan() {
         progressBar.visibility = View.GONE
         switch1.isChecked = false
-        DeviceUtil.stopDataReceive()
+        DeviceUtil.stopSearch()
     }
 
     private inner class MySearchCallback : SearchCallback() {

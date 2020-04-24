@@ -13,16 +13,25 @@ import com.lifesense.ble.bean.constant.DeviceConnectState
 import com.lifesense.ble.bean.constant.PacketProfile
 import com.lifesense.ble.bean.constant.PedometerSportsType
 import com.zjut.wristband2.R
+import com.zjut.wristband2.error.WCode
+import com.zjut.wristband2.repo.DailyHeart
+import com.zjut.wristband2.repo.MyDatabase
+import com.zjut.wristband2.task.DeviceConnectTask
+import com.zjut.wristband2.task.TaskListener
 import com.zjut.wristband2.util.DeviceUtil
+import com.zjut.wristband2.util.SpUtil
+import com.zjut.wristband2.util.TimeTransfer
 import com.zjut.wristband2.vm.HomeActivityVM
 import kotlinx.android.synthetic.main.cell_device.view.*
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class DeviceAdapter(
     private val context: Context,
     private val viewModel: HomeActivityVM,
     private val array: List<DeviceItem>,
-    private val listener: () -> Unit
+    private val listener: ConnectListener
 ) :
     RecyclerView.Adapter<DeviceViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DeviceViewHolder {
@@ -30,13 +39,11 @@ class DeviceAdapter(
             LayoutInflater.from(parent.context).inflate(R.layout.cell_device, parent, false)
         return DeviceViewHolder(view).apply {
             view.setOnClickListener {
-                val type = array[this.adapterPosition].type
                 val address = array[this.adapterPosition].address
-                val typeName = array[this.adapterPosition].typeName
                 AlertDialog.Builder(context)
                     .setTitle("确定连接手环$address？")
                     .setPositiveButton("确定") { _, _ ->
-                        connect(type, address, typeName)
+                        connect(array[this.adapterPosition])
                     }
                     .setNegativeButton("取消") { _, _ -> }
                     .create().show()
@@ -53,13 +60,25 @@ class DeviceAdapter(
         }
     }
 
-    private fun connect(type: String, address: String, typeName: String) {
-        viewModel.address = address
-        viewModel.typeName = typeName
-        viewModel.isConnected = true
+    private fun connect(item: DeviceItem) {
+        viewModel.address = item.address
+        viewModel.typeName = item.typeName
         DeviceUtil.stopSearch()
-        DeviceUtil.startDataReceive(type, address, MyDataCallback(viewModel))
-        listener()
+        DeviceUtil.startDataReceive(
+            item.type,
+            item.address,
+            MyDataCallback(viewModel, listener)
+        )
+        listener.startConnect(item)
+        with(SpUtil.getSp(SpUtil.SpAccount.FILE_NAME).edit()) {
+            putString(SpUtil.SpAccount.MAC_ADDRESS, item.address)
+            apply()
+        }
+    }
+
+    interface ConnectListener {
+        fun startConnect(item: DeviceItem)
+        fun finishConnect()
     }
 
 }
@@ -72,13 +91,27 @@ data class DeviceItem(val type: String, val address: String, val typeName: Strin
 
 const val TAG = "MyDataCallback"
 
-class MyDataCallback(private val viewModel: HomeActivityVM) : ReceiveDataCallback() {
+class MyDataCallback(
+    private val viewModel: HomeActivityVM,
+    private val listener: DeviceAdapter.ConnectListener
+) :
+    ReceiveDataCallback() {
     override fun onDeviceConnectStateChange(p0: DeviceConnectState?, p1: String?) {
         super.onDeviceConnectStateChange(p0, p1)
-        Log.e(TAG, "device connect status: $p0")
+        Log.e(TAG, "device connect status: $p0, $p1")
         when (p0) {
             DeviceConnectState.CONNECTED_SUCCESS -> {
                 viewModel.isConnected = true
+                DeviceConnectTask(object : TaskListener {
+                    override fun onStart() {}
+
+                    override fun onSuccess() {
+                        listener.finishConnect()
+                    }
+
+                    override fun onFail(code: WCode) {}
+
+                }).execute()
             }
             DeviceConnectState.DISCONNECTED -> {
                 viewModel.isConnected = false
@@ -95,12 +128,33 @@ class MyDataCallback(private val viewModel: HomeActivityVM) : ReceiveDataCallbac
         when (p0) {
             //list<PedometerData>
             is List<*> -> {
-                val stat = p0[p0.size - 1] as PedometerData
+                val p = p0[p0.size - 1] as PedometerData
+                val d = TimeTransfer.utc2Date(p.utc)
+                val d1 = Date()
+                if (d.year == d1.year && d.month == d1.month && d.date == d1.date) {
+                    with(SpUtil.getSp(SpUtil.SpStatistics.FILE_NAME).edit()) {
+                        putInt(SpUtil.SpStatistics.STEP, p.walkSteps)
+                        putLong(SpUtil.SpStatistics.UTC, p.utc)
+                        apply()
+                    }
+                    viewModel.step = p.walkSteps
+                }
+
             }
             is PedometerHeartRateData -> {
+                val array = arrayListOf<DailyHeart>()
                 for (i in 0 until p0.heartRates.size) {
-
+                    array.add(
+                        DailyHeart(
+                            p0.heartRates[i] as Int,
+                            p0.utc + i * 300,
+                            viewModel.address
+                        )
+                    )
                 }
+                Thread {
+                    MyDatabase.instance.getDailyHeartDao().insert(*array.toTypedArray())
+                }.start()
             }
             is PedometerSleepData -> {
 

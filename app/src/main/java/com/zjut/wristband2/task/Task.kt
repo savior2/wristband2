@@ -1,5 +1,6 @@
 package com.zjut.wristband2.task
 
+import android.os.AsyncTask
 import com.zjut.wristband2.util.WebUtil
 
 class LoginTask(
@@ -27,4 +28,14 @@ class ModifyPasswordTask(
 ) : BasicTask(listener) {
     override fun doInBackground(vararg p0: String?) =
         WebUtil.modifyPassword(p0[0]!!, p0[1]!!, p0[2]!!)
+}
+
+class DeviceConnectTask(
+    private val listener: TaskListener
+) : AsyncTask<Void, Void, Void>() {
+    override fun doInBackground(vararg p0: Void?): Void? = null
+    override fun onPostExecute(result: Void?) {
+        super.onPostExecute(result)
+        listener.onSuccess()
+    }
 }
