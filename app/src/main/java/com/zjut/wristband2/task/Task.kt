@@ -1,7 +1,13 @@
 package com.zjut.wristband2.task
 
 import android.os.AsyncTask
+import android.util.Log
+import com.zjut.wristband2.repo.DailyHeart
+import com.zjut.wristband2.repo.MyDatabase
+import com.zjut.wristband2.util.SpUtil
+import com.zjut.wristband2.util.TimeTransfer
 import com.zjut.wristband2.util.WebUtil
+import java.util.*
 
 class LoginTask(
     private val listener: TaskListener
@@ -37,5 +43,22 @@ class DeviceConnectTask(
     override fun onPostExecute(result: Void?) {
         super.onPostExecute(result)
         listener.onSuccess()
+    }
+}
+
+
+class DailyHeartTask(
+    private val listener: DailyHeartListener
+) : AsyncTask<Date, Void, List<DailyHeart>>() {
+    override fun doInBackground(vararg p0: Date): List<DailyHeart> {
+        val start = TimeTransfer.date2Utc(p0[0])
+        val end = start + 86400
+        val device =
+            SpUtil.getSp(SpUtil.SpAccount.FILE_NAME).getString(SpUtil.SpAccount.MAC_ADDRESS, "")
+        return MyDatabase.instance.getDailyHeartDao().findByUtcAndDevice(start, end, device!!)
+    }
+
+    override fun onPostExecute(result: List<DailyHeart>) {
+        listener.onSuccess(result)
     }
 }

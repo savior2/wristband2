@@ -18,5 +18,8 @@
     <string name="sex_text">性别：%s</string>
     <string name="version_logo">served by zjut\nv2.0.0</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 
 </resources>

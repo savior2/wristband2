@@ -1,11 +1,13 @@
 package com.zjut.wristband2.adapter
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.zjut.wristband2.R
+import com.zjut.wristband2.activity.DailyHeartActivity
 import kotlinx.android.synthetic.main.cell_nav_home.view.*
 
 
@@ -18,7 +20,7 @@ class NavHomeAdapter(private val context: Context, private val array: List<Item>
             view.setOnClickListener {
                 when (array[this.adapterPosition].id) {
                     1 -> {
-
+                        context.startActivity(Intent(context, DailyHeartActivity::class.java))
                     }
                     2 -> {
 

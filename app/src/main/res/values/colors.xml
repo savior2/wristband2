@@ -13,4 +13,7 @@
     <color name="lighter_grey">#E1E0E0</color>
     <color name="dark_grey">#7E7D7D</color>
     <color name="light_blue">#C8ECF4</color>
+    <color name="blue">#31A8F8</color>
+    <color name="orange">#FFD08C</color>
+    <color name="green">#08FF00</color>
 </resources>

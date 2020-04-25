@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/daily_heart_nav"
+    app:startDestination="@id/dailyHeartFragment">
+
+    <fragment
+        android:id="@+id/dailyHeartFragment"
+        android:name="com.zjut.wristband2.fragment.DailyHeartFragment"
+        android:label="fragment_daily_heart"
+        tools:layout="@layout/fragment_daily_heart" >
+        <action
+            android:id="@+id/action_dailyHeartFragment_to_datePickerFragment"
+            app:destination="@id/datePickerFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim" />
+    </fragment>
+    <dialog
+        android:id="@+id/datePickerFragment"
+        android:name="com.zjut.wristband2.fragment.DatePickerFragment"
+        android:label="fragment_date_picker"
+        tools:layout="@layout/fragment_date_picker" />
+</navigation>
