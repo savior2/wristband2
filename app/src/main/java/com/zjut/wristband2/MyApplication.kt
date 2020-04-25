@@ -2,6 +2,7 @@ package com.zjut.wristband2
 
 import android.app.Application
 import android.content.Context
+import com.baidu.mapapi.SDKInitializer
 import com.lifesense.ble.LsBleManager
 import com.zjut.wristband2.util.DeviceUtil
 
@@ -12,6 +13,7 @@ class MyApplication : Application() {
         _context = applicationContext
 
         DeviceUtil.init()
+        SDKInitializer.initialize(this)
     }
 
     companion object {

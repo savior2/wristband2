@@ -129,6 +129,40 @@ object WebUtil {
         }
         return WCode.OK
     }
+
+    fun feedback(
+        sid: String,
+        name: String,
+        type: String,
+        content: String,
+        contact: String
+    ): WCode {
+        if (!isNetworkConnected()) {
+            return WCode.NetworkError
+        }
+        WebBasic.doPost(
+            WebBasic.DOMAIN + WebBasic.FEEDBACK_URI,
+            mapOf(
+                "userid" to sid,
+                "username" to name,
+                "type" to type,
+                "content" to content,
+                "contact" to contact
+            )
+        ) {
+            try {
+                val jsonObject = JSONObject(it)
+                when (jsonObject.getString("code")) {
+                    "0" -> return WCode.OK
+                }
+            } catch (e: JSONException) {
+                return WCode.JsonParseError
+            } catch (e: Exception) {
+                return WCode.ServerError
+            }
+        }
+        return WCode.OK
+    }
 }
 
 
@@ -145,6 +179,7 @@ private object WebBasic {
     const val VERIFY_CODE_URI = "/api/sportsEquipment/getVertifyCode"
     const val RESET_PASSWORD_URI = "/api/sportsEquipment/resetPassword"
     const val MODIFY_PASSWORD_URI = "/api/sportsEquipment/modifyPSWServlet"
+    const val FEEDBACK_URI = "/api/sportsEquipment/feedback"
 
     inline fun doPost(url: String, body: Map<String, String>, callable: (String) -> Unit) {
         val formBody = FormBody.Builder().apply {

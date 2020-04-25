@@ -2,6 +2,7 @@ package com.zjut.wristband2.task
 
 import android.os.AsyncTask
 import android.util.Log
+import com.zjut.wristband2.error.WCode
 import com.zjut.wristband2.repo.DailyHeart
 import com.zjut.wristband2.repo.MyDatabase
 import com.zjut.wristband2.util.SpUtil
@@ -12,29 +13,43 @@ import java.util.*
 class LoginTask(
     private val listener: TaskListener
 ) : BasicTask(listener) {
-    override fun doInBackground(vararg p0: String?) = WebUtil.login(p0[0]!!, p0[1]!!)
+    override fun doInBackground(vararg p0: String) = WebUtil.login(p0[0], p0[1])
 }
 
 class VerifyCodeTask(
     private val listener: TaskListener
 ) : BasicTask(listener) {
-    override fun doInBackground(vararg p0: String?) = WebUtil.getVerifyCode(p0[0]!!)
+    override fun doInBackground(vararg p0: String) = WebUtil.getVerifyCode(p0[0])
 }
 
 
 class ResetPasswordTask(
     private val listener: TaskListener
 ) : BasicTask(listener) {
-    override fun doInBackground(vararg p0: String?) =
-        WebUtil.resetPassword(p0[0]!!, p0[1]!!, p0[2]!!)
+    override fun doInBackground(vararg p0: String) =
+        WebUtil.resetPassword(p0[0], p0[1], p0[2])
 }
 
 class ModifyPasswordTask(
     private val listener: TaskListener
 ) : BasicTask(listener) {
-    override fun doInBackground(vararg p0: String?) =
-        WebUtil.modifyPassword(p0[0]!!, p0[1]!!, p0[2]!!)
+    override fun doInBackground(vararg p0: String) =
+        WebUtil.modifyPassword(p0[0], p0[1], p0[2])
 }
+
+
+class FeedbackTask(
+    private val listener: TaskListener
+) : BasicTask(listener) {
+    override fun doInBackground(vararg p0: String): WCode {
+        with(SpUtil.getSp(SpUtil.SpAccount.FILE_NAME)) {
+            val sid = getString(SpUtil.SpAccount.SID, "")!!
+            val name = getString(SpUtil.SpAccount.NAME, "")!!
+            return WebUtil.feedback(sid, name, p0[0], p0[1], p0[2])
+        }
+    }
+}
+
 
 class DeviceConnectTask(
     private val listener: TaskListener
