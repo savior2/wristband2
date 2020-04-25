@@ -31,7 +31,11 @@ class NavBorderAdapter(private val context: Context, private val array: List<Ite
 
                     }
                     4 -> {
-
+                        val view2 =
+                            LayoutInflater.from(context).inflate(R.layout.module_connect, null)
+                        AlertDialog.Builder(context)
+                            .setView(view2)
+                            .create().show()
                     }
                     5 -> {
                         AlertDialog.Builder(context)

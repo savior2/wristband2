@@ -27,6 +27,7 @@ import com.zjut.wristband2.util.DeviceUtil
 import com.zjut.wristband2.util.toast
 import com.zjut.wristband2.vm.HomeActivityVM
 import kotlinx.android.synthetic.main.fragment_nav_device.*
+import kotlinx.android.synthetic.main.module_connect.view.*
 
 class NavDeviceFragment : Fragment() {
 
@@ -34,6 +35,8 @@ class NavDeviceFragment : Fragment() {
 
     private val array = arrayListOf<DeviceItem>()
     private lateinit var adapter2: DeviceAdapter
+
+    private lateinit var dialog: AlertDialog
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,6 +51,7 @@ class NavDeviceFragment : Fragment() {
             requireActivity(),
             SavedStateViewModelFactory(requireActivity().application, requireActivity())
         )[HomeActivityVM::class.java]
+
         if (viewModel.isConnected) {
             connect()
         } else {
@@ -91,15 +95,19 @@ class NavDeviceFragment : Fragment() {
                 override fun startConnect(item: DeviceItem) {
                     array.clear()
                     adapter2.notifyDataSetChanged()
-                    recyclerView.visibility = View.GONE
-                    progressBar2.visibility = View.VISIBLE
-                    onConnect.visibility = View.VISIBLE
-                    onConnect.text = "正在连接：${item.typeName}[${item.address}]...\n请勿切换页面！！！"
+                    val dialogView =
+                        LayoutInflater.from(requireContext()).inflate(R.layout.module_connect, null)
+                    dialogView.onConnectText.text =
+                        "正在连接...\n${item.typeName}[${item.address}]\n请勿切换页面！！！"
+                    dialog = AlertDialog.Builder(requireContext())
+                        .setView(dialogView)
+                        .setCancelable(false)
+                        .create()
+                    dialog.show()
                 }
 
                 override fun finishConnect() {
-                    progressBar2.visibility = View.GONE
-                    onConnect.visibility = View.GONE
+                    dialog.dismiss()
                     toast(this@NavDeviceFragment.requireContext(), "连接成功！")
                     connect()
                 }
