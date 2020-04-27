@@ -1,5 +1,6 @@
 package com.zjut.wristband2.adapter
 
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
@@ -8,6 +9,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.zjut.wristband2.R
 import com.zjut.wristband2.activity.DailyHeartActivity
+import com.zjut.wristband2.activity.SportsSummaryActivity
+import kotlinx.android.synthetic.main.activity_version.view.*
 import kotlinx.android.synthetic.main.cell_nav_home.view.*
 
 
@@ -23,13 +26,18 @@ class NavHomeAdapter(private val context: Context, private val array: List<Item>
                         context.startActivity(Intent(context, DailyHeartActivity::class.java))
                     }
                     2 -> {
-
+                        context.startActivity(Intent(context, SportsSummaryActivity::class.java))
                     }
                     3 -> {
 
                     }
                     4 -> {
-
+                        val view2 =
+                            LayoutInflater.from(context).inflate(R.layout.activity_version, null)
+                        view2.version.text = "该功能正在积极开发..."
+                        AlertDialog.Builder(context)
+                            .setView(view2)
+                            .create().show()
                     }
                 }
             }

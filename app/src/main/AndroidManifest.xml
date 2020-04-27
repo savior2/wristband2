@@ -24,6 +24,10 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
+
+        <activity
+            android:name=".activity.SportsSummaryActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.DailyHeartActivity"
             android:screenOrientation="portrait" />
@@ -65,9 +69,15 @@
             android:enabled="true"
             android:exported="true"
             android:process=":remote" />
+
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="bUGBDn1uUGYjalGFLnorcblcPy1IE44R" />
+
+        <service
+            android:name=".service.AlarmService"
+            android:enabled="true"
+            android:exported="false" />
     </application>
 
 </manifest>
