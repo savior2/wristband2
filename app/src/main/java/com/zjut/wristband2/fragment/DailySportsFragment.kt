@@ -1,5 +1,6 @@
 package com.zjut.wristband2.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,7 @@ import com.baidu.location.LocationClientOption
 import com.baidu.mapapi.map.*
 import com.baidu.mapapi.model.LatLng
 import com.zjut.wristband2.R
+import com.zjut.wristband2.activity.DailySportsActivity
 import kotlinx.android.synthetic.main.fragment_daily_sports.*
 
 /**
@@ -51,6 +53,9 @@ class DailySportsFragment : Fragment() {
             mLocClient.locOption = this
         }
         mLocClient.registerLocationListener(mLocListener)
+        enter.setOnClickListener {
+            startActivity(Intent(requireContext(), DailySportsActivity::class.java))
+        }
     }
 
 
@@ -85,7 +90,7 @@ class DailySportsFragment : Fragment() {
             if (isFirstZoom) {
                 mBaiduMap.apply {
                     val mMapStatus =
-                        MapStatus.Builder().target(LatLng(p0.latitude, p0.longitude)).zoom(19f)
+                        MapStatus.Builder().target(LatLng(p0.latitude, p0.longitude)).zoom(18f)
                             .build()
                     animateMapStatus(MapStatusUpdateFactory.newMapStatus(mMapStatus))
                 }

@@ -12,6 +12,7 @@ import com.lifesense.ble.bean.*
 import com.lifesense.ble.bean.constant.DeviceConnectState
 import com.lifesense.ble.bean.constant.PacketProfile
 import com.lifesense.ble.bean.constant.PedometerSportsType
+import com.zjut.wristband2.MyApplication
 import com.zjut.wristband2.R
 import com.zjut.wristband2.error.WCode
 import com.zjut.wristband2.repo.DailyHeart
@@ -70,10 +71,6 @@ class DeviceAdapter(
             MyDataCallback(viewModel, listener)
         )
         listener.startConnect(item)
-        with(SpUtil.getSp(SpUtil.SpAccount.FILE_NAME).edit()) {
-            putString(SpUtil.SpAccount.MAC_ADDRESS, item.address)
-            apply()
-        }
     }
 
     interface ConnectListener {
@@ -102,6 +99,11 @@ class MyDataCallback(
         when (p0) {
             DeviceConnectState.CONNECTED_SUCCESS -> {
                 viewModel.isConnected = true
+                MyApplication.isConnect = true
+                with(SpUtil.getSp(SpUtil.SpAccount.FILE_NAME).edit()) {
+                    putString(SpUtil.SpAccount.MAC_ADDRESS, viewModel.address)
+                    apply()
+                }
                 DeviceConnectTask(object : TaskListener {
                     override fun onStart() {}
 
@@ -115,6 +117,7 @@ class MyDataCallback(
             }
             DeviceConnectState.DISCONNECTED -> {
                 viewModel.isConnected = false
+                MyApplication.isConnect = false
             }
             else -> {
 

@@ -24,3 +24,8 @@ class DailyHeart {
         this.deviceId = deviceId
     }
 }
+
+@Entity(tableName = "aerobics_summary")
+class AerobicsSummary{
+
+}

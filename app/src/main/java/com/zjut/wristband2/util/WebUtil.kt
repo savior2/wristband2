@@ -5,8 +5,10 @@ import android.net.ConnectivityManager
 import com.zjut.wristband2.MyApplication
 import com.zjut.wristband2.error.WCode
 import okhttp3.FormBody
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.RequestBody
 import org.json.JSONException
 import org.json.JSONObject
 
@@ -163,6 +165,36 @@ object WebUtil {
         }
         return WCode.OK
     }
+
+    fun postAerobics(body: String) =
+        basicPost(WebBasic.DOMAIN_POST_TEMP + WebBasic.POST_AEROBICS_URI, body)
+
+    fun postNormalSports(body: String) =
+        basicPost(WebBasic.DOMAIN_POST_TEMP + WebBasic.POST_NORMAL_SPORTS_URI, body)
+
+    private fun basicPost(url: String, body: String): WCode {
+        if (!isNetworkConnected()) {
+            return WCode.NetworkError
+        }
+        WebBasic.doPostWithRawBody(url, body) {
+            try {
+                val jsonObject = JSONObject(it)
+                when (jsonObject.getString("Code")) {
+                    "0" -> {
+                        return WCode.OK
+                    }
+                    "6" -> {
+                        return WCode.TokenInvalidError
+                    }
+                }
+            } catch (e: JSONException) {
+                return WCode.JsonParseError
+            } catch (e: Exception) {
+                return WCode.ServerError
+            }
+        }
+        return WCode.OK
+    }
 }
 
 
@@ -174,12 +206,16 @@ private fun isNetworkConnected(): Boolean {
 
 
 private object WebBasic {
+    private val JSON_TYPE = "application/json; charset=utf-8".toMediaType()
     const val DOMAIN = "http://www.justrun.com.cn"
+    const val DOMAIN_POST_TEMP = "http://47.99.157.159:9898"
     const val LOGIN_URI = "/api/sportsEquipment/getConnectServlet"
     const val VERIFY_CODE_URI = "/api/sportsEquipment/getVertifyCode"
     const val RESET_PASSWORD_URI = "/api/sportsEquipment/resetPassword"
     const val MODIFY_PASSWORD_URI = "/api/sportsEquipment/modifyPSWServlet"
     const val FEEDBACK_URI = "/api/sportsEquipment/feedback"
+    const val POST_AEROBICS_URI = "/uploadTestData"
+    const val POST_NORMAL_SPORTS_URI = "/uploadSportData"
 
     inline fun doPost(url: String, body: Map<String, String>, callable: (String) -> Unit) {
         val formBody = FormBody.Builder().apply {
@@ -195,6 +231,13 @@ private object WebBasic {
         val response = OkHttpClient()
             .newCall(request)
             .execute()
+        callable(response.body?.string() ?: "")
+    }
+
+    inline fun doPostWithRawBody(url: String, body: String, callable: (String) -> Unit) {
+        val requestBody = RequestBody.create(JSON_TYPE, body)
+        val request = Request.Builder().url(url).post(requestBody).build()
+        val response = OkHttpClient().newCall(request).execute()
         callable(response.body?.string() ?: "")
     }
 }

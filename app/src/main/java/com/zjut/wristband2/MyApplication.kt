@@ -23,5 +23,6 @@ class MyApplication : Application() {
         var mode = RunMode.Normal
         var num = 0
         var heartRate = 0
+        var isConnect = false
     }
 }

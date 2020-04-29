@@ -1,5 +1,6 @@
 package com.zjut.wristband2.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -13,6 +14,7 @@ import com.baidu.mapapi.map.*
 import com.baidu.mapapi.model.LatLng
 
 import com.zjut.wristband2.R
+import com.zjut.wristband2.activity.AerobicsActivity
 import kotlinx.android.synthetic.main.fragment_aerobics.*
 
 /**
@@ -31,7 +33,6 @@ class AerobicsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_aerobics, container, false)
     }
 
@@ -53,6 +54,9 @@ class AerobicsFragment : Fragment() {
             mLocClient.locOption = this
         }
         mLocClient.registerLocationListener(mLocListener)
+        enter.setOnClickListener {
+            startActivity(Intent(requireContext(), AerobicsActivity::class.java))
+        }
     }
 
     override fun onResume() {
@@ -86,7 +90,7 @@ class AerobicsFragment : Fragment() {
             if (isFirstZoom) {
                 mBaiduMap.apply {
                     val mMapStatus =
-                        MapStatus.Builder().target(LatLng(p0.latitude, p0.longitude)).zoom(19f)
+                        MapStatus.Builder().target(LatLng(p0.latitude, p0.longitude)).zoom(18f)
                             .build()
                     animateMapStatus(MapStatusUpdateFactory.newMapStatus(mMapStatus))
                 }

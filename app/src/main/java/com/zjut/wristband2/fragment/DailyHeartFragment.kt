@@ -65,7 +65,6 @@ class DailyHeartFragment : Fragment() {
         myViewModel.date.observe(requireActivity(), Observer {
             reset()
         })
-        reset()
     }
 
     private fun initLineChart() {

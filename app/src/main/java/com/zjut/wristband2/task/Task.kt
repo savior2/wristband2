@@ -1,7 +1,6 @@
 package com.zjut.wristband2.task
 
 import android.os.AsyncTask
-import android.util.Log
 import com.zjut.wristband2.error.WCode
 import com.zjut.wristband2.repo.DailyHeart
 import com.zjut.wristband2.repo.MyDatabase
@@ -77,3 +76,10 @@ class DailyHeartTask(
         listener.onSuccess(result)
     }
 }
+
+class PostAerobicsTask(
+    private val listener: TaskListener
+) : BasicTask(listener) {
+    override fun doInBackground(vararg p0: kotlin.String): WCode = WebUtil.postAerobics(p0[0])
+}
+
