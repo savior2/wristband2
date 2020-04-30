@@ -2,14 +2,14 @@ package com.zjut.wristband2.task
 
 import android.os.AsyncTask
 import android.util.Log
+import com.google.gson.Gson
 import com.zjut.wristband2.MyApplication
 import com.zjut.wristband2.error.WCode
-import com.zjut.wristband2.repo.AerobicsSummary
-import com.zjut.wristband2.repo.DailyHeart
-import com.zjut.wristband2.repo.MyDatabase
+import com.zjut.wristband2.repo.*
 import com.zjut.wristband2.util.SpUtil
 import com.zjut.wristband2.util.TimeTransfer
 import com.zjut.wristband2.util.WebUtil
+import java.lang.StringBuilder
 import java.util.*
 
 class LoginTask(
@@ -90,7 +90,6 @@ class AerobicsSummaryTask : AsyncTask<Void, Void, Void>() {
                     TimeTransfer.nowUtcMillion()
                 )
             )
-            Log.e("test", id.toString())
             MyApplication.num = id
         }
         return null
@@ -99,7 +98,50 @@ class AerobicsSummaryTask : AsyncTask<Void, Void, Void>() {
 
 class PostAerobicsTask(
     private val listener: TaskListener
-) : BasicTask(listener) {
-    override fun doInBackground(vararg p0: kotlin.String): WCode = WebUtil.postAerobics(p0[0])
+) : AsyncTask<AerobicsPosition, Void, WCode>() {
+    override fun onPostExecute(result: WCode) {
+        super.onPostExecute(result)
+        if (result == WCode.OK) {
+            listener.onSuccess()
+        } else {
+            listener.onFail(result)
+        }
+    }
+
+    override fun onPreExecute() {
+        super.onPreExecute()
+        listener.onStart()
+    }
+
+    override fun doInBackground(vararg p0: AerobicsPosition): WCode {
+        MyDatabase.instance.getAerobicsPositionDao().insert(*p0)
+        val summary = MyDatabase.instance.getAerobicsSummaryDao().findById(MyApplication.num)
+        val hearts = MyDatabase.instance.getAerobicsHeartDao().findBySummaryId(MyApplication.num)
+        with(SpUtil.getSp(SpUtil.SpAccount.FILE_NAME)) {
+            val token = getString(SpUtil.SpAccount.TOKEN, "")!!
+            val heartString = StringBuilder()
+            val positionString = StringBuilder()
+            val speedString = StringBuilder()
+            for (i in hearts) {
+                heartString.append("${i.utc},${i.rate},")
+            }
+            for (i in p0) {
+                positionString.append("${i.utc},lng${i.longitude},lat${i.latitude},")
+                speedString.append("${i.utc},${i.speed},")
+            }
+            val info = Gson().toJson(
+                AerobicsJson(
+                    token,
+                    summary.sid,
+                    summary.deviceId.replace(":", "").toLowerCase(),
+                    summary.startUtc.toString(),
+                    positionString.toString(),
+                    speedString.toString(),
+                    heartString.toString()
+                )
+            )
+            return WebUtil.postAerobics(info)
+        }
+    }
 }
 

@@ -15,11 +15,13 @@ import com.lifesense.ble.bean.constant.PedometerSportsType
 import com.zjut.wristband2.MyApplication
 import com.zjut.wristband2.R
 import com.zjut.wristband2.error.WCode
+import com.zjut.wristband2.repo.AerobicsHeart
 import com.zjut.wristband2.repo.DailyHeart
 import com.zjut.wristband2.repo.MyDatabase
 import com.zjut.wristband2.task.DeviceConnectTask
 import com.zjut.wristband2.task.TaskListener
 import com.zjut.wristband2.util.DeviceUtil
+import com.zjut.wristband2.util.RunMode
 import com.zjut.wristband2.util.SpUtil
 import com.zjut.wristband2.util.TimeTransfer
 import com.zjut.wristband2.vm.HomeActivityVM
@@ -173,6 +175,22 @@ class MyDataCallback(
         if (p1 is PedometerHeartRateData) {
             Log.e(TAG, "real data: $p0, ${p1.heartRates}")
             MyApplication.heartRate = p1.heartRates[0] as Int
+            when (MyApplication.mode) {
+                RunMode.Aerobics -> {
+                    Thread {
+                        MyDatabase.instance.getAerobicsHeartDao().insert(
+                            AerobicsHeart(
+                                MyApplication.num,
+                                p1.heartRates[0] as Int,
+                                p1.utc
+                            )
+                        )
+                    }.start()
+                }
+                RunMode.Normal -> {
+
+                }
+            }
         }
     }
 

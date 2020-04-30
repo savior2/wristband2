@@ -6,6 +6,7 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.location.LocationManager
+import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Vibrator
@@ -23,11 +24,13 @@ import com.baidu.mapapi.model.LatLng
 import com.zjut.wristband2.MyApplication
 import com.zjut.wristband2.R
 import com.zjut.wristband2.databinding.ActivityAerobicsBinding
+import com.zjut.wristband2.error.WCode
+import com.zjut.wristband2.repo.AerobicsHeart
+import com.zjut.wristband2.repo.AerobicsPosition
 import com.zjut.wristband2.task.AerobicsSummaryTask
-import com.zjut.wristband2.util.DeviceUtil
-import com.zjut.wristband2.util.RunMode
-import com.zjut.wristband2.util.getDistance
-import com.zjut.wristband2.util.toast
+import com.zjut.wristband2.task.PostAerobicsTask
+import com.zjut.wristband2.task.TaskListener
+import com.zjut.wristband2.util.*
 import com.zjut.wristband2.vm.AerobicsActivityVM
 import kotlin.math.abs
 
@@ -43,6 +46,10 @@ class AerobicsActivity : AppCompatActivity(), SensorEventListener {
     private lateinit var mSensorManager: SensorManager
     private lateinit var mLocationManager: LocationManager
     private lateinit var mVibrator: Vibrator
+
+    private lateinit var mSoundSpeedUp: MediaPlayer
+    private lateinit var mSoundSlowDown: MediaPlayer
+    private lateinit var mSoundNormal: MediaPlayer
 
     private val startBD = BitmapDescriptorFactory.fromResource(R.drawable.ic_start)
     private val finishBD = BitmapDescriptorFactory.fromResource(R.drawable.ic_end)
@@ -62,6 +69,9 @@ class AerobicsActivity : AppCompatActivity(), SensorEventListener {
         mSensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         mLocationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
         mVibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        mSoundSpeedUp = MediaPlayer.create(this, R.raw.speed_up)
+        mSoundSlowDown = MediaPlayer.create(this, R.raw.slow_down)
+        mSoundNormal = MediaPlayer.create(this, R.raw.speed_normal)
         initMap()
         initControl()
         initViewModel()
@@ -128,6 +138,7 @@ class AerobicsActivity : AppCompatActivity(), SensorEventListener {
                     )
                     else -> {
                         viewModel.isStart.value = true
+                        viewModel.positions.clear()
                         reset()
                         setProgress(true, "GPS信号搜索中，请留在原地...")
                         mBaiduMap.clear()
@@ -158,6 +169,24 @@ class AerobicsActivity : AppCompatActivity(), SensorEventListener {
                                 )
                                 points.clear()
                             }
+                            PostAerobicsTask(object : TaskListener {
+                                override fun onStart() {
+                                    setProgress(true, "正在上传...")
+                                }
+
+                                override fun onSuccess() {
+                                    positions.clear()
+                                    setProgress(false)
+                                    toast(this@AerobicsActivity, "上传成功!")
+                                }
+
+                                override fun onFail(code: WCode) {
+                                    positions.clear()
+                                    setProgress(false)
+                                    toast(this@AerobicsActivity, "上传失败！${code.error}")
+                                }
+
+                            }).execute(*positions.toTypedArray())
                         }
 
                     }
@@ -232,6 +261,18 @@ class AerobicsActivity : AppCompatActivity(), SensorEventListener {
         }
     }
 
+    private fun speedUp() {
+        mVibrator.vibrate(longArrayOf(0L, 100L, 200L, 100L), -1)
+        mSoundSpeedUp.start()
+    }
+
+    private fun slowDown() {
+        mVibrator.vibrate(1000)
+        mSoundSlowDown.start()
+    }
+
+    private fun speedNormal() = mSoundNormal.start()
+
     override fun finish() {
         if (viewModel.isStart.value!!) {
             AlertDialog.Builder(this)
@@ -270,6 +311,12 @@ class AerobicsActivity : AppCompatActivity(), SensorEventListener {
         startBD?.recycle()
         finishBD?.recycle()
         mVibrator.cancel()
+        mSoundSpeedUp.stop()
+        mSoundSpeedUp.release()
+        mSoundSlowDown.stop()
+        mSoundSlowDown.release()
+        mSoundNormal.stop()
+        mSoundNormal.release()
         if (MyApplication.isConnect) {
             DeviceUtil.stopRealTime(viewModel.address)
         }
@@ -321,12 +368,102 @@ class AerobicsActivity : AppCompatActivity(), SensorEventListener {
                             lastPoint = ll
                             mBaiduMap.apply {
                                 clear()
-                                addOverlay(MarkerOptions().position(ll).icon(startBD))
+                                addOverlay(MarkerOptions().position(points[0]).icon(startBD))
                                 addOverlay(
                                     PolylineOptions().width(10).color(-0x55010000).points(
                                         points
                                     )
                                 )
+                            }
+                        }
+                        positions.add(
+                            AerobicsPosition(
+                                MyApplication.num,
+                                ll.longitude.toString(),
+                                ll.latitude.toString(),
+                                String.format("%.2f", p0.speed).toFloat(),
+                                TimeTransfer.nowUtcMillion()
+                            )
+                        )
+                        if (runTime.value!! % 10 == 0) {
+                            when (runTime.value) {
+                                in 1..119 -> {
+                                    when {
+                                        p0.speed < 1.5 -> speedUp()
+                                        p0.speed > 2.5 -> slowDown()
+                                        else -> speedNormal()
+                                    }
+                                }
+                                in 120..239 -> {
+                                    when {
+                                        p0.speed < 3.5 -> speedUp()
+                                        p0.speed > 4.5 -> slowDown()
+                                        else -> speedNormal()
+                                    }
+                                }
+                                in 240..359 -> {
+                                    when {
+                                        p0.speed < 5.5 -> speedUp()
+                                        p0.speed > 6.5 -> slowDown()
+                                        else -> speedNormal()
+                                    }
+                                }
+                                in 360..479 -> {
+                                    when {
+                                        p0.speed < 7.5 -> speedUp()
+                                        p0.speed > 8.5 -> slowDown()
+                                        else -> speedNormal()
+                                    }
+                                }
+                                in 480..599 -> {
+                                    when {
+                                        p0.speed < 9.5 -> speedUp()
+                                        p0.speed > 10.5 -> slowDown()
+                                        else -> speedNormal()
+                                    }
+                                }
+                                in 600..719 -> {
+                                    when {
+                                        p0.speed < 11.5 -> speedUp()
+                                        p0.speed > 12.5 -> slowDown()
+                                        else -> speedNormal()
+                                    }
+                                }
+                                in 720..839 -> {
+                                    when {
+                                        p0.speed < 9.5 -> speedUp()
+                                        p0.speed > 10.5 -> slowDown()
+                                        else -> speedNormal()
+                                    }
+                                }
+                                in 840..959 -> {
+                                    when {
+                                        p0.speed < 7.5 -> speedUp()
+                                        p0.speed > 8.5 -> slowDown()
+                                        else -> speedNormal()
+                                    }
+                                }
+                                in 960..1079 -> {
+                                    when {
+                                        p0.speed < 5.5 -> speedUp()
+                                        p0.speed > 6.5 -> slowDown()
+                                        else -> speedNormal()
+                                    }
+                                }
+                                in 1080..1199 -> {
+                                    when {
+                                        p0.speed < 3.5 -> speedUp()
+                                        p0.speed > 4.5 -> slowDown()
+                                        else -> speedNormal()
+                                    }
+                                }
+                                in 1200..1319 -> {
+                                    when {
+                                        p0.speed < 1.5 -> speedUp()
+                                        p0.speed > 2.5 -> slowDown()
+                                        else -> speedNormal()
+                                    }
+                                }
                             }
                         }
                     }

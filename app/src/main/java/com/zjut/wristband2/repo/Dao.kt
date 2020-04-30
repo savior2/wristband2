@@ -21,4 +21,26 @@ interface DailyHeartDao {
 interface AerobicsSummaryDao {
     @Insert
     fun insert(p: AerobicsSummary): Long
+
+    @Query("select * from aerobics_summary where id = :id")
+    fun findById(id: Long): AerobicsSummary
+}
+
+@Dao
+interface AerobicsHeartDao {
+    @Insert
+    fun insert(vararg p: AerobicsHeart)
+
+    @Query("select * from aerobics_heart where summary_id = :id order by utc asc")
+    fun findBySummaryId(id: Long): List<AerobicsHeart>
+}
+
+@Dao
+interface AerobicsPositionDao {
+    @Insert
+    fun insert(vararg p: AerobicsPosition)
+
+
+    @Query("select * from aerobics_position where summary_id = :id order by utc asc")
+    fun findBySummaryId(id: Long): List<AerobicsPosition>
 }

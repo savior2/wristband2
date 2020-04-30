@@ -44,3 +44,45 @@ class AerobicsSummary {
         this.startUtc = startUtc
     }
 }
+
+@Entity(tableName = "aerobics_heart")
+class AerobicsHeart {
+    @PrimaryKey(autoGenerate = true)
+    var id = 0
+    @ColumnInfo(name = "summary_id")
+    var summaryId = 0L
+    @ColumnInfo(name = "utc")
+    var utc = 0L
+    @ColumnInfo(name = "rate")
+    var rate = 0
+
+    constructor(summaryId: Long, rate: Int, utc: Long) {
+        this.summaryId = summaryId
+        this.rate = rate
+        this.utc = utc
+    }
+}
+
+@Entity(tableName = "aerobics_position")
+class AerobicsPosition {
+    @PrimaryKey(autoGenerate = true)
+    var id = 0
+    @ColumnInfo(name = "summary_id")
+    var summaryId = 0L
+    @ColumnInfo(name = "longitude")
+    var longitude = ""
+    @ColumnInfo(name = "latitude")
+    var latitude = ""
+    @ColumnInfo(name = "speed")
+    var speed = 0F
+    @ColumnInfo(name = "utc")
+    var utc = 0L
+
+    constructor(summaryId: Long, longitude: String, latitude: String, speed: Float, utc: Long) {
+        this.summaryId = summaryId
+        this.longitude = longitude
+        this.latitude = latitude
+        this.speed = speed
+        this.utc = utc
+    }
+}

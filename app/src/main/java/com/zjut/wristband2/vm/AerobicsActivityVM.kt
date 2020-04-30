@@ -4,6 +4,8 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.baidu.mapapi.model.LatLng
+import com.zjut.wristband2.repo.AerobicsHeart
+import com.zjut.wristband2.repo.AerobicsPosition
 import com.zjut.wristband2.util.SpUtil
 
 class AerobicsActivityVM(app: Application) : AndroidViewModel(app) {
@@ -47,4 +49,6 @@ class AerobicsActivityVM(app: Application) : AndroidViewModel(app) {
     var lastPoint = LatLng(0.0, 0.0)
 
     val points = arrayListOf<LatLng>()
+
+    val positions = arrayListOf<AerobicsPosition>()
 }
