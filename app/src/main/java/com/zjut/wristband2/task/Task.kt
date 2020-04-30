@@ -1,7 +1,10 @@
 package com.zjut.wristband2.task
 
 import android.os.AsyncTask
+import android.util.Log
+import com.zjut.wristband2.MyApplication
 import com.zjut.wristband2.error.WCode
+import com.zjut.wristband2.repo.AerobicsSummary
 import com.zjut.wristband2.repo.DailyHeart
 import com.zjut.wristband2.repo.MyDatabase
 import com.zjut.wristband2.util.SpUtil
@@ -74,6 +77,23 @@ class DailyHeartTask(
 
     override fun onPostExecute(result: List<DailyHeart>) {
         listener.onSuccess(result)
+    }
+}
+
+class AerobicsSummaryTask : AsyncTask<Void, Void, Void>() {
+    override fun doInBackground(vararg p0: Void?): Void? {
+        with(SpUtil.getSp(SpUtil.SpAccount.FILE_NAME)) {
+            val id = MyDatabase.instance.getAerobicsSummaryDao().insert(
+                AerobicsSummary(
+                    getString(SpUtil.SpAccount.SID, "")!!,
+                    getString(SpUtil.SpAccount.MAC_ADDRESS, "")!!,
+                    TimeTransfer.nowUtcMillion()
+                )
+            )
+            Log.e("test", id.toString())
+            MyApplication.num = id
+        }
+        return null
     }
 }
 

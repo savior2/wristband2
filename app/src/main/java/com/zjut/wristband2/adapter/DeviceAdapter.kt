@@ -172,6 +172,7 @@ class MyDataCallback(
         super.onReceiveRealtimeMeasureData(p0, p1)
         if (p1 is PedometerHeartRateData) {
             Log.e(TAG, "real data: $p0, ${p1.heartRates}")
+            MyApplication.heartRate = p1.heartRates[0] as Int
         }
     }
 

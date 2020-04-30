@@ -20,8 +20,8 @@ class MyApplication : Application() {
     companion object {
         private lateinit var _context: Context
         val context get() = _context
-        var mode = RunMode.Normal
-        var num = 0
+        var mode = RunMode.Stop
+        var num = 0L
         var heartRate = 0
         var isConnect = false
     }

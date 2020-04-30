@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Vibrator
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -17,15 +18,18 @@ import com.baidu.location.BDLocation
 import com.baidu.location.BDLocationListener
 import com.baidu.location.LocationClient
 import com.baidu.location.LocationClientOption
-import com.baidu.mapapi.map.BaiduMap
-import com.baidu.mapapi.map.BitmapDescriptorFactory
-import com.baidu.mapapi.map.MapStatus
-import com.baidu.mapapi.map.MyLocationConfiguration
+import com.baidu.mapapi.map.*
+import com.baidu.mapapi.model.LatLng
 import com.zjut.wristband2.MyApplication
 import com.zjut.wristband2.R
 import com.zjut.wristband2.databinding.ActivityAerobicsBinding
+import com.zjut.wristband2.task.AerobicsSummaryTask
+import com.zjut.wristband2.util.DeviceUtil
+import com.zjut.wristband2.util.RunMode
+import com.zjut.wristband2.util.getDistance
 import com.zjut.wristband2.util.toast
 import com.zjut.wristband2.vm.AerobicsActivityVM
+import kotlin.math.abs
 
 class AerobicsActivity : AppCompatActivity(), SensorEventListener {
 
@@ -60,6 +64,7 @@ class AerobicsActivity : AppCompatActivity(), SensorEventListener {
         mVibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
         initMap()
         initControl()
+        initViewModel()
     }
 
     private fun initMap() {
@@ -80,7 +85,12 @@ class AerobicsActivity : AppCompatActivity(), SensorEventListener {
 
                 override fun onMapStatusChange(p0: MapStatus?) {}
 
-                override fun onMapStatusChangeFinish(p0: MapStatus?) {}
+                override fun onMapStatusChangeFinish(p0: MapStatus) {
+                    if (!viewModel.isFirstZoom) {
+                        viewModel.currentZoom.value = p0.zoom
+                        viewModel.currentTarget.value = p0.target
+                    }
+                }
             })
         }
         with(LocationClientOption()) {
@@ -120,14 +130,69 @@ class AerobicsActivity : AppCompatActivity(), SensorEventListener {
                         viewModel.isStart.value = true
                         reset()
                         setProgress(true, "GPS信号搜索中，请留在原地...")
-
+                        mBaiduMap.clear()
+                        AerobicsSummaryTask().execute()
                     }
                 }
-
             } else {
-                viewModel.isStart.value = false
+                AlertDialog.Builder(this)
+                    .setTitle("确定结束测试？")
+                    .setPositiveButton("确定") { _, _ ->
+                        with(viewModel) {
+                            isStart.value = false
+                            if (MyApplication.isConnect) {
+                                DeviceUtil.stopRealTime(address)
+                            }
+                            MyApplication.mode = RunMode.Stop
+                            setProgress(false)
+                            if (isFirstLocate) {
+                                points.clear()
+                            } else {
+                                isFirstLocate = true
+                                runHeart.value = 0
+                                runSpeed.value = 0f
+                                mBaiduMap.addOverlay(
+                                    MarkerOptions().position(points[points.size - 1]).icon(
+                                        finishBD
+                                    )
+                                )
+                                points.clear()
+                            }
+                        }
+
+                    }
+                    .setNegativeButton("取消") { _, _ -> }
+                    .create().show()
             }
         }
+    }
+
+    private fun initViewModel() {
+        with(viewModel) {
+            currentDirection.observe(this@AerobicsActivity, Observer {
+                setMyLocation()
+            })
+            currentLocation.observe(this@AerobicsActivity, Observer {
+                setMyLocation()
+                setTargetLocation()
+            })
+        }
+    }
+
+
+    private fun setMyLocation() {
+        val mLocData = MyLocationData.Builder().accuracy(0f)
+            .direction(viewModel.currentDirection.value!!)
+            .latitude(viewModel.currentLocation.value!!.latitude)
+            .longitude(viewModel.currentLocation.value!!.longitude).build()
+        mBaiduMap.setMyLocationData(mLocData)
+    }
+
+    private fun setTargetLocation() {
+        val mMapStatus = MapStatus.Builder()
+            .target(viewModel.currentTarget.value)
+            .zoom(viewModel.currentZoom.value!!).build()
+        mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(mMapStatus))
     }
 
     private fun reset() {
@@ -139,12 +204,43 @@ class AerobicsActivity : AppCompatActivity(), SensorEventListener {
         }
     }
 
-    private fun setProgress(visible: Boolean, text: String) {
+    private fun setProgress(visible: Boolean, text: String = "") {
         if (visible) {
             binding.progress.visibility = View.VISIBLE
             binding.textView.text = text
         } else {
             binding.progress.visibility = View.GONE
+        }
+    }
+
+    private fun getMostAccuracyLocation(location: LatLng): LatLng? {
+        with(viewModel) {
+            return if (getDistance(location, lastPoint) > MAX_DISTANCE) {
+                points.clear()
+                lastPoint = location
+                null
+            } else {
+                points.add(location)
+                lastPoint = location
+                if (points.size > MIN_NUMBER) {
+                    points.clear()
+                    location
+                } else {
+                    null
+                }
+            }
+        }
+    }
+
+    override fun finish() {
+        if (viewModel.isStart.value!!) {
+            AlertDialog.Builder(this)
+                .setTitle("警告")
+                .setMessage("请先结束测试，否则可能造成数据丢失！")
+                .setPositiveButton("确定") { _, _ -> }
+                .create().show()
+        } else {
+            super.finish()
         }
     }
 
@@ -166,18 +262,83 @@ class AerobicsActivity : AppCompatActivity(), SensorEventListener {
 
     override fun onDestroy() {
         super.onDestroy()
+        if (mLocClient.isStarted) {
+            mLocClient.stop()
+        }
+        binding.mapView.onDestroy()
+        mLocClient.unRegisterLocationListener(mLocListener)
         startBD?.recycle()
         finishBD?.recycle()
+        mVibrator.cancel()
+        if (MyApplication.isConnect) {
+            DeviceUtil.stopRealTime(viewModel.address)
+        }
     }
 
     override fun onAccuracyChanged(p0: Sensor?, p1: Int) {}
 
-    override fun onSensorChanged(p0: SensorEvent?) {}
-
-
-    private inner class MyLocationListener : BDLocationListener {
-        override fun onReceiveLocation(p0: BDLocation?) {
+    override fun onSensorChanged(p0: SensorEvent) {
+        if (!viewModel.isFirstZoom) {
+            val x = p0.values[SensorManager.DATA_X]
+            if (abs(x - viewModel.currentDirection.value!!) > 1) {
+                viewModel.currentDirection.value = x
+            }
         }
     }
 
+
+    private inner class MyLocationListener : BDLocationListener {
+        override fun onReceiveLocation(p0: BDLocation) {
+            val ll = LatLng(p0.latitude, p0.longitude)
+            viewModel.apply {
+                currentLocation.value = ll
+                if (isFirstZoom) isFirstZoom = false
+            }
+            with(viewModel) {
+                if (isStart.value!! && p0.locType == BDLocation.TypeGpsLocation) {
+                    if (p0.radius > MIN_ACCURACY) return
+                    if (isFirstLocate) {
+                        val location =
+                            getMostAccuracyLocation(ll) ?: return
+                        points.add(location)
+                        mBaiduMap.addOverlay(MarkerOptions().position(ll).icon(startBD))
+                        isFirstLocate = false
+                        setProgress(false)
+                        binding.runTimeText.visibility = View.VISIBLE
+                        binding.statisticLayout.visibility = View.VISIBLE
+                        if (MyApplication.isConnect) {
+                            DeviceUtil.startRealtime(viewModel.address)
+                        }
+                        MyApplication.mode = RunMode.Aerobics
+                    } else {
+                        val distance = getDistance(ll, lastPoint).toFloat()
+                        runTime.value = runTime.value!! + 1
+                        runSpeed.value = p0.speed
+                        runHeart.value = MyApplication.heartRate
+                        if (distance > MIN_DISTANCE) {
+                            runDistance.value = runDistance.value!! + distance
+                            points.add(ll)
+                            lastPoint = ll
+                            mBaiduMap.apply {
+                                clear()
+                                addOverlay(MarkerOptions().position(ll).icon(startBD))
+                                addOverlay(
+                                    PolylineOptions().width(10).color(-0x55010000).points(
+                                        points
+                                    )
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    companion object {
+        private const val MAX_DISTANCE = 10
+        private const val MIN_DISTANCE = 5
+        private const val MIN_NUMBER = 5
+        private const val MIN_ACCURACY = 40
+    }
 }

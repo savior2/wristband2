@@ -26,6 +26,21 @@ class DailyHeart {
 }
 
 @Entity(tableName = "aerobics_summary")
-class AerobicsSummary{
+class AerobicsSummary {
+    @PrimaryKey(autoGenerate = true)
+    var id = 0
+    @ColumnInfo(name = "student_id")
+    var sid = ""
+    @ColumnInfo(name = "device_id")
+    var deviceId = ""
+    @ColumnInfo(name = "start_utc")
+    var startUtc = 0L
+    @ColumnInfo(name = "status")
+    var status = 0
 
+    constructor(sid: String, deviceId: String, startUtc: Long) {
+        this.sid = sid
+        this.deviceId = deviceId
+        this.startUtc = startUtc
+    }
 }

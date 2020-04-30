@@ -5,9 +5,10 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.zjut.wristband2.MyApplication
 
-@Database(entities = [DailyHeart::class], version = 1)
+@Database(entities = [DailyHeart::class, AerobicsSummary::class], version = 2)
 abstract class MyDatabase : RoomDatabase() {
     abstract fun getDailyHeartDao(): DailyHeartDao
+    abstract fun getAerobicsSummaryDao(): AerobicsSummaryDao
 
     companion object {
         val instance by lazy {

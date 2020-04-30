@@ -16,3 +16,9 @@ interface DailyHeartDao {
     @Query("select * from daily_heart where utc>=:begin and utc<=:end and device_id=:device order by utc asc")
     fun findByUtcAndDevice(begin: Long, end: Long, device: String): List<DailyHeart>
 }
+
+@Dao
+interface AerobicsSummaryDao {
+    @Insert
+    fun insert(p: AerobicsSummary): Long
+}
