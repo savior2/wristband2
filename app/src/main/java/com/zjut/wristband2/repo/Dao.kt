@@ -44,3 +44,34 @@ interface AerobicsPositionDao {
     @Query("select * from aerobics_position where summary_id = :id order by utc asc")
     fun findBySummaryId(id: Long): List<AerobicsPosition>
 }
+
+@Dao
+interface SportsSummaryDao {
+    @Insert
+    fun insert(p: SportsSummary): Long
+
+    @Update
+    fun update(p: SportsSummary)
+
+    @Query("select * from sports_summary where id = :id")
+    fun findById(id: Long): SportsSummary
+}
+
+
+@Dao
+interface SportsPositionDao {
+    @Insert
+    fun insert(vararg p: SportsPosition)
+}
+
+@Dao
+interface SportsHeartDao {
+    @Insert
+    fun insert(vararg p: SportsHeart)
+
+    @Update
+    fun update(vararg p: SportsHeart)
+
+    @Query("select * from sports_heart where sports_id = :id and status = 0 order by utc asc")
+    fun findBySportsId(id: Long): List<SportsHeart>
+}

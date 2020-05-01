@@ -18,6 +18,7 @@ import com.zjut.wristband2.error.WCode
 import com.zjut.wristband2.repo.AerobicsHeart
 import com.zjut.wristband2.repo.DailyHeart
 import com.zjut.wristband2.repo.MyDatabase
+import com.zjut.wristband2.repo.SportsHeart
 import com.zjut.wristband2.task.DeviceConnectTask
 import com.zjut.wristband2.task.TaskListener
 import com.zjut.wristband2.util.DeviceUtil
@@ -27,7 +28,6 @@ import com.zjut.wristband2.util.TimeTransfer
 import com.zjut.wristband2.vm.HomeActivityVM
 import kotlinx.android.synthetic.main.cell_device.view.*
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 class DeviceAdapter(
@@ -188,7 +188,15 @@ class MyDataCallback(
                     }.start()
                 }
                 RunMode.Normal -> {
-
+                    Thread {
+                        MyDatabase.instance.getSportsHeartDao().insert(
+                            SportsHeart(
+                                MyApplication.num,
+                                p1.heartRates[0] as Int,
+                                p1.utc
+                            )
+                        )
+                    }.start()
                 }
             }
         }
