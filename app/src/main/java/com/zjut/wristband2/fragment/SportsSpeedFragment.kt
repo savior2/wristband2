@@ -11,13 +11,14 @@ import com.zjut.wristband2.R
 /**
  * A simple [Fragment] subclass.
  */
-class ToWeekFragment : Fragment() {
+class SportsSpeedFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_to_week, container, false)
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_sports_speed, container, false)
     }
 
 }

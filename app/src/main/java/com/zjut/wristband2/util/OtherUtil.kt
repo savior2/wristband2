@@ -6,7 +6,7 @@ import kotlin.math.*
 
 object TimeTransfer {
     fun utc2Date(utc: Long) = Date(utc * 1000)
-    fun utcMillion2Date(utc: Long) = Date()
+    fun utcMillion2Date(utc: Long) = Date(utc)
 
     fun date2Utc(date: Date) = date2UtcMillion(date) / 1000
     fun date2UtcMillion(date: Date) = Calendar.getInstance().apply {

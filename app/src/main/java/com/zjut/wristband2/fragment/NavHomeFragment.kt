@@ -30,13 +30,16 @@ class NavHomeFragment : Fragment() {
         Item(4, "有氧能力", R.drawable.ic_nav_home_health)
     )
 
+    private lateinit var parent2: View
+
     private lateinit var viewModel: HomeActivityVM
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_nav_home, container, false)
+        parent2 = inflater.inflate(R.layout.fragment_nav_home, container, false)
+        return parent2
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -59,7 +62,12 @@ class NavHomeFragment : Fragment() {
                     DividerItemDecoration.VERTICAL
                 )
             )
-            adapter = NavHomeAdapter(this@NavHomeFragment.requireContext(), array)
+            adapter = NavHomeAdapter(
+                this@NavHomeFragment.requireContext(),
+                array,
+                parent2,
+                requireActivity().window
+            )
         }
     }
 

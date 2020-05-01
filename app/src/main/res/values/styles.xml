@@ -35,4 +35,9 @@
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
+    <style name="AnimTheme">
+        <item name="android:windowEnterAnimation">@anim/pop_window_in</item>
+        <item name="android:windowExitAnimation">@anim/pop_window_exit</item>
+    </style>
+
 </resources>

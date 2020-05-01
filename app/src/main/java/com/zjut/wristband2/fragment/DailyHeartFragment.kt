@@ -23,8 +23,8 @@ import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.utils.MPPointF
 import com.zjut.wristband2.R
 import com.zjut.wristband2.repo.DailyHeart
-import com.zjut.wristband2.task.DailyHeartListener
 import com.zjut.wristband2.task.DailyHeartTask
+import com.zjut.wristband2.task.SimpleTaskListener
 import com.zjut.wristband2.util.TimeTransfer
 import com.zjut.wristband2.vm.DailyHeartActivityVM
 import kotlinx.android.synthetic.main.fragment_daily_heart.*
@@ -112,7 +112,7 @@ class DailyHeartFragment : Fragment() {
             clear()
             animateX(2500)
         }
-        DailyHeartTask(object : DailyHeartListener {
+        DailyHeartTask(object : SimpleTaskListener {
             override fun onSuccess(list: List<DailyHeart>) {
                 if (list.isEmpty()) return
                 array = list

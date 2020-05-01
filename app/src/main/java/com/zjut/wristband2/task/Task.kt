@@ -1,7 +1,6 @@
 package com.zjut.wristband2.task
 
 import android.os.AsyncTask
-import android.util.Log
 import com.google.gson.Gson
 import com.zjut.wristband2.MyApplication
 import com.zjut.wristband2.error.WCode
@@ -9,7 +8,6 @@ import com.zjut.wristband2.repo.*
 import com.zjut.wristband2.util.SpUtil
 import com.zjut.wristband2.util.TimeTransfer
 import com.zjut.wristband2.util.WebUtil
-import java.lang.StringBuilder
 import java.util.*
 
 class LoginTask(
@@ -65,7 +63,7 @@ class DeviceConnectTask(
 
 
 class DailyHeartTask(
-    private val listener: DailyHeartListener
+    private val listener: SimpleTaskListener
 ) : AsyncTask<Date, Void, List<DailyHeart>>() {
     override fun doInBackground(vararg p0: Date): List<DailyHeart> {
         val start = TimeTransfer.date2Utc(p0[0])
@@ -230,6 +228,7 @@ class PostSportsFinalTask(
         super.onPreExecute()
         listener.onStart()
     }
+
     //运功时间、运动距离
     override fun doInBackground(vararg p0: String): WCode {
         val summary = MyDatabase.instance.getSportsSummaryDao().findById(MyApplication.num)
@@ -260,8 +259,35 @@ class PostSportsFinalTask(
             maxHeartRate = summary.maxHeartRate.toString(),
             avgHeartRate = summary.avgHeartRate.toString()
         )
-        Log.e("test2", Gson().toJson(info))
         return WebUtil.postNormalSports(Gson().toJson(info))
     }
 }
 
+
+class PickDateTask(
+    private val listener: PickDateTaskListener
+) : AsyncTask<Long, Void, Boolean>() {
+    override fun doInBackground(vararg p0: Long?): Boolean {
+        val s = MyDatabase.instance.getSportsSummaryDao()
+            .findByTime(p0[0]!!, p0[1]!!)
+        return s.isEmpty()
+    }
+
+    override fun onPostExecute(result: Boolean) {
+        super.onPostExecute(result)
+        listener.onSuccess(result)
+    }
+}
+
+
+class SummaryOneDayTask(
+    private val listener: SummaryOneDayTaskListener
+) : AsyncTask<Long, Void, List<SportsSummary>>() {
+    override fun doInBackground(vararg p0: Long?) = MyDatabase.instance.getSportsSummaryDao()
+        .findByTime(p0[0]!!, p0[1]!!)
+
+    override fun onPostExecute(result: List<SportsSummary>) {
+        super.onPostExecute(result)
+        listener.onSuccess(result)
+    }
+}
