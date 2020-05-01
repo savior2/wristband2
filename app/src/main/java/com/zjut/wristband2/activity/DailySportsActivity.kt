@@ -24,6 +24,7 @@ import com.zjut.wristband2.R
 import com.zjut.wristband2.databinding.ActivityDailySportsBinding
 import com.zjut.wristband2.error.WCode
 import com.zjut.wristband2.repo.SportsPosition
+import com.zjut.wristband2.task.PostSportsFinalTask
 import com.zjut.wristband2.task.PostSportsRealTimeTask
 import com.zjut.wristband2.task.SportsSummaryTask
 import com.zjut.wristband2.task.TaskListener
@@ -158,6 +159,40 @@ class DailySportsActivity : AppCompatActivity(), SensorEventListener {
                                     )
                                 )
                                 points.clear()
+                                PostSportsRealTimeTask(object : TaskListener {
+                                    override fun onStart() {}
+
+                                    override fun onSuccess() {
+                                        positions.clear()
+                                        PostSportsFinalTask(object : TaskListener {
+                                            override fun onStart() {
+                                                setProgress(true, "正在上传...")
+                                            }
+
+                                            override fun onSuccess() {
+                                                setProgress(false)
+                                                toast(this@DailySportsActivity, "上传成功!")
+                                            }
+
+                                            override fun onFail(code: WCode) {
+                                                setProgress(false)
+                                                toast(
+                                                    this@DailySportsActivity,
+                                                    "上传失败！${code.error}"
+                                                )
+                                            }
+
+                                        }).execute(
+                                            runTime.value!!.toString(),
+                                            runDistance.value!!.toString()
+                                        )
+                                    }
+
+                                    override fun onFail(code: WCode) {
+                                        toast(this@DailySportsActivity, "上传失败！${code.error}")
+                                    }
+
+                                }).execute(*positions.toTypedArray())
                             }
                         }
 

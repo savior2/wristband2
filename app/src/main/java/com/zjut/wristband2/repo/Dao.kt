@@ -73,5 +73,8 @@ interface SportsHeartDao {
     fun update(vararg p: SportsHeart)
 
     @Query("select * from sports_heart where sports_id = :id and status = 0 order by utc asc")
+    fun findBySportsIdAndStatus(id: Long): List<SportsHeart>
+
+    @Query("select * from sports_heart where sports_id = :id  order by rate desc")
     fun findBySportsId(id: Long): List<SportsHeart>
 }
