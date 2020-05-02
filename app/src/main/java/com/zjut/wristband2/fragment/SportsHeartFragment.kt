@@ -14,15 +14,18 @@ import com.github.mikephil.charting.components.LimitLine
 import com.github.mikephil.charting.components.MarkerView
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
-import com.github.mikephil.charting.data.Entry
-import com.github.mikephil.charting.data.LineData
-import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.data.*
+import com.github.mikephil.charting.formatter.IAxisValueFormatter
+import com.github.mikephil.charting.formatter.IValueFormatter
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.utils.MPPointF
 import com.zjut.wristband2.R
 import com.zjut.wristband2.repo.SportsHeart
+import com.zjut.wristband2.repo.SportsSummary
 import com.zjut.wristband2.task.SportsHeartListener
 import com.zjut.wristband2.task.SportsHeartTask
+import com.zjut.wristband2.task.SportsPositionTask2
+import com.zjut.wristband2.task.SportsPositionTask2Listener
 import com.zjut.wristband2.util.TimeTransfer
 import com.zjut.wristband2.vm.SummaryOnceActivityVM
 import kotlinx.android.synthetic.main.activity_summary_once.*
@@ -38,6 +41,7 @@ class SportsHeartFragment : Fragment() {
 
     private lateinit var myMarkerView: MyMarkerView
     private val array = arrayListOf<SportsHeart>()
+    private val array2 = arrayListOf<Float>()
 
     private var mAge = 24
     private var h0 = 0
@@ -125,7 +129,21 @@ class SportsHeartFragment : Fragment() {
     }
 
     private fun initBarChart() {
-
+        val labelName = listOf("放松", "热身", "基础", "高效", "冲刺")
+        barChart.apply {
+            setNoDataText("无运动数据")
+            description.isEnabled = false
+            legend.isEnabled = false
+            setExtraOffsets(20F, 20F, 20F, 20F)
+            animateY(1400)
+        }
+        barChart.xAxis.apply {
+            position = XAxis.XAxisPosition.BOTTOM
+            setDrawGridLines(false)
+            labelCount = 5
+            valueFormatter = IAxisValueFormatter { value, _ -> labelName[value.toInt()] }
+            yOffset = 15F
+        }
     }
 
     private fun setData() {
@@ -148,10 +166,60 @@ class SportsHeartFragment : Fragment() {
                     highLightColor = resources.getColor(R.color.orange)
                 }
                 lineChart.data = LineData(set)
+
+                var t1 = 0
+                var t2 = 0
+                var t3 = 0
+                var t4 = 0
+                var t5 = 0
+                for (i in array.indices) {
+                    when {
+                        array[i].rate <= h1 -> ++t1
+                        array[i].rate <= h2 -> ++t2
+                        array[i].rate <= h3 -> ++t3
+                        array[i].rate <= h4 -> ++t4
+                        else -> ++t5
+                    }
+                }
+                array2.add(t1.toFloat() / 60)
+                array2.add(t2.toFloat() / 60)
+                array2.add(t3.toFloat() / 60)
+                array2.add(t4.toFloat() / 60)
+                array2.add(t5.toFloat() / 60)
+
+                val entries2 = arrayListOf<BarEntry>()
+                for (i in array2.indices) {
+                    entries2.add(BarEntry(i.toFloat(), array2[i]))
+                }
+                val bSet = BarDataSet(entries2, "").apply {
+                    valueTextSize = 12F
+                    colors = getColors2()
+                    valueFormatter = IValueFormatter { value, _, _, _ ->
+                        "${String.format("%.2f", value)}min"
+                    }
+                }
+                barChart.data = BarData(bSet)
+            }
+
+        }).execute(viewModel.id)
+
+        SportsPositionTask2(object : SportsPositionTask2Listener {
+            @SuppressLint("SetTextI18n")
+            override fun onSuccess(p: SportsSummary) {
+                maxHeart.text = "最高心率：${p.maxHeartRate}次/分"
+                avgHeart.text = "平均心率：${p.avgHeartRate}次/分"
             }
 
         }).execute(viewModel.id)
     }
+
+    private fun getColors2() = arrayListOf(
+        resources.getColor(R.color.light_grey),
+        resources.getColor(R.color.light_blue),
+        resources.getColor(R.color.light_green),
+        resources.getColor(R.color.light_orange),
+        resources.getColor(R.color.light_red)
+    )
 
     override fun onResume() {
         super.onResume()

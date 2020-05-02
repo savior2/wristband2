@@ -38,4 +38,26 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline13" />
 
+    <TextView
+        android:id="@+id/maxHeart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/avgHeart"
+        app:layout_constraintEnd_toEndOf="@+id/avgHeart"
+        app:layout_constraintStart_toStartOf="@+id/avgHeart"
+        app:layout_constraintTop_toBottomOf="@+id/barChart" />
+
+    <TextView
+        android:id="@+id/avgHeart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/maxHeart" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
