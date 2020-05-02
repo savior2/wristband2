@@ -2,9 +2,7 @@ package com.zjut.wristband2.activity
 
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.adapter.FragmentStateAdapter
@@ -13,7 +11,6 @@ import com.zjut.wristband2.R
 import com.zjut.wristband2.fragment.SportsHeartFragment
 import com.zjut.wristband2.fragment.SportsSpeedFragment
 import com.zjut.wristband2.fragment.SportsTraceFragment
-import com.zjut.wristband2.repo.SportsHeart
 import com.zjut.wristband2.vm.SummaryOnceActivityVM
 import kotlinx.android.synthetic.main.activity_summary_once.*
 

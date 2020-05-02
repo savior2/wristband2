@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 
 import com.zjut.wristband2.R
+import kotlinx.android.synthetic.main.activity_summary_once.*
 
 /**
  * A simple [Fragment] subclass.
@@ -21,4 +22,8 @@ class SportsHeartFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_sports_heart, container, false)
     }
 
+    override fun onResume() {
+        super.onResume()
+        requireActivity().viewPager2.isUserInputEnabled = true
+    }
 }

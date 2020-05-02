@@ -57,7 +57,7 @@ interface SportsSummaryDao {
     @Query("select * from sports_summary where id = :id")
     fun findById(id: Long): SportsSummary
 
-    @Query("select * from sports_summary where start_utc>= :start and start_utc <= :end order by id")
+    @Query("select * from sports_summary where start_utc>= :start and start_utc <= :end and exercise_time>10 order by id")
     fun findByTime(start: Long, end: Long): List<SportsSummary>
 }
 
@@ -67,8 +67,8 @@ interface SportsPositionDao {
     @Insert
     fun insert(vararg p: SportsPosition)
 
-    @Query("select * from sports_position where sports_id = :id  order by id desc")
-    fun findBySportsId(id: Long): LiveData<List<SportsPosition>>
+    @Query("select * from sports_position where sports_id = :id  order by id asc")
+    fun findBySportsId(id: Long): List<SportsPosition>
 }
 
 @Dao
@@ -85,6 +85,6 @@ interface SportsHeartDao {
     @Query("select * from sports_heart where sports_id = :id  order by rate desc")
     fun findBySportsId(id: Long): List<SportsHeart>
 
-    @Query("select * from sports_heart where sports_id = :id  order by id desc")
-    fun findBySportsId2(id: Long): LiveData<List<SportsHeart>>
+    @Query("select * from sports_heart where sports_id = :id  order by id asc")
+    fun findBySportsId2(id: Long): List<SportsHeart>
 }

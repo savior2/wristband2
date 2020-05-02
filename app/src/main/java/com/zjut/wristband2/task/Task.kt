@@ -1,6 +1,7 @@
 package com.zjut.wristband2.task
 
 import android.os.AsyncTask
+import android.util.Log
 import com.google.gson.Gson
 import com.zjut.wristband2.MyApplication
 import com.zjut.wristband2.error.WCode
@@ -287,6 +288,19 @@ class SummaryOneDayTask(
         .findByTime(p0[0]!!, p0[1]!!)
 
     override fun onPostExecute(result: List<SportsSummary>) {
+        super.onPostExecute(result)
+        listener.onSuccess(result)
+    }
+}
+
+
+class SportsPositionTask(
+    private val listener: SportsPositionTaskListener
+) : AsyncTask<Long, Void, List<SportsPosition>>() {
+    override fun doInBackground(vararg p0: Long?) =
+        MyDatabase.instance.getSportsPositionDao().findBySportsId(p0[0]!!)
+
+    override fun onPostExecute(result: List<SportsPosition>) {
         super.onPostExecute(result)
         listener.onSuccess(result)
     }

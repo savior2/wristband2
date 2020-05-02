@@ -3,6 +3,7 @@ package com.zjut.wristband2.task
 import android.os.AsyncTask
 import com.zjut.wristband2.error.WCode
 import com.zjut.wristband2.repo.DailyHeart
+import com.zjut.wristband2.repo.SportsPosition
 import com.zjut.wristband2.repo.SportsSummary
 
 abstract class BasicTask(private val listener: TaskListener) : AsyncTask<String, Void, WCode>() {
@@ -37,4 +38,8 @@ interface PickDateTaskListener {
 
 interface SummaryOneDayTaskListener {
     fun onSuccess(p: List<SportsSummary>)
+}
+
+interface SportsPositionTaskListener {
+    fun onSuccess(p: List<SportsPosition>)
 }
