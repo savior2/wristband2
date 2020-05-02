@@ -305,3 +305,28 @@ class SportsPositionTask(
         listener.onSuccess(result)
     }
 }
+
+class SportsPositionTask2(
+    private val listener: SportsPositionTask2Listener
+) : AsyncTask<Long, Void, SportsSummary>() {
+    override fun doInBackground(vararg p0: Long?) = MyDatabase.instance.getSportsSummaryDao()
+        .findById(p0[0]!!)
+
+    override fun onPostExecute(result: SportsSummary) {
+        super.onPostExecute(result)
+        listener.onSuccess(result)
+    }
+}
+
+
+class SportsHeartTask(
+    private val listener: SportsHeartListener
+) : AsyncTask<Long, Void, List<SportsHeart>>() {
+    override fun doInBackground(vararg p0: Long?) =
+        MyDatabase.instance.getSportsHeartDao().findBySportsId2(p0[0]!!)
+
+    override fun onPostExecute(result: List<SportsHeart>) {
+        super.onPostExecute(result)
+        listener.onSuccess(result)
+    }
+}

@@ -3,6 +3,7 @@ package com.zjut.wristband2.task
 import android.os.AsyncTask
 import com.zjut.wristband2.error.WCode
 import com.zjut.wristband2.repo.DailyHeart
+import com.zjut.wristband2.repo.SportsHeart
 import com.zjut.wristband2.repo.SportsPosition
 import com.zjut.wristband2.repo.SportsSummary
 
@@ -42,4 +43,13 @@ interface SummaryOneDayTaskListener {
 
 interface SportsPositionTaskListener {
     fun onSuccess(p: List<SportsPosition>)
+}
+
+interface SportsPositionTask2Listener {
+    fun onSuccess(p: SportsSummary)
+}
+
+
+interface SportsHeartListener {
+    fun onSuccess(p: List<SportsHeart>)
 }

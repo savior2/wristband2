@@ -17,4 +17,8 @@
     <color name="orange">#FFD08C</color>
     <color name="green">#08FF00</color>
     <color name="purple">#800080</color>
+
+    <color name="light_green">#C0FF8C</color>
+    <color name="light_orange">#F3B65F</color>
+    <color name="light_red">#FF3C3C</color>
 </resources>
