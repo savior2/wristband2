@@ -9,7 +9,7 @@ object TimeTransfer {
     fun utcMillion2Date(utc: Long) = Date(utc)
 
     fun date2Utc(date: Date) = date2UtcMillion(date) / 1000
-    fun date2UtcMillion(date: Date) = Calendar.getInstance().apply {
+    private fun date2UtcMillion(date: Date) = Calendar.getInstance().apply {
         time = date
         set(Calendar.HOUR_OF_DAY, 0)
         set(Calendar.MINUTE, 0)
@@ -20,7 +20,40 @@ object TimeTransfer {
     fun nowUtcMillion() = Calendar.getInstance().apply {
         time = Date()
     }.time.time
+
+    fun getTodayTimeSpan() = with(date2UtcMillion(Date())) {
+        TimeSpan(this, this + 86400000)
+    }
+
+    fun getToMonthTimeSpan() = with(Calendar.getInstance()) {
+        time = Date()
+        set(Calendar.HOUR_OF_DAY, 0)
+        set(Calendar.MINUTE, 0)
+        set(Calendar.SECOND, 0)
+        set(Calendar.DAY_OF_MONTH, 1)
+        TimeSpan(time.time, date2UtcMillion(Date()) + 86400000)
+    }
+
+    fun getToWeekTimeSpan() = with(Calendar.getInstance()) {
+        time = Date()
+        val dayOfWeek =
+            if (get(Calendar.DAY_OF_WEEK) - 1 == 0)
+                7
+            else
+                get(Calendar.DAY_OF_WEEK) - 1
+        set(Calendar.HOUR_OF_DAY, 0)
+        set(Calendar.MINUTE, 0)
+        set(Calendar.SECOND, 0)
+        add(Calendar.DATE, 1 - dayOfWeek)
+        TimeSpan(time.time, date2UtcMillion(Date()) + 86400000)
+    }
+
+    data class TimeSpan(
+        val startTime: Long,
+        val endTime: Long
+    )
 }
+
 
 enum class RunMode {
     Stop,

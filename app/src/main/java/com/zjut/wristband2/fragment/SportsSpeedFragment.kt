@@ -98,9 +98,12 @@ class SportsSpeedFragment : Fragment() {
 
     private fun setData() {
         SportsPositionTask(object : SportsPositionTaskListener {
+            @SuppressLint("SetTextI18n")
             override fun onSuccess(p: List<SportsPosition>) {
+                var sumSpeed = 0F
                 for (i in p) {
                     array.add(Speed(String.format("%.2f", i.speed).toFloat(), i.utc))
+                    sumSpeed += i.speed
                 }
                 val entries = arrayListOf<Entry>()
                 for (i in array.indices) {
@@ -116,6 +119,10 @@ class SportsSpeedFragment : Fragment() {
                     highLightColor = resources.getColor(R.color.orange)
                 }
                 lineChart.data = LineData(set)
+                val maxSpeed = array.maxBy { it.speed }!!.speed
+                val avgSpeed = String.format("%.2f", sumSpeed / array.size).toFloat()
+                maxSpeedText.text = "最高速度：${maxSpeed}km/h"
+                avgSpeedText.text = "平均速度：${avgSpeed}km/h"
             }
 
         }).execute(viewModel.id)

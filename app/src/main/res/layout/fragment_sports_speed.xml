@@ -30,9 +30,10 @@
         android:text="TextView"
         android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/runDistanceText"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/guideline15" />
+        app:layout_constraintEnd_toEndOf="@+id/runDistanceText"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/runDistanceText"
+        app:layout_constraintTop_toBottomOf="@+id/lineChart" />
 
     <TextView
         android:id="@+id/runDistanceText"
@@ -40,10 +41,10 @@
         android:layout_height="wrap_content"
         android:text="TextView"
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline16"
-        app:layout_constraintEnd_toEndOf="@+id/runTimeText"
+        app:layout_constraintBottom_toTopOf="@+id/maxSpeedText"
+        app:layout_constraintEnd_toEndOf="@+id/maxSpeedText"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/runTimeText"
+        app:layout_constraintStart_toStartOf="@+id/maxSpeedText"
         app:layout_constraintTop_toBottomOf="@+id/runTimeText" />
 
     <androidx.constraintlayout.widget.Guideline
@@ -51,6 +52,29 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.75" />
+        app:layout_constraintGuide_percent="0.9" />
+
+    <TextView
+        android:id="@+id/maxSpeedText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/avgSpeedText"
+        app:layout_constraintEnd_toEndOf="@+id/avgSpeedText"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/avgSpeedText"
+        app:layout_constraintTop_toBottomOf="@+id/runDistanceText" />
+
+    <TextView
+        android:id="@+id/avgSpeedText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline16"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/maxSpeedText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
