@@ -95,7 +95,7 @@ class ToMonthFragment : Fragment() {
 
 
     private fun setData() {
-        val span = TimeTransfer.getToWeekTimeSpan()
+        val span = TimeTransfer.getToMonthTimeSpan()
         SummaryOneDayTask(object : SummaryOneDayTaskListener {
             @SuppressLint("SetTextI18n")
             override fun onSuccess(p: List<SportsSummary>) {

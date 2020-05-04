@@ -43,6 +43,10 @@ class NavHomeAdapter(
                         normalStatic()
                     }
                     4 -> {
+                        AlertDialog.Builder(context)
+                            .setTitle("你的有氧运动能力为：良好")
+                            .setPositiveButton("确定") { _, _ -> }
+                            .create().show()
                     }
                 }
             }

@@ -9,6 +9,7 @@ import androidx.core.view.GravityCompat
 import androidx.navigation.Navigation
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
+import cn.sharesdk.onekeyshare.OnekeyShare
 import com.zjut.wristband2.R
 import kotlinx.android.synthetic.main.activity_home.*
 
@@ -44,6 +45,13 @@ class HomeActivity : AppCompatActivity() {
             }
             R.id.item_version -> {
                 startActivity(Intent(this, VersionActivity::class.java))
+            }
+            R.id.item_share -> {
+                val oks = OnekeyShare().apply {
+                    text = "测试"
+                    setUrl("http://www.meetpanda.xyz")
+                }
+                oks.show(this)
             }
         }
         return super.onOptionsItemSelected(item)
