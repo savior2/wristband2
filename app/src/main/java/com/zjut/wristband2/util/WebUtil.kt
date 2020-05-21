@@ -2,6 +2,7 @@ package com.zjut.wristband2.util
 
 import android.content.Context
 import android.net.ConnectivityManager
+import android.util.Log
 import com.zjut.wristband2.MyApplication
 import com.zjut.wristband2.error.WCode
 import okhttp3.FormBody
@@ -13,13 +14,15 @@ import org.json.JSONException
 import org.json.JSONObject
 
 object WebUtil {
+    private const val KEY = "oldShouHuan511ok"
     fun login(sid: String, password: String): WCode {
         if (!isNetworkConnected()) {
             return WCode.NetworkError
         }
+        val keyContent = AesUtil.AESEncode(KEY, "$sid&$password")
         WebBasic.doPost(
             WebBasic.DOMAIN + WebBasic.LOGIN_URI,
-            mapOf("username" to sid, "password" to password)
+            mapOf("content" to keyContent)
         ) {
             try {
                 val jsonObject = JSONObject(it)
@@ -74,13 +77,11 @@ object WebUtil {
         if (!isNetworkConnected()) {
             return WCode.NetworkError
         }
+        val keyContent = AesUtil.AESEncode(KEY, "$sid&$newPassword&$newPassword&$verifyCode")
         WebBasic.doPost(
             WebBasic.DOMAIN + WebBasic.RESET_PASSWORD_URI,
             mapOf(
-                "username" to sid,
-                "newPassword" to newPassword,
-                "newPassword2" to newPassword,
-                "vertifyCode" to verifyCode
+                "content" to keyContent
             )
         ) {
             try {
@@ -108,13 +109,11 @@ object WebUtil {
         if (!isNetworkConnected()) {
             return WCode.NetworkError
         }
+        val keyContent = AesUtil.AESEncode(KEY, "$sid&$oldPassword&$newPassword&$newPassword")
         WebBasic.doPost(
             WebBasic.DOMAIN + WebBasic.MODIFY_PASSWORD_URI,
             mapOf(
-                "username" to sid,
-                "oldPassword" to oldPassword,
-                "newPassword" to newPassword,
-                "newPassword2" to newPassword
+                "content" to keyContent
             )
         ) {
             try {
