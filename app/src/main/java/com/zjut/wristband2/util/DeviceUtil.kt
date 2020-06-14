@@ -7,6 +7,7 @@ import com.lifesense.ble.SearchCallback
 import com.lifesense.ble.bean.LsDeviceInfo
 import com.lifesense.ble.bean.constant.BroadcastType
 import com.lifesense.ble.bean.constant.DeviceType
+import com.lifesense.ble.bean.constant.HeartRateDetectionMode
 import com.zjut.wristband2.MyApplication
 
 object DeviceUtil {
@@ -61,6 +62,25 @@ object DeviceUtil {
                 super.onFailure(p0)
             }
         })
+
+
+    fun startHeartRateMonitor(address: String) {
+        instance.updatePedometerHeartDetectionMode(
+            address,
+            HeartRateDetectionMode.values()[1],
+            object :
+                OnSettingListener() {
+            })
+    }
+
+    fun stopHeartRateMonitor(address: String) {
+        instance.updatePedometerHeartDetectionMode(
+            address,
+            HeartRateDetectionMode.values()[0],
+            object :
+                OnSettingListener() {
+            })
+    }
 
     fun init() {
         //init LSBluetoothManager

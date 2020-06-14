@@ -29,8 +29,8 @@ interface TaskListener {
     fun onFail(code: WCode)
 }
 
-interface SimpleTaskListener {
-    fun onSuccess(list: List<DailyHeart>)
+interface SimpleTaskListener<T> {
+    fun onSuccess(p: T)
 }
 
 interface PickDateTaskListener {
@@ -52,4 +52,10 @@ interface SportsPositionTask2Listener {
 
 interface SportsHeartListener {
     fun onSuccess(p: List<SportsHeart>)
+}
+
+interface DownloadListener {
+    fun onSuccess()
+    fun onFail()
+    fun onProgress(p: Int)
 }

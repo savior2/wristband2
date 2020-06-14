@@ -1,6 +1,8 @@
 package com.zjut.wristband2.task
 
 import android.os.AsyncTask
+import android.os.Environment
+import android.util.Log
 import com.google.gson.Gson
 import com.zjut.wristband2.MyApplication
 import com.zjut.wristband2.error.WCode
@@ -8,6 +10,12 @@ import com.zjut.wristband2.repo.*
 import com.zjut.wristband2.util.SpUtil
 import com.zjut.wristband2.util.TimeTransfer
 import com.zjut.wristband2.util.WebUtil
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import java.io.File
+import java.io.InputStream
+import java.io.RandomAccessFile
+import java.lang.Exception
 import java.util.*
 
 class LoginTask(
@@ -63,7 +71,7 @@ class DeviceConnectTask(
 
 
 class DailyHeartTask(
-    private val listener: SimpleTaskListener
+    private val listener: SimpleTaskListener<List<DailyHeart>>
 ) : AsyncTask<Date, Void, List<DailyHeart>>() {
     override fun doInBackground(vararg p0: Date): List<DailyHeart> {
         val start = TimeTransfer.date2Utc(p0[0])
@@ -335,4 +343,88 @@ class SportsHeartTask(
         listener.onSuccess(result)
     }
 }
+
+
+class VersionTask(
+    private val listener: SimpleTaskListener<Version?>
+) : AsyncTask<Void, Void, Version?>() {
+    override fun doInBackground(vararg params: Void?): Version? = WebUtil.getVersion()
+
+    override fun onPostExecute(result: Version?) = listener.onSuccess(result)
+}
+
+
+class DownloadTask(private val listener: DownloadListener) : AsyncTask<String, Int, Int>() {
+
+    private var last = 0
+    override fun doInBackground(vararg params: String?): Int {
+        var input: InputStream? = null
+        val path =
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).path
+        val file = File(path, "wristband.apk")
+        val saved = RandomAccessFile(file, "rw")
+        val url = params[0]!!
+        val contentLength = getContentLength(url)
+        val request = Request.Builder()
+            .url(url)
+            .build()
+        val response = OkHttpClient()
+            .newCall(request)
+            .execute()
+        try {
+            input = response.body!!.byteStream()
+            val byte = ByteArray(1024)
+            var total = 0
+            var len = 0
+            while (true) {
+                len = input.read(byte)
+                if (len == -1) {
+                    break
+                }
+                total += len
+                saved.write(byte, 0, len)
+                val p = (total * 100 / contentLength).toInt()
+                publishProgress(p)
+            }
+            return 0
+        } catch (e: Exception) {
+            return 1
+        } finally {
+            input?.close()
+            saved.close()
+            response.close()
+        }
+    }
+
+    override fun onPostExecute(result: Int) {
+        super.onPostExecute(result)
+        when (result) {
+            0 -> listener.onSuccess()
+            1 -> listener.onFail()
+        }
+    }
+
+    override fun onProgressUpdate(vararg values: Int?) {
+        super.onProgressUpdate(*values)
+        val v = values[0]!!
+        if (v > last) {
+            listener.onProgress(v)
+            last = v
+        }
+    }
+
+    private fun getContentLength(url: String): Long {
+        val request = Request.Builder()
+            .url(url)
+            .build()
+        val response = OkHttpClient()
+            .newCall(request)
+            .execute()
+        val length = response.body?.contentLength() ?: 0
+        response.close()
+        return length
+    }
+}
+
+
 

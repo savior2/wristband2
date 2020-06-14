@@ -1,5 +1,8 @@
 package com.zjut.wristband2.repo
 
+import com.google.gson.annotations.SerializedName
+import java.io.Serializable
+
 data class AerobicsJson(
     val token: String,
     val studentId: String,
@@ -39,3 +42,12 @@ data class SportsSummaryJson(
     val maxStepRate: String = "0.0",
     val avgStepRate: String = "0.0"
 )
+
+data class Version(
+    @SerializedName("newVersion")
+    val newVersion: String,
+    @SerializedName("updateInfo")
+    val updateInfo: String,
+    @SerializedName("url")
+    val url: String
+) : Serializable

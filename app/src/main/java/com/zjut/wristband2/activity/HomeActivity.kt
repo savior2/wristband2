@@ -2,6 +2,7 @@ package com.zjut.wristband2.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -11,6 +12,9 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import cn.sharesdk.onekeyshare.OnekeyShare
 import com.zjut.wristband2.R
+import com.zjut.wristband2.repo.Version
+import com.zjut.wristband2.task.SimpleTaskListener
+import com.zjut.wristband2.task.VersionTask
 import kotlinx.android.synthetic.main.activity_home.*
 
 class HomeActivity : AppCompatActivity() {
@@ -44,7 +48,19 @@ class HomeActivity : AppCompatActivity() {
                 startActivity(Intent(this, FeedbackActivity::class.java))
             }
             R.id.item_version -> {
-                startActivity(Intent(this, VersionActivity::class.java))
+                VersionTask(object : SimpleTaskListener<Version?> {
+                    override fun onSuccess(p: Version?) {
+                        val intent = Intent(this@HomeActivity, VersionActivity::class.java)
+                        Log.e("test", "result:$p")
+                        if (p != null) {
+                            intent.putExtra("latest", false)
+                            intent.putExtra("data", p)
+                        } else {
+                            intent.putExtra("latest", true)
+                        }
+                        startActivity(intent)
+                    }
+                }).execute()
             }
             R.id.item_share -> {
                 val oks = OnekeyShare().apply {

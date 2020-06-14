@@ -1,28 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white">
 
-
-    <DatePicker
-        android:id="@+id/date_picker"
-        style="@android:style/Widget.DatePicker"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/weight_wheel_picker"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="20dp"
+        android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent">
+
+        <com.aigestudio.wheelpicker.WheelPicker
+            android:id="@+id/weight_wheel_picker1"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:padding="20dp"
+            app:wheel_atmospheric="true"
+            app:wheel_curtain="true"
+            app:wheel_curved="true"
+            app:wheel_indicator="true"
+            app:wheel_indicator_color="@color/grey_dim"
+            app:wheel_item_space="50dp"
+            app:wheel_item_text_color="@color/grey"
+            app:wheel_item_text_size="20sp"
+            app:wheel_selected_item_text_color="@color/black"
+            app:wheel_visible_item_count="5" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="."
+            android:textSize="35sp" />
+
+        <com.aigestudio.wheelpicker.WheelPicker
+            android:id="@+id/weight_wheel_picker2"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:padding="20dp"
+            app:wheel_atmospheric="true"
+            app:wheel_curtain="true"
+            app:wheel_curved="true"
+            app:wheel_indicator="true"
+            app:wheel_indicator_color="@color/grey_dim"
+            app:wheel_item_space="50dp"
+            app:wheel_item_text_color="@color/grey"
+            app:wheel_item_text_size="20sp"
+            app:wheel_selected_item_text_color="@color/black"
+            app:wheel_visible_item_count="5" />
+
+    </LinearLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="1dp"
         android:background="@color/lighter_grey"
-        app:layout_constraintBottom_toTopOf="@+id/date_picker"
+        app:layout_constraintBottom_toTopOf="@+id/weight_wheel_picker"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -57,10 +94,11 @@
             android:id="@+id/title_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="选择运动日期"
+            android:text="体重"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/confirm"
             app:layout_constraintStart_toEndOf="@+id/cancel"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

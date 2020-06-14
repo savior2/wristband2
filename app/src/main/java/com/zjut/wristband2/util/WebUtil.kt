@@ -2,8 +2,11 @@ package com.zjut.wristband2.util
 
 import android.content.Context
 import android.net.ConnectivityManager
+import com.google.gson.Gson
 import com.zjut.wristband2.MyApplication
+import com.zjut.wristband2.R
 import com.zjut.wristband2.error.WCode
+import com.zjut.wristband2.repo.Version
 import okhttp3.FormBody
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -13,13 +16,15 @@ import org.json.JSONException
 import org.json.JSONObject
 
 object WebUtil {
+    private const val KEY = "oldShouHuan511ok"
     fun login(sid: String, password: String): WCode {
         if (!isNetworkConnected()) {
             return WCode.NetworkError
         }
+        val keyContent = AesUtil.AESEncode(KEY, "$sid&$password")
         WebBasic.doPost(
             WebBasic.DOMAIN + WebBasic.LOGIN_URI,
-            mapOf("username" to sid, "password" to password)
+            mapOf("content" to keyContent)
         ) {
             try {
                 val jsonObject = JSONObject(it)
@@ -74,13 +79,11 @@ object WebUtil {
         if (!isNetworkConnected()) {
             return WCode.NetworkError
         }
+        val keyContent = AesUtil.AESEncode(KEY, "$sid&$newPassword&$newPassword&$verifyCode")
         WebBasic.doPost(
             WebBasic.DOMAIN + WebBasic.RESET_PASSWORD_URI,
             mapOf(
-                "username" to sid,
-                "newPassword" to newPassword,
-                "newPassword2" to newPassword,
-                "vertifyCode" to verifyCode
+                "content" to keyContent
             )
         ) {
             try {
@@ -108,13 +111,11 @@ object WebUtil {
         if (!isNetworkConnected()) {
             return WCode.NetworkError
         }
+        val keyContent = AesUtil.AESEncode(KEY, "$sid&$oldPassword&$newPassword&$newPassword")
         WebBasic.doPost(
             WebBasic.DOMAIN + WebBasic.MODIFY_PASSWORD_URI,
             mapOf(
-                "username" to sid,
-                "oldPassword" to oldPassword,
-                "newPassword" to newPassword,
-                "newPassword2" to newPassword
+                "content" to keyContent
             )
         ) {
             try {
@@ -195,6 +196,25 @@ object WebUtil {
         }
         return WCode.OK
     }
+
+    fun getVersion(): Version? {
+        val version = MyApplication.context.resources.getString(R.string.version_num)
+        WebBasic.doPost(
+            WebBasic.DOMAIN + WebBasic.VERSION_URI, mapOf(
+                "version" to version,
+                "type" to "1"
+            )
+        ) {
+            val jsonObject = JSONObject(it)
+            return if (jsonObject.getBoolean("latest")) {
+                null
+            } else {
+                val data = Gson().fromJson(jsonObject.getString("data"), Version::class.java)
+                data
+            }
+        }
+        return null
+    }
 }
 
 
@@ -214,6 +234,7 @@ private object WebBasic {
     const val RESET_PASSWORD_URI = "/api/sportsEquipment/resetPassword"
     const val MODIFY_PASSWORD_URI = "/api/sportsEquipment/modifyPSWServlet"
     const val FEEDBACK_URI = "/api/sportsEquipment/feedback"
+    const val VERSION_URI = "/api/sportsEquipment/appVersion"
     const val POST_AEROBICS_URI = "/uploadTestData"
     const val POST_NORMAL_SPORTS_URI = "/uploadSportData"
 

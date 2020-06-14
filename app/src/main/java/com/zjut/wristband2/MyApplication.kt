@@ -3,7 +3,6 @@ package com.zjut.wristband2
 import android.app.Application
 import android.content.Context
 import com.baidu.mapapi.SDKInitializer
-import com.lifesense.ble.LsBleManager
 import com.mob.MobSDK
 import com.zjut.wristband2.util.DeviceUtil
 import com.zjut.wristband2.util.RunMode

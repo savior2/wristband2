@@ -42,6 +42,7 @@ class DailyHeartFragment : Fragment() {
 
     @SuppressLint("SimpleDateFormat")
     private val df1 = SimpleDateFormat("yyyy年MM月dd日")
+
     @SuppressLint("SimpleDateFormat")
     private val df2 = SimpleDateFormat("HH:mm")
 
@@ -112,7 +113,7 @@ class DailyHeartFragment : Fragment() {
             clear()
             animateX(2500)
         }
-        DailyHeartTask(object : SimpleTaskListener {
+        DailyHeartTask(object : SimpleTaskListener<List<DailyHeart>> {
             override fun onSuccess(list: List<DailyHeart>) {
                 if (list.isEmpty()) return
                 array = list
@@ -138,6 +139,7 @@ class DailyHeartFragment : Fragment() {
     private inner class MyMarkerView(context: Context, layoutResource: Int) :
         MarkerView(context, layoutResource) {
         private val mHeartRateTextView: TextView = findViewById(R.id.heart_rate_text_view)
+
         @SuppressLint("SetTextI18n")
         override fun refreshContent(e: Entry?, highlight: Highlight?) {
             val date = TimeTransfer.utc2Date(array[e!!.x.toInt()].utc)
