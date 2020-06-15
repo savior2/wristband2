@@ -1,9 +1,6 @@
 package com.zjut.wristband2.util
 
-import com.lifesense.ble.LsBleManager
-import com.lifesense.ble.OnSettingListener
-import com.lifesense.ble.ReceiveDataCallback
-import com.lifesense.ble.SearchCallback
+import com.lifesense.ble.*
 import com.lifesense.ble.bean.LsDeviceInfo
 import com.lifesense.ble.bean.constant.BroadcastType
 import com.lifesense.ble.bean.constant.DeviceType
@@ -80,6 +77,10 @@ object DeviceUtil {
             object :
                 OnSettingListener() {
             })
+    }
+
+    fun readPower(address: String, listener: OnDeviceReadListener) {
+        instance.readDeviceVoltage(address, listener)
     }
 
     fun init() {

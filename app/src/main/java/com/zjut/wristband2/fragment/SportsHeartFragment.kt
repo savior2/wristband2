@@ -26,11 +26,13 @@ import com.zjut.wristband2.task.SportsHeartListener
 import com.zjut.wristband2.task.SportsHeartTask
 import com.zjut.wristband2.task.SportsPositionTask2
 import com.zjut.wristband2.task.SportsPositionTask2Listener
+import com.zjut.wristband2.util.SpUtil
 import com.zjut.wristband2.util.TimeTransfer
 import com.zjut.wristband2.vm.SummaryOnceActivityVM
 import kotlinx.android.synthetic.main.activity_summary_once.*
 import kotlinx.android.synthetic.main.fragment_sports_heart.*
 import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * A simple [Fragment] subclass.
@@ -57,6 +59,10 @@ class SportsHeartFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        val ageUtc = SpUtil.getSp(SpUtil.SpAccount.FILE_NAME).getLong(SpUtil.SpAccount.BIRTHDAY, 0)
+        val age = Date().year - TimeTransfer.utcMillion2Date(ageUtc).year
+        if (age in 1..99)
+            mAge = age
         return inflater.inflate(R.layout.fragment_sports_heart, container, false)
     }
 
