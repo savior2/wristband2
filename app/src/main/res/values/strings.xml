@@ -16,8 +16,8 @@
     <string name="sid_text">学号：%s</string>
     <string name="name_text">姓名：%s</string>
     <string name="sex_text">性别：%s</string>
-    <string name="version_logo">served by zjut\nv2.0.0</string>
-    <string name="version_num">2.0.0</string>
+    <string name="version_logo">served by zjut\nv2.0.1</string>
+    <string name="version_num">2.0.1</string>
     <string name="run_time">%02d:%02d:%02d</string>
     <string name="run_distance">%.2fm</string>
     <string name="run_speed">%.2fkm/h</string>

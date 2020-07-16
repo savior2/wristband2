@@ -362,6 +362,9 @@ class DownloadTask(private val listener: DownloadListener) : AsyncTask<String, I
         val path =
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).path
         val file = File(path, "wristband.apk")
+        if (file.exists()) {
+            file.delete()
+        }
         val saved = RandomAccessFile(file, "rw")
         val url = params[0]!!
         val contentLength = getContentLength(url)

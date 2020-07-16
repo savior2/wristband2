@@ -394,10 +394,10 @@ class DailySportsActivity : AppCompatActivity(), SensorEventListener {
     }
 
     companion object {
-        private const val MAX_DISTANCE = 10     //两个点的最大距离(计算数量)
+        private const val MAX_DISTANCE = 1000     //两个点的最大距离(计算数量)
         private const val MIN_DISTANCE = 5      //两个点的最小距离(计算距离)
-        private const val MIN_NUMBER = 3        //位置点最小数量
-        private const val MIN_ACCURACY = 40     //位置点最小精确度
+        private const val MIN_NUMBER = 2        //位置点最小数量
+        private const val MIN_ACCURACY = 1000 //40     //位置点最小精确度
     }
 }
 

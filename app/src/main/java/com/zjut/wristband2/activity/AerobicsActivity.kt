@@ -342,7 +342,7 @@ class AerobicsActivity : AppCompatActivity(), SensorEventListener {
                 if (isFirstZoom) isFirstZoom = false
             }
             with(viewModel) {
-                if (isStart.value!! && p0.locType == BDLocation.TypeGpsLocation) {
+                if (isStart.value!!) {  //&& p0.locType == BDLocation.TypeGpsLocation
                     if (p0.radius > MIN_ACCURACY) return
                     if (isFirstLocate) {
                         val location =
@@ -475,7 +475,7 @@ class AerobicsActivity : AppCompatActivity(), SensorEventListener {
     companion object {
         private const val MAX_DISTANCE = 10
         private const val MIN_DISTANCE = 5
-        private const val MIN_NUMBER = 5
-        private const val MIN_ACCURACY = 40
+        private const val MIN_NUMBER = 3
+        private const val MIN_ACCURACY = 1000 //40
     }
 }

@@ -85,8 +85,13 @@ class DailyHeartFragment : Fragment() {
             setAvoidFirstLastClipping(true)
             setLabelCount(3, false)
             setValueFormatter { value, _ ->
-                val d = TimeTransfer.utc2Date(array[value.toInt()].utc)
-                df2.format(d)
+                val x = value.toInt()
+                if (x >= 0 && x < array.size) {
+                    val d = TimeTransfer.utc2Date(array[value.toInt()].utc)
+                    df2.format(d)
+                } else {
+                    ""
+                }
             }
             textSize = 12f
         }
