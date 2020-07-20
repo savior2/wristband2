@@ -20,6 +20,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.lifesense.ble.SearchCallback
 import com.lifesense.ble.bean.LsDeviceInfo
+import com.zjut.wristband2.MyApplication
 import com.zjut.wristband2.R
 import com.zjut.wristband2.adapter.DeviceAdapter
 import com.zjut.wristband2.adapter.DeviceItem
@@ -104,6 +105,17 @@ class NavDeviceFragment : Fragment() {
                         .setCancelable(false)
                         .create()
                     dialog.show()
+                    Thread {
+                        Thread.sleep(10000)
+                        if (!MyApplication.isConnect) {
+                            this@NavDeviceFragment.activity?.runOnUiThread {
+                                dialog.dismiss()
+                                DeviceUtil.stopDataReceive()
+                                toast(this@NavDeviceFragment.requireContext(), "连接失败！")
+                                beginScan()
+                            }
+                        }
+                    }.start()
                 }
 
                 override fun finishConnect() {

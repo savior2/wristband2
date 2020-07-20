@@ -95,6 +95,21 @@ class HomeActivityVM(private val app: Application, private val handle: SavedStat
         }
         set(value) = handle.set(TYPE, value)
 
+    var type: String
+        get() {
+            if (!handle.contains(TYPE_ID)) {
+                handle.set(
+                    TYPE_ID,
+                    SpUtil.getSp(SpUtil.SpAccount.FILE_NAME).getString(
+                        SpUtil.SpAccount.MAC_TYPE,
+                        ""
+                    )
+                )
+            }
+            return handle[TYPE_ID]!!
+        }
+        set(value) = handle.set(TYPE_ID, value)
+
 
     var step: Int
         get() {
@@ -125,6 +140,7 @@ class HomeActivityVM(private val app: Application, private val handle: SavedStat
         private const val CONNECT = "connect"
         private const val ADDRESS = "address"
         private const val TYPE = "type"
+        private const val TYPE_ID = "typeId"
         private const val STEP = "step"
     }
 

@@ -66,6 +66,7 @@ class DeviceAdapter(
     private fun connect(item: DeviceItem) {
         viewModel.address = item.address
         viewModel.typeName = item.typeName
+        viewModel.type = item.type
         DeviceUtil.stopSearch()
         DeviceUtil.startDataReceive(
             item.type,
@@ -92,7 +93,7 @@ const val TAG = "MyDataCallback"
 
 class MyDataCallback(
     private val viewModel: HomeActivityVM,
-    private val listener: DeviceAdapter.ConnectListener
+    private val listener: DeviceAdapter.ConnectListener?
 ) :
     ReceiveDataCallback() {
     override fun onDeviceConnectStateChange(p0: DeviceConnectState?, p1: String?) {
@@ -104,13 +105,14 @@ class MyDataCallback(
                 MyApplication.isConnect = true
                 with(SpUtil.getSp(SpUtil.SpAccount.FILE_NAME).edit()) {
                     putString(SpUtil.SpAccount.MAC_ADDRESS, viewModel.address)
+                    putString(SpUtil.SpAccount.MAC_TYPE, viewModel.type)
                     apply()
                 }
                 DeviceConnectTask(object : TaskListener {
                     override fun onStart() {}
 
                     override fun onSuccess() {
-                        listener.finishConnect()
+                        listener?.finishConnect()
                     }
 
                     override fun onFail(code: WCode) {}

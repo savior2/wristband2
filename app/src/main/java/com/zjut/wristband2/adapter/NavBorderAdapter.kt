@@ -9,10 +9,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.zjut.wristband2.MyApplication
 import com.zjut.wristband2.R
-import com.zjut.wristband2.activity.DeviceManageActivity
-import com.zjut.wristband2.activity.LoginActivity
-import com.zjut.wristband2.activity.ModifyPasswordActivity
-import com.zjut.wristband2.activity.PersonalInfoActivity
+import com.zjut.wristband2.activity.*
 import com.zjut.wristband2.util.SpUtil
 import kotlinx.android.synthetic.main.cell_nav_border.view.*
 
@@ -41,6 +38,7 @@ class NavBorderAdapter(private val context: Context, private val array: List<Ite
                         }
                     }
                     4 -> {
+                        context.startActivity(Intent(context, AboutActivity::class.java))
                     }
                     5 -> {
                         AlertDialog.Builder(context)

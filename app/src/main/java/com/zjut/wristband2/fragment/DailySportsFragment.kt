@@ -14,6 +14,7 @@ import com.baidu.mapapi.map.*
 import com.baidu.mapapi.model.LatLng
 import com.zjut.wristband2.R
 import com.zjut.wristband2.activity.DailySportsActivity
+import com.zjut.wristband2.activity.DailySportsIndoorActivity
 import kotlinx.android.synthetic.main.fragment_daily_sports.*
 
 /**
@@ -53,8 +54,11 @@ class DailySportsFragment : Fragment() {
             mLocClient.locOption = this
         }
         mLocClient.registerLocationListener(mLocListener)
-        enter.setOnClickListener {
+        outButton.setOnClickListener {
             startActivity(Intent(requireContext(), DailySportsActivity::class.java))
+        }
+        inButton.setOnClickListener {
+            startActivity(Intent(requireContext(), DailySportsIndoorActivity::class.java))
         }
     }
 

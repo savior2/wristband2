@@ -198,6 +198,9 @@ object WebUtil {
     }
 
     fun getVersion(): Version? {
+        if (!isNetworkConnected()) {
+            return null
+        }
         val version = MyApplication.context.resources.getString(R.string.version_num)
         WebBasic.doPost(
             WebBasic.DOMAIN + WebBasic.VERSION_URI, mapOf(
@@ -218,7 +221,7 @@ object WebUtil {
 }
 
 
-private fun isNetworkConnected(): Boolean {
+fun isNetworkConnected(): Boolean {
     val connectivityManager =
         MyApplication.context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     return connectivityManager.activeNetworkInfo != null

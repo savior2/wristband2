@@ -2,10 +2,7 @@ package com.zjut.wristband2.activity
 
 import android.Manifest
 import android.app.AlertDialog
-import android.content.ComponentName
-import android.content.Context
-import android.content.Intent
-import android.content.ServiceConnection
+import android.content.*
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -16,17 +13,21 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
+import androidx.lifecycle.SavedStateViewModelFactory
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import cn.sharesdk.onekeyshare.OnekeyShare
-import com.zjut.wristband2.MyApplication.Companion.context
 import com.zjut.wristband2.R
+import com.zjut.wristband2.receiver.NetworkReceiver
 import com.zjut.wristband2.repo.Version
 import com.zjut.wristband2.service.DownloadService
 import com.zjut.wristband2.task.SimpleTaskListener
 import com.zjut.wristband2.task.VersionTask
+import com.zjut.wristband2.util.isNetworkConnected
 import com.zjut.wristband2.util.toast
+import com.zjut.wristband2.vm.HomeActivityVM
 import kotlinx.android.synthetic.main.activity_home.*
 
 class HomeActivity : AppCompatActivity() {
@@ -42,11 +43,18 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
+    private lateinit var viewModel: HomeActivityVM
+
+    private lateinit var networkListener: NetworkReceiver
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
+        viewModel = ViewModelProvider(
+            this,
+            SavedStateViewModelFactory(application, this)
+        )[HomeActivityVM::class.java]
         setSupportActionBar(toolbar)
         with(toolbar) {
             navigationIcon = getDrawable(R.drawable.ic_menu)
@@ -60,6 +68,33 @@ class HomeActivity : AppCompatActivity() {
         NavigationUI.setupActionBarWithNavController(this, nav, config)
         NavigationUI.setupWithNavController(bottomNavigationView, nav)
 
+        networkListener = NetworkReceiver(object : NetworkReceiver.NetworkListener {
+            override fun doWork() {
+                runOnUiThread(
+                    Thread{
+                        AlertDialog.Builder(this@HomeActivity)
+                            .setCancelable(false)
+                            .setTitle("登录失效，请重新登录！")
+                            .setPositiveButton("确定") { _, _ ->
+                                startActivity(Intent(this@HomeActivity, LoginActivity::class.java))
+                                this@HomeActivity.finish()
+                            }
+                            .create().show()
+                    }
+                )
+            }
+        })
+        with(IntentFilter()) {
+            addAction("android.net.conn.CONNECTIVITY_CHANGE")
+            registerReceiver(networkListener, this)
+        }
+        /*with(SpUtil.getSp(SpUtil.SpAccount.FILE_NAME)) {
+            DeviceUtil.startDataReceive(
+                getString(SpUtil.SpAccount.MAC_TYPE, "")!!,
+                getString(SpUtil.SpAccount.MAC_ADDRESS, "")!!,
+                MyDataCallback(viewModel, null)
+            )
+        }*/
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -76,7 +111,9 @@ class HomeActivity : AppCompatActivity() {
                 VersionTask(object : SimpleTaskListener<Version?> {
                     @RequiresApi(Build.VERSION_CODES.M)
                     override fun onSuccess(p: Version?) {
-                        if (p != null) {
+                        if (!isNetworkConnected()) {
+                            toast(this@HomeActivity, "网络连接异常！")
+                        } else if (p != null) {
                             url = p.url
                             val intent =
                                 Intent(this@HomeActivity, DownloadService::class.java)
@@ -138,5 +175,10 @@ class HomeActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(networkListener)
     }
 }

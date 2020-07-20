@@ -20,9 +20,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
-
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
-
 
     <application
         android:name=".MyApplication"
@@ -36,6 +34,13 @@
         android:usesCleartextTraffic="true"
         tools:replace="android:name"
         tools:targetApi="q">
+        <activity
+            android:name=".activity.DailySportsIndoorActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.AboutActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/DarkTheme" />
         <activity
             android:name=".activity.DeviceManageActivity"
             android:screenOrientation="portrait" />

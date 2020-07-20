@@ -21,6 +21,7 @@ object SpUtil {
             const val WEIGHT = "weight"                 //Float
             const val TOKEN = "token"                   //String
             const val MAC_ADDRESS = "mac_address"       //String
+            const val MAC_TYPE = "mac_type"       //String
         }
     }
 
