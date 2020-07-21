@@ -35,6 +35,9 @@
         tools:replace="android:name"
         tools:targetApi="q">
         <activity
+            android:name=".activity.DailySportsOutdoorActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".activity.DailySportsIndoorActivity"
             android:screenOrientation="portrait" />
         <activity

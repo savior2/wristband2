@@ -1,9 +1,7 @@
 package com.zjut.wristband2.vm
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.SavedStateHandle
 import com.zjut.wristband2.R
 import com.zjut.wristband2.util.SpUtil
@@ -67,13 +65,41 @@ class HomeActivityVM(private val app: Application, private val handle: SavedStat
         }
         set(value) = handle.set(CONNECT, value)
 
+    var isConnecting: Boolean
+        get() {
+            if (!handle.contains(CONNECTING)) {
+                handle.set(
+                    CONNECTING,
+                    false
+                )
+            }
+            return handle[CONNECTING]!!
+        }
+        set(value) = handle.set(CONNECTING, value)
+
+
+    var isBind: Boolean
+        get() {
+            if (!handle.contains(BIND)) {
+                handle.set(
+                    BIND,
+                    false
+                )
+            }
+            return handle[BIND]!!
+        }
+        set(value) = handle.set(BIND, value)
+
 
     var address: String
         get() {
             if (!handle.contains(ADDRESS)) {
                 handle.set(
                     ADDRESS,
-                    ""
+                    SpUtil.getSp(SpUtil.SpAccount.FILE_NAME).getString(
+                        SpUtil.SpAccount.MAC_ADDRESS,
+                        ""
+                    )
                 )
             }
             return handle[ADDRESS]!!
@@ -86,7 +112,7 @@ class HomeActivityVM(private val app: Application, private val handle: SavedStat
                 handle.set(
                     TYPE,
                     SpUtil.getSp(SpUtil.SpAccount.FILE_NAME).getString(
-                        SpUtil.SpAccount.MAC_ADDRESS,
+                        SpUtil.SpAccount.MAC_NAME,
                         ""
                     )
                 )
@@ -138,6 +164,8 @@ class HomeActivityVM(private val app: Application, private val handle: SavedStat
         private const val NAME = "name"
         private const val SEX = "sex"
         private const val CONNECT = "connect"
+        private const val CONNECTING = "connecting"
+        private const val BIND = "bind"
         private const val ADDRESS = "address"
         private const val TYPE = "type"
         private const val TYPE_ID = "typeId"

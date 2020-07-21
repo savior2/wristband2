@@ -15,6 +15,8 @@ import com.baidu.mapapi.model.LatLng
 import com.zjut.wristband2.R
 import com.zjut.wristband2.activity.DailySportsActivity
 import com.zjut.wristband2.activity.DailySportsIndoorActivity
+import com.zjut.wristband2.activity.DailySportsOutdoorActivity
+import com.zjut.wristband2.util.isNetworkConnected
 import kotlinx.android.synthetic.main.fragment_daily_sports.*
 
 /**
@@ -55,7 +57,11 @@ class DailySportsFragment : Fragment() {
         }
         mLocClient.registerLocationListener(mLocListener)
         outButton.setOnClickListener {
-            startActivity(Intent(requireContext(), DailySportsActivity::class.java))
+            if (isNetworkConnected()) {
+                startActivity(Intent(requireContext(), DailySportsActivity::class.java))
+            } else {
+                startActivity(Intent(requireContext(), DailySportsOutdoorActivity::class.java))
+            }
         }
         inButton.setOnClickListener {
             startActivity(Intent(requireContext(), DailySportsIndoorActivity::class.java))

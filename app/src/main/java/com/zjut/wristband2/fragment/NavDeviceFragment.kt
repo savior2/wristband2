@@ -10,6 +10,7 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.provider.Settings
 import android.text.TextUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,7 +25,9 @@ import com.zjut.wristband2.MyApplication
 import com.zjut.wristband2.R
 import com.zjut.wristband2.adapter.DeviceAdapter
 import com.zjut.wristband2.adapter.DeviceItem
+import com.zjut.wristband2.adapter.MyDataCallback
 import com.zjut.wristband2.util.DeviceUtil
+import com.zjut.wristband2.util.SpUtil
 import com.zjut.wristband2.util.toast
 import com.zjut.wristband2.vm.HomeActivityVM
 import kotlinx.android.synthetic.main.fragment_nav_device.*
@@ -53,6 +56,36 @@ class NavDeviceFragment : Fragment() {
             SavedStateViewModelFactory(requireActivity().application, requireActivity())
         )[HomeActivityVM::class.java]
 
+        viewModel.isBind = viewModel.address != ""
+
+        if (viewModel.isBind) {
+            deviceTextView.visibility = View.VISIBLE
+            deviceTextView.text = "当前绑定设备：${viewModel.typeName}[${viewModel.address}]"
+            unBindButton.visibility = View.VISIBLE
+            unBindButton.setOnClickListener {
+                AlertDialog.Builder(context)
+                    .setTitle("确定解绑当前设备？")
+                    .setPositiveButton("确定") { _, _ ->
+                        viewModel.isBind = false
+                        viewModel.isConnected = false
+                        DeviceUtil.stopDataReceive()
+                        viewModel.address = ""
+                        with(SpUtil.getSp(SpUtil.SpAccount.FILE_NAME).edit()) {
+                            putString(SpUtil.SpAccount.MAC_ADDRESS, "")
+                            apply()
+                        }
+                        toast(this@NavDeviceFragment.requireContext(), "解绑成功！")
+                        disconnect()
+                    }
+                    .setNegativeButton("取消") { _, _ -> }
+                    .create().show()
+            }
+
+        } else {
+            deviceTextView.visibility = View.INVISIBLE
+            unBindButton.visibility = View.INVISIBLE
+        }
+
         if (viewModel.isConnected) {
             connect()
         } else {
@@ -62,10 +95,40 @@ class NavDeviceFragment : Fragment() {
 
     @SuppressLint("SetTextI18n")
     private fun connect() {
+        if (viewModel.isBind) {
+            deviceTextView.visibility = View.VISIBLE
+            deviceTextView.text = "当前绑定设备：${viewModel.typeName}[${viewModel.address}]"
+            unBindButton.visibility = View.VISIBLE
+            unBindButton.setOnClickListener {
+                AlertDialog.Builder(context)
+                    .setTitle("确定解绑当前设备？")
+                    .setPositiveButton("确定") { _, _ ->
+                        viewModel.isBind = false
+                        viewModel.isConnected = false
+                        DeviceUtil.stopDataReceive()
+                        viewModel.address = ""
+                        with(SpUtil.getSp(SpUtil.SpAccount.FILE_NAME).edit()) {
+                            putString(SpUtil.SpAccount.MAC_ADDRESS, "")
+                            apply()
+                        }
+                        toast(this@NavDeviceFragment.requireContext(), "解绑成功！")
+                        disconnect()
+                    }
+                    .setNegativeButton("取消") { _, _ -> }
+                    .create().show()
+            }
+
+        } else {
+            deviceTextView.visibility = View.INVISIBLE
+            unBindButton.visibility = View.INVISIBLE
+        }
+
         stopScan()
-        recyclerView.visibility = View.GONE
+        recyclerView.visibility = View.INVISIBLE
         switch1.isEnabled = false
-        deviceTextView.visibility = View.VISIBLE
+        connectStatus.text = "已连接"
+        connectTip.visibility = View.VISIBLE
+        connectTip.setImageDrawable(resources.getDrawable(R.drawable.ic_connect))
         disconnect.visibility = View.VISIBLE
         disconnect.setOnClickListener {
             AlertDialog.Builder(context)
@@ -79,63 +142,80 @@ class NavDeviceFragment : Fragment() {
                 .setNegativeButton("取消") { _, _ -> }
                 .create().show()
         }
-        deviceTextView.text = "当前连接设备：${viewModel.typeName}[${viewModel.address}]"
     }
 
     private fun disconnect() {
-        recyclerView.visibility = View.VISIBLE
         switch1.isEnabled = true
-        deviceTextView.visibility = View.GONE
         disconnect.visibility = View.GONE
-        adapter2 = DeviceAdapter(
-            this@NavDeviceFragment.requireContext(),
-            viewModel,
-            array,
-            object : DeviceAdapter.ConnectListener {
-                @SuppressLint("SetTextI18n")
-                override fun startConnect(item: DeviceItem) {
-                    array.clear()
-                    adapter2.notifyDataSetChanged()
-                    val dialogView =
-                        LayoutInflater.from(requireContext()).inflate(R.layout.module_connect, null)
-                    dialogView.onConnectText.text =
-                        "正在连接...\n${item.typeName}[${item.address}]\n请勿切换页面！！！"
-                    dialog = AlertDialog.Builder(requireContext())
-                        .setView(dialogView)
-                        .setCancelable(false)
-                        .create()
-                    dialog.show()
-                    Thread {
-                        Thread.sleep(10000)
-                        if (!MyApplication.isConnect) {
-                            this@NavDeviceFragment.activity?.runOnUiThread {
-                                dialog.dismiss()
-                                DeviceUtil.stopDataReceive()
-                                toast(this@NavDeviceFragment.requireContext(), "连接失败！")
-                                beginScan()
-                            }
-                        }
-                    }.start()
-                }
-
-                override fun finishConnect() {
-                    dialog.dismiss()
-                    toast(this@NavDeviceFragment.requireContext(), "连接成功！")
-                    connect()
-                }
-            })
-        recyclerView.apply {
-            val manager = LinearLayoutManager(requireContext())
-            manager.orientation = LinearLayoutManager.VERTICAL
-            layoutManager = manager
-            this.adapter = adapter2
-        }
         switch1.setOnCheckedChangeListener { _, b ->
             if (b) {
                 beginScan()
             } else {
                 stopScan()
             }
+        }
+        if (viewModel.isBind) {
+            recyclerView.visibility = View.INVISIBLE
+            connectStatus.text = "未连接"
+            connectTip.visibility = View.VISIBLE
+            connectTip.setImageDrawable(resources.getDrawable(R.drawable.ic_disconnect))
+
+        } else {
+            recyclerView.visibility = View.VISIBLE
+            connectStatus.text = "扫描附近手环"
+            connectTip.visibility = View.GONE
+            deviceTextView.visibility = View.INVISIBLE
+            unBindButton.visibility = View.INVISIBLE
+
+            adapter2 = DeviceAdapter(
+                this@NavDeviceFragment.requireContext(),
+                viewModel,
+                array,
+                object : DeviceAdapter.ConnectListener {
+                    @SuppressLint("SetTextI18n")
+                    override fun startConnect(item: DeviceItem) {
+                        array.clear()
+                        adapter2.notifyDataSetChanged()
+                        val dialogView =
+                            LayoutInflater.from(requireContext())
+                                .inflate(R.layout.module_connect, null)
+                        dialogView.onConnectText.text =
+                            "正在连接...\n${item.typeName}[${item.address}]\n请勿切换页面！！！"
+                        dialog = AlertDialog.Builder(requireContext())
+                            .setView(dialogView)
+                            .setCancelable(false)
+                            .create()
+                        dialog.show()
+                        viewModel.isConnecting = true
+                        Thread {
+                            Thread.sleep(10000)
+                            if (viewModel.isConnecting) {
+                                viewModel.isConnecting = false
+                                this@NavDeviceFragment.activity?.runOnUiThread {
+                                    dialog.dismiss()
+                                    DeviceUtil.stopDataReceive()
+                                    toast(this@NavDeviceFragment.requireContext(), "连接失败！")
+                                    beginScan()
+                                }
+                            }
+                        }.start()
+                    }
+
+                    override fun finishConnect() {
+                        dialog.dismiss()
+                        toast(this@NavDeviceFragment.requireContext(), "连接成功！")
+                        viewModel.isBind = true
+                        viewModel.isConnecting = false
+                        connect()
+                    }
+                })
+            recyclerView.apply {
+                val manager = LinearLayoutManager(requireContext())
+                manager.orientation = LinearLayoutManager.VERTICAL
+                layoutManager = manager
+                this.adapter = adapter2
+            }
+
         }
     }
 
@@ -197,6 +277,7 @@ class NavDeviceFragment : Fragment() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun openLocationService() {
         if (!isLocationEnabled()) {
             AlertDialog.Builder(activity)
@@ -208,9 +289,52 @@ class NavDeviceFragment : Fragment() {
                 .create().show()
             stopScan()
         } else {
-            array.clear()
-            adapter2.notifyDataSetChanged()
-            DeviceUtil.startSearch(MySearchCallback())
+            if (viewModel.isBind) {
+                DeviceUtil.stopSearch()
+                val dialogView =
+                    LayoutInflater.from(requireContext())
+                        .inflate(R.layout.module_connect, null)
+                dialogView.onConnectText.text =
+                    "正在连接...\n${viewModel.typeName}[${viewModel.address}]\n请勿切换页面！！！"
+                dialog = AlertDialog.Builder(requireContext())
+                    .setView(dialogView)
+                    .setCancelable(false)
+                    .create()
+                dialog.show()
+                viewModel.isConnecting = true
+                Thread {
+                    Thread.sleep(10000)
+                    if (viewModel.isConnecting) {
+                        viewModel.isConnecting = false
+                        this@NavDeviceFragment.activity?.runOnUiThread {
+                            dialog.dismiss()
+                            DeviceUtil.stopDataReceive()
+                            toast(this@NavDeviceFragment.requireContext(), "连接失败！")
+                        }
+                    }
+                }.start()
+                DeviceUtil.startDataReceive(
+                    viewModel.type,
+                    viewModel.address,
+                    MyDataCallback(viewModel, object : DeviceAdapter.ConnectListener {
+                        override fun startConnect(item: DeviceItem) {
+                        }
+
+                        override fun finishConnect() {
+                            dialog.dismiss()
+                            toast(this@NavDeviceFragment.requireContext(), "连接成功！")
+                            viewModel.isBind = true
+                            viewModel.isConnecting = false
+                            connect()
+                        }
+
+                    })
+                )
+            } else {
+                array.clear()
+                adapter2.notifyDataSetChanged()
+                DeviceUtil.startSearch(MySearchCallback())
+            }
         }
     }
 
@@ -222,7 +346,7 @@ class NavDeviceFragment : Fragment() {
     )
 
     private fun stopScan() {
-        progressBar.visibility = View.GONE
+        progressBar.visibility = View.INVISIBLE
         switch1.isChecked = false
         DeviceUtil.stopSearch()
     }
