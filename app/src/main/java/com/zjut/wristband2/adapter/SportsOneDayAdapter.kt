@@ -2,7 +2,6 @@ package com.zjut.wristband2.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,12 +24,16 @@ class SportsOneDayAdapter(
             LayoutInflater.from(parent.context).inflate(R.layout.cell_sports_one_day, parent, false)
         return SportsOneDayViewHolder(view).apply {
             view.setOnClickListener {
-                context.startActivity(
-                    SummaryOnceActivity.getIntent(
-                        context,
-                        array[this.adapterPosition].id.toLong()
+                if (array[this.adapterPosition].mode == "indoor") {
+
+                } else {
+                    context.startActivity(
+                        SummaryOnceActivity.getIntent(
+                            context,
+                            array[this.adapterPosition].id.toLong()
+                        )
                     )
-                )
+                }
             }
         }
 
@@ -41,6 +44,10 @@ class SportsOneDayAdapter(
     override fun onBindViewHolder(holder: SportsOneDayViewHolder, position: Int) {
         holder.itemView.timeText.text =
             df.format(TimeTransfer.utcMillion2Date(array[position].startUtc))
+        if (array[position].mode == "indoor") {
+            holder.itemView.imageView4.setImageDrawable(context.getDrawable(R.drawable.ic_weightlift))
+            holder.itemView.type.text = "室内"
+        }
     }
 
     @SuppressLint("SimpleDateFormat")

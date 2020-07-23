@@ -10,7 +10,6 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.provider.Settings
 import android.text.TextUtils
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,7 +20,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.lifesense.ble.SearchCallback
 import com.lifesense.ble.bean.LsDeviceInfo
-import com.zjut.wristband2.MyApplication
 import com.zjut.wristband2.R
 import com.zjut.wristband2.adapter.DeviceAdapter
 import com.zjut.wristband2.adapter.DeviceItem
@@ -195,6 +193,8 @@ class NavDeviceFragment : Fragment() {
                                     dialog.dismiss()
                                     DeviceUtil.stopDataReceive()
                                     toast(this@NavDeviceFragment.requireContext(), "连接失败！")
+                                    progressBar.visibility = View.INVISIBLE
+                                    switch1.isChecked = false
                                     beginScan()
                                 }
                             }
@@ -309,6 +309,8 @@ class NavDeviceFragment : Fragment() {
                         this@NavDeviceFragment.activity?.runOnUiThread {
                             dialog.dismiss()
                             DeviceUtil.stopDataReceive()
+                            progressBar.visibility = View.INVISIBLE
+                            switch1.isChecked = false
                             toast(this@NavDeviceFragment.requireContext(), "连接失败！")
                         }
                     }

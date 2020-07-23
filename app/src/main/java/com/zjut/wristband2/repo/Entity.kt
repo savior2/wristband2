@@ -9,12 +9,16 @@ import androidx.room.PrimaryKey
 class DailyHeart {
     @PrimaryKey(autoGenerate = true)
     var id = 0
+
     @ColumnInfo(name = "heart_rate")
     var heartRate = 0
+
     @ColumnInfo(name = "utc")
     var utc = 0L
+
     @ColumnInfo(name = "device_id")
     var deviceId = ""
+
     @ColumnInfo(name = "status")
     var status = 0
 
@@ -29,12 +33,16 @@ class DailyHeart {
 class AerobicsSummary {
     @PrimaryKey(autoGenerate = true)
     var id = 0
+
     @ColumnInfo(name = "student_id")
     var sid = ""
+
     @ColumnInfo(name = "device_id")
     var deviceId = ""
+
     @ColumnInfo(name = "start_utc")
     var startUtc = 0L
+
     @ColumnInfo(name = "status")
     var status = 0
 
@@ -49,10 +57,13 @@ class AerobicsSummary {
 class AerobicsHeart {
     @PrimaryKey(autoGenerate = true)
     var id = 0
+
     @ColumnInfo(name = "summary_id")
     var summaryId = 0L
+
     @ColumnInfo(name = "utc")
     var utc = 0L
+
     @ColumnInfo(name = "rate")
     var rate = 0
 
@@ -67,14 +78,19 @@ class AerobicsHeart {
 class AerobicsPosition {
     @PrimaryKey(autoGenerate = true)
     var id = 0
+
     @ColumnInfo(name = "summary_id")
     var summaryId = 0L
+
     @ColumnInfo(name = "longitude")
     var longitude = ""
+
     @ColumnInfo(name = "latitude")
     var latitude = ""
+
     @ColumnInfo(name = "speed")
     var speed = 0F
+
     @ColumnInfo(name = "utc")
     var utc = 0L
 
@@ -91,29 +107,42 @@ class AerobicsPosition {
 class SportsSummary {
     @PrimaryKey(autoGenerate = true)
     var id = 0
+
     @ColumnInfo(name = "student_id")
     var sid = ""
+
     @ColumnInfo(name = "device_id")
     var deviceId = ""
+
     @ColumnInfo(name = "start_utc")
     var startUtc = 0L
 
     @ColumnInfo(name = "exercise_time")
     var exerciseTime = 0L
+
     @ColumnInfo(name = "steps")
     var steps = 0
+
     @ColumnInfo(name = "calorie")
     var calorie = 0F
+
     @ColumnInfo(name = "distance")
     var distance = 0F
+
     @ColumnInfo(name = "max_heart_rate")
     var maxHeartRate = 0
+
     @ColumnInfo(name = "avg_heart_rate")
     var avgHeartRate = 0
+
     @ColumnInfo(name = "max_step_rate")
     var maxStepRate = 0
+
     @ColumnInfo(name = "avg_step_rate")
     var avgStepRate = 0
+
+    @ColumnInfo(name = "mode")
+    var mode: String? = null
 
     @ColumnInfo(name = "status")
     var status = 0
@@ -124,12 +153,16 @@ class SportsSummary {
 class SportsHeart {
     @PrimaryKey(autoGenerate = true)
     var id = 0
+
     @ColumnInfo(name = "sports_id")
     var sportsId = 0L
+
     @ColumnInfo(name = "rate")
     var rate = 0
+
     @ColumnInfo(name = "utc")
     var utc = 0L
+
     @ColumnInfo(name = "status")
     var status = 0
 
@@ -145,16 +178,22 @@ class SportsHeart {
 class SportsPosition {
     @PrimaryKey(autoGenerate = true)
     var id = 0
+
     @ColumnInfo(name = "sports_id")
     var sportsId = 0L
+
     @ColumnInfo(name = "longitude")
     var longitude = ""
+
     @ColumnInfo(name = "latitude")
     var latitude = ""
+
     @ColumnInfo(name = "speed")
     var speed = 0F
+
     @ColumnInfo(name = "utc")
     var utc = 0L
+
     @ColumnInfo(name = "status")
     var status = 0
 
