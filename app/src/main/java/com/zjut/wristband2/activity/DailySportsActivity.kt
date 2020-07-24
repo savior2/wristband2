@@ -133,7 +133,8 @@ class DailySportsActivity : AppCompatActivity(), SensorEventListener {
                         reset()
                         setProgress(true, "GPS信号搜索中，请留在原地...")
                         mBaiduMap.clear()
-                        SportsSummaryTask().execute()
+                        MyApplication.mode = RunMode.Outdoor
+                        SportsSummaryTask(null).execute()
                     }
                 }
             } else {
@@ -145,7 +146,6 @@ class DailySportsActivity : AppCompatActivity(), SensorEventListener {
                             if (MyApplication.isConnect) {
                                 DeviceUtil.stopRealTime(address)
                             }
-                            MyApplication.mode = RunMode.Stop
                             setProgress(false)
                             if (isFirstLocate) {
                                 points.clear()
@@ -170,11 +170,13 @@ class DailySportsActivity : AppCompatActivity(), SensorEventListener {
                                             }
 
                                             override fun onSuccess() {
+                                                MyApplication.mode = RunMode.Stop
                                                 setProgress(false)
                                                 toast(this@DailySportsActivity, "上传成功!")
                                             }
 
                                             override fun onFail(code: WCode) {
+                                                MyApplication.mode = RunMode.Stop
                                                 setProgress(false)
                                                 toast(
                                                     this@DailySportsActivity,
@@ -343,7 +345,6 @@ class DailySportsActivity : AppCompatActivity(), SensorEventListener {
                         if (MyApplication.isConnect) {
                             DeviceUtil.startRealtime(viewModel.address)
                         }
-                        MyApplication.mode = RunMode.Normal
                     } else {
                         val distance = getDistance(ll, lastPoint).toFloat()
                         runTime.value = runTime.value!! + 1

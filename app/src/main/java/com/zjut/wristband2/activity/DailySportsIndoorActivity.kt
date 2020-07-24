@@ -22,9 +22,13 @@ import androidx.lifecycle.ViewModelProvider
 import com.zjut.wristband2.MyApplication
 import com.zjut.wristband2.R
 import com.zjut.wristband2.databinding.ActivityDailySportsIndoorBinding
+import com.zjut.wristband2.error.WCode
+import com.zjut.wristband2.task.*
 import com.zjut.wristband2.util.DeviceUtil
+import com.zjut.wristband2.util.RunMode
 import com.zjut.wristband2.util.toast
 import com.zjut.wristband2.vm.DailySportsInActivityVM
+import kotlinx.android.synthetic.main.activity_daily_sports_indoor.*
 
 class DailySportsIndoorActivity : AppCompatActivity() {
 
@@ -82,6 +86,20 @@ class DailySportsIndoorActivity : AppCompatActivity() {
                 if (viewModel.isStart.value!!) {
                     viewModel.runTime.value = viewModel.runTime.value!! + 1
                     viewModel.runHeart.value = MyApplication.heartRate
+                    if (viewModel.runTime.value!! % 60 == 0) {
+                        PostSportsRealTimeTask(object : TaskListener {
+                            override fun onStart() {}
+
+                            override fun onSuccess() {
+                                toast(this@DailySportsIndoorActivity, "上传成功!")
+                            }
+
+                            override fun onFail(code: WCode) {
+                                toast(this@DailySportsIndoorActivity, "上传失败！${code.error}")
+                            }
+
+                        }).execute()
+                    }
                 }
                 handler.postDelayed(this, 1000)
             }
@@ -112,9 +130,16 @@ class DailySportsIndoorActivity : AppCompatActivity() {
                         "请先开启gps！"
                     )
                     else -> {
-                        viewModel.isStart.value = true
                         reset()
-                        DeviceUtil.startRealtime(viewModel.address)
+                        progressBar.visibility = View.VISIBLE
+                        MyApplication.mode = RunMode.Indoor
+                        SportsSummaryTask(object : SimpleTaskListener<Unit> {
+                            override fun onSuccess(p: Unit) {
+                                progressBar.visibility = View.INVISIBLE
+                                viewModel.isStart.value = true
+                                DeviceUtil.startRealtime(viewModel.address)
+                            }
+                        }).execute()
                     }
                 }
             } else {
@@ -126,6 +151,38 @@ class DailySportsIndoorActivity : AppCompatActivity() {
                             if (MyApplication.isConnect) {
                                 DeviceUtil.stopRealTime(address)
                             }
+                            progressBar.visibility = View.INVISIBLE
+                            PostSportsRealTimeTask(object : TaskListener {
+                                override fun onStart() {}
+
+                                override fun onSuccess() {
+                                    PostSportsFinalTask(object : TaskListener {
+                                        override fun onStart() {
+                                        }
+
+                                        override fun onSuccess() {
+                                            MyApplication.mode = RunMode.Stop
+                                            toast(this@DailySportsIndoorActivity, "上传成功!")
+                                        }
+
+                                        override fun onFail(code: WCode) {
+                                            MyApplication.mode = RunMode.Stop
+                                            toast(
+                                                this@DailySportsIndoorActivity,
+                                                "上传失败！${code.error}"
+                                            )
+                                        }
+
+                                    }).execute(
+                                        runTime.value!!.toString()
+                                    )
+                                }
+
+                                override fun onFail(code: WCode) {
+                                    toast(this@DailySportsIndoorActivity, "上传失败！${code.error}")
+                                }
+
+                            }).execute()
                         }
                     }
                     .setNegativeButton("取消") { _, _ -> }

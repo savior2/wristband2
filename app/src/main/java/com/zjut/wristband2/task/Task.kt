@@ -151,7 +151,8 @@ class PostAerobicsTask(
     }
 }
 
-class SportsSummaryTask : AsyncTask<Void, Void, Void>() {
+class SportsSummaryTask(private val listener: SimpleTaskListener<Unit>?) :
+    AsyncTask<Void, Void, Void>() {
     override fun doInBackground(vararg p0: Void?): Void? {
         with(SpUtil.getSp(SpUtil.SpAccount.FILE_NAME)) {
             val id = MyDatabase.instance.getSportsSummaryDao().insert(
@@ -159,11 +160,17 @@ class SportsSummaryTask : AsyncTask<Void, Void, Void>() {
                     sid = getString(SpUtil.SpAccount.SID, "")!!
                     deviceId = getString(SpUtil.SpAccount.MAC_ADDRESS, "")!!
                     startUtc = TimeTransfer.nowUtcMillion()
+                    mode = MyApplication.mode.mode
                 }
             )
             MyApplication.num = id
             return null
         }
+    }
+
+    override fun onPostExecute(result: Void?) {
+        super.onPostExecute(result)
+        listener?.onSuccess(Unit)
     }
 }
 
@@ -186,35 +193,67 @@ class PostSportsRealTimeTask(
 
 
     override fun doInBackground(vararg p0: SportsPosition): WCode {
-        MyDatabase.instance.getSportsPositionDao().insert(*p0)
-        val summary = MyDatabase.instance.getSportsSummaryDao().findById(MyApplication.num)
-        val hearts =
-            MyDatabase.instance.getSportsHeartDao().findBySportsIdAndStatus(MyApplication.num)
-        for (i in hearts.indices) {
-            hearts[i].status = 1
-        }
-        MyDatabase.instance.getSportsHeartDao().update(*hearts.toTypedArray())
-        with(SpUtil.getSp(SpUtil.SpAccount.FILE_NAME)) {
-            val token = getString(SpUtil.SpAccount.TOKEN, "")!!
-            val count = minOf(p0.size, hearts.size)
-            val details = arrayListOf<SportsDetailJson>()
-            for (i in 0 until count) {
-                details.add(
-                    SportsDetailJson(
-                        time = p0[i].utc.toString(),
-                        heartRate = hearts[i].rate.toString(),
-                        position = "lng${p0[i].longitude},lat${p0[i].latitude}"
-                    )
-                )
+        if (p0.isNotEmpty()) {
+            MyDatabase.instance.getSportsPositionDao().insert(*p0)
+            val summary = MyDatabase.instance.getSportsSummaryDao().findById(MyApplication.num)
+            val hearts =
+                MyDatabase.instance.getSportsHeartDao().findBySportsIdAndStatus(MyApplication.num)
+            for (i in hearts.indices) {
+                hearts[i].status = 1
             }
-            val info = SportsRealtimeJson(
-                token = token,
-                studentId = summary.sid,
-                deviceId = summary.deviceId.replace(":", "").toLowerCase(),
-                mode = "running",
-                detail = details
-            )
-            return WebUtil.postNormalSports(Gson().toJson(info))
+            MyDatabase.instance.getSportsHeartDao().update(*hearts.toTypedArray())
+            with(SpUtil.getSp(SpUtil.SpAccount.FILE_NAME)) {
+                val token = getString(SpUtil.SpAccount.TOKEN, "")!!
+                val count = minOf(p0.size, hearts.size)
+                val details = arrayListOf<SportsDetailJson>()
+                for (i in 0 until count) {
+                    details.add(
+                        SportsDetailJson(
+                            time = p0[i].utc.toString(),
+                            heartRate = hearts[i].rate.toString(),
+                            position = "lng${p0[i].longitude},lat${p0[i].latitude}"
+                        )
+                    )
+                }
+                val info = SportsRealtimeJson(
+                    token = token,
+                    studentId = summary.sid,
+                    deviceId = summary.deviceId.replace(":", "").toLowerCase(),
+                    mode = MyApplication.mode.mode,
+                    detail = details
+                )
+                return WebUtil.postNormalSports(Gson().toJson(info))
+            }
+        } else {
+            val summary = MyDatabase.instance.getSportsSummaryDao().findById(MyApplication.num)
+            val hearts =
+                MyDatabase.instance.getSportsHeartDao().findBySportsIdAndStatus(MyApplication.num)
+            for (i in hearts.indices) {
+                hearts[i].status = 1
+            }
+            MyDatabase.instance.getSportsHeartDao().update(*hearts.toTypedArray())
+            with(SpUtil.getSp(SpUtil.SpAccount.FILE_NAME)) {
+                val token = getString(SpUtil.SpAccount.TOKEN, "")!!
+                val count = hearts.size
+                val details = arrayListOf<SportsDetailJson>()
+                for (i in 0 until count) {
+                    details.add(
+                        SportsDetailJson(
+                            time = hearts[i].utc.toString(),
+                            heartRate = hearts[i].rate.toString(),
+                            position = ""
+                        )
+                    )
+                }
+                val info = SportsRealtimeJson(
+                    token = token,
+                    studentId = summary.sid,
+                    deviceId = summary.deviceId.replace(":", "").toLowerCase(),
+                    mode = summary.mode ?: "",
+                    detail = details
+                )
+                return WebUtil.postNormalSports(Gson().toJson(info))
+            }
         }
     }
 }
@@ -243,7 +282,11 @@ class PostSportsFinalTask(
         val hearts = MyDatabase.instance.getSportsHeartDao().findBySportsId(MyApplication.num)
         summary.apply {
             exerciseTime = p0[0].toLong()
-            distance = p0[1].toFloat()
+            var d = 0F
+            if (p0.size > 1) {
+                d = p0[1].toFloat()
+            }
+            distance = d
             var sum = 0
             if (hearts.isNotEmpty()) {
                 summary.maxHeartRate = hearts[0].rate
@@ -255,12 +298,13 @@ class PostSportsFinalTask(
             avgHeartRate = sum
         }
         MyDatabase.instance.getSportsSummaryDao().update(summary)
-        val token = SpUtil.getSp(SpUtil.SpAccount.FILE_NAME).getString(SpUtil.SpAccount.TOKEN, "")!!
+        val token =
+            SpUtil.getSp(SpUtil.SpAccount.FILE_NAME).getString(SpUtil.SpAccount.TOKEN, "")!!
         val info = SportsSummaryJson(
             token = token,
             studentId = summary.sid,
             deviceId = summary.deviceId.replace(":", "").toLowerCase(),
-            mode = "running",
+            mode = summary.mode ?: "",
             startTime = summary.startUtc.toString(),
             exerciseTime = summary.exerciseTime.toString(),
             distance = summary.distance.toString(),

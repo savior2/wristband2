@@ -55,10 +55,11 @@ object TimeTransfer {
 }
 
 
-enum class RunMode {
-    Stop,
-    Normal,
-    Aerobics
+enum class RunMode(val num: Int, val mode: String) {
+    Stop(0, "stop"),
+    Indoor(1, "indoor"),
+    Outdoor(2, "outdoor"),
+    Aerobics(3, "aerobics")
 }
 
 fun getDistance(source: LatLng, target: LatLng): Double {

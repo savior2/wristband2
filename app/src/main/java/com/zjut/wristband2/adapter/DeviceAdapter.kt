@@ -106,7 +106,7 @@ class MyDataCallback(
                 with(SpUtil.getSp(SpUtil.SpAccount.FILE_NAME).edit()) {
                     putString(SpUtil.SpAccount.MAC_ADDRESS, viewModel.address)
                     putString(SpUtil.SpAccount.MAC_TYPE, viewModel.type)
-                    putString(SpUtil.SpAccount.MAC_NAME,viewModel.typeName)
+                    putString(SpUtil.SpAccount.MAC_NAME, viewModel.typeName)
                     apply()
                 }
                 DeviceConnectTask(object : TaskListener {
@@ -190,7 +190,7 @@ class MyDataCallback(
                         )
                     }.start()
                 }
-                RunMode.Normal -> {
+                RunMode.Indoor, RunMode.Outdoor -> {
                     Thread {
                         MyDatabase.instance.getSportsHeartDao().insert(
                             SportsHeart(

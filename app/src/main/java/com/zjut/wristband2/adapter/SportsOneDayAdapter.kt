@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.zjut.wristband2.R
 import com.zjut.wristband2.activity.SummaryOnceActivity
+import com.zjut.wristband2.activity.SummaryOnceIndoorActivity
 import com.zjut.wristband2.repo.SportsSummary
 import com.zjut.wristband2.util.TimeTransfer
 import kotlinx.android.synthetic.main.cell_sports_one_day.view.*
@@ -25,7 +26,12 @@ class SportsOneDayAdapter(
         return SportsOneDayViewHolder(view).apply {
             view.setOnClickListener {
                 if (array[this.adapterPosition].mode == "indoor") {
-
+                    context.startActivity(
+                        SummaryOnceIndoorActivity.getIntent(
+                            context,
+                            array[this.adapterPosition].id.toLong()
+                        )
+                    )
                 } else {
                     context.startActivity(
                         SummaryOnceActivity.getIntent(
