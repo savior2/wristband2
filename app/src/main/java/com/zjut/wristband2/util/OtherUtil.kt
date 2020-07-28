@@ -1,6 +1,7 @@
 package com.zjut.wristband2.util
 
 import com.baidu.mapapi.model.LatLng
+import com.zjut.wristband2.repo.Position
 import java.util.*
 import kotlin.math.*
 
@@ -80,4 +81,20 @@ fun getDistance(source: LatLng, target: LatLng): Double {
 
 private fun rad(d: Double): Double {
     return d * Math.PI / 180.00 //角度转换成弧度
+}
+
+fun baiduToGaode(lng: Double, lat: Double): Position {
+    val x_pi = 3.14159265358979324 * 3000.0 / 180.0
+    val x = lng - 0.0065
+    val y = lat - 0.006
+    val z = sqrt(x * x + y * y) - 0.00002 * sin(y * x_pi)
+    val theta = atan2(y, x) - 0.000003 * cos(x * x_pi)
+    val lngs = z * cos(theta)
+    val lats = z * sin(theta)
+    return Position(
+        name = "",
+        longitude = lngs,
+        latitude = lats,
+        updateTime = ""
+    )
 }

@@ -125,10 +125,6 @@ class DailySportsIndoorActivity : AppCompatActivity() {
             if (!viewModel.isStart.value!!) {
                 when {
                     !MyApplication.isConnect -> toast(this, "请先连接手环！")
-                    !mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) -> toast(
-                        this,
-                        "请先开启gps！"
-                    )
                     else -> {
                         reset()
                         progressBar.visibility = View.VISIBLE

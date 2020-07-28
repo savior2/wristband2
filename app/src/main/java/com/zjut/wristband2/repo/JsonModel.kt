@@ -51,3 +51,14 @@ data class Version(
     @SerializedName("url")
     val url: String
 ) : Serializable
+
+data class Position(
+    @SerializedName("name")
+    val name: String,
+    @SerializedName("longitude")
+    val longitude: Double,
+    @SerializedName("latitude")
+    val latitude: Double,
+    @SerializedName("update_time")
+    val updateTime: String
+) : Serializable

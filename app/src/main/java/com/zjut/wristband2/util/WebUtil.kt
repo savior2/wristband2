@@ -6,6 +6,7 @@ import com.google.gson.Gson
 import com.zjut.wristband2.MyApplication
 import com.zjut.wristband2.R
 import com.zjut.wristband2.error.WCode
+import com.zjut.wristband2.repo.Position
 import com.zjut.wristband2.repo.Version
 import okhttp3.FormBody
 import okhttp3.MediaType.Companion.toMediaType
@@ -218,6 +219,13 @@ object WebUtil {
         }
         return null
     }
+
+    fun temp(pos: List<Position>) {
+        val data = Gson().toJson(pos)
+        WebBasic.doGet("http://www.meetpanda.xyz:8000/insertpos?data=$data") {
+
+        }
+    }
 }
 
 
@@ -262,6 +270,17 @@ private object WebBasic {
         val requestBody = RequestBody.create(JSON_TYPE, body)
         val request = Request.Builder().url(url).post(requestBody).build()
         val response = OkHttpClient().newCall(request).execute()
+        callable(response.body?.string() ?: "")
+    }
+
+    inline fun doGet(url: String, callable: (String) -> Unit) {
+        val request = Request.Builder()
+            .url(url)
+            .get()
+            .build()
+        val response = OkHttpClient()
+            .newCall(request)
+            .execute()
         callable(response.body?.string() ?: "")
     }
 }

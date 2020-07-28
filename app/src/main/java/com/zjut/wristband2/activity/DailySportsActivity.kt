@@ -373,7 +373,7 @@ class DailySportsActivity : AppCompatActivity(), SensorEventListener {
                                 TimeTransfer.nowUtcMillion()
                             )
                         )
-                        if (runTime.value!! % 60 == 0) {
+                        if (runTime.value!! % 5 == 0) {
                             PostSportsRealTimeTask(object : TaskListener {
                                 override fun onStart() {}
 

@@ -2,7 +2,6 @@ package com.zjut.wristband2.task
 
 import android.os.AsyncTask
 import android.os.Environment
-import android.util.Log
 import com.google.gson.Gson
 import com.zjut.wristband2.MyApplication
 import com.zjut.wristband2.error.WCode
@@ -10,12 +9,12 @@ import com.zjut.wristband2.repo.*
 import com.zjut.wristband2.util.SpUtil
 import com.zjut.wristband2.util.TimeTransfer
 import com.zjut.wristband2.util.WebUtil
+import com.zjut.wristband2.util.baiduToGaode
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.File
 import java.io.InputStream
 import java.io.RandomAccessFile
-import java.lang.Exception
 import java.util.*
 
 class LoginTask(
@@ -222,6 +221,20 @@ class PostSportsRealTimeTask(
                     mode = MyApplication.mode.mode,
                     detail = details
                 )
+
+                val tt = arrayListOf<Position>()
+                for (i in p0) {
+                    val cc = baiduToGaode(i.longitude.toDouble(), i.latitude.toDouble())
+                    tt.add(
+                        Position(
+                            name = summary.sid,
+                            longitude = cc.longitude,
+                            latitude = cc.latitude,
+                            updateTime = i.utc.toString()
+                        )
+                    )
+                }
+                WebUtil.temp(tt)
                 return WebUtil.postNormalSports(Gson().toJson(info))
             }
         } else {
