@@ -62,3 +62,8 @@ data class Position(
     @SerializedName("update_time")
     val updateTime: String
 ) : Serializable
+
+data class TempSportsRealtime(
+    val deviceId: String,
+    val data: List<SportsDetailJson>
+) : Serializable

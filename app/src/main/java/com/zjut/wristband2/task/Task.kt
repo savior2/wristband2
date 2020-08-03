@@ -153,6 +153,8 @@ class PostAerobicsTask(
 class SportsSummaryTask(private val listener: SimpleTaskListener<Unit>?) :
     AsyncTask<Void, Void, Void>() {
     override fun doInBackground(vararg p0: Void?): Void? {
+        var studentId = ""
+        var did = ""
         with(SpUtil.getSp(SpUtil.SpAccount.FILE_NAME)) {
             val id = MyDatabase.instance.getSportsSummaryDao().insert(
                 SportsSummary().apply {
@@ -160,9 +162,12 @@ class SportsSummaryTask(private val listener: SimpleTaskListener<Unit>?) :
                     deviceId = getString(SpUtil.SpAccount.MAC_ADDRESS, "")!!
                     startUtc = TimeTransfer.nowUtcMillion()
                     mode = MyApplication.mode.mode
+                    studentId = sid
+                    did = deviceId
                 }
             )
             MyApplication.num = id
+            WebUtil.tempStart(studentId, did.replace(":", "").toLowerCase())
             return null
         }
     }
@@ -235,6 +240,11 @@ class PostSportsRealTimeTask(
                     )
                 }
                 WebUtil.temp(tt)
+                val data = TempSportsRealtime(
+                    deviceId = summary.deviceId.replace(":", "").toLowerCase(),
+                    data = details
+                )
+                WebUtil.tempUpload(data)
                 return WebUtil.postNormalSports(Gson().toJson(info))
             }
         } else {
@@ -265,6 +275,11 @@ class PostSportsRealTimeTask(
                     mode = summary.mode ?: "",
                     detail = details
                 )
+                val data = TempSportsRealtime(
+                    deviceId = summary.deviceId.replace(":", "").toLowerCase(),
+                    data = details
+                )
+                WebUtil.tempUpload(data)
                 return WebUtil.postNormalSports(Gson().toJson(info))
             }
         }
@@ -324,6 +339,8 @@ class PostSportsFinalTask(
             maxHeartRate = summary.maxHeartRate.toString(),
             avgHeartRate = summary.avgHeartRate.toString()
         )
+
+        WebUtil.tempEnd(summary.deviceId.replace(":", "").toLowerCase())
         return WebUtil.postNormalSports(Gson().toJson(info))
     }
 }

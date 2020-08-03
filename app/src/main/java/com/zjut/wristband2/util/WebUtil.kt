@@ -7,6 +7,7 @@ import com.zjut.wristband2.MyApplication
 import com.zjut.wristband2.R
 import com.zjut.wristband2.error.WCode
 import com.zjut.wristband2.repo.Position
+import com.zjut.wristband2.repo.TempSportsRealtime
 import com.zjut.wristband2.repo.Version
 import okhttp3.FormBody
 import okhttp3.MediaType.Companion.toMediaType
@@ -223,6 +224,25 @@ object WebUtil {
     fun temp(pos: List<Position>) {
         val data = Gson().toJson(pos)
         WebBasic.doGet("http://www.meetpanda.xyz:8000/insertpos?data=$data") {
+        }
+    }
+
+    fun tempStart(sid: String, deviceId: String) {
+        WebBasic.doGet(WebBasic.DOMAIN + WebBasic.TEMP_START + "?username=$sid&deviceId=$deviceId") {
+
+        }
+    }
+
+    fun tempUpload(data: TempSportsRealtime) {
+        val info = Gson().toJson(data)
+        WebBasic.doPostWithRawBody(WebBasic.DOMAIN + WebBasic.TEMP_UPLOAD, info) {
+
+        }
+
+    }
+
+    fun tempEnd(deviceId: String) {
+        WebBasic.doGet(WebBasic.DOMAIN + WebBasic.TEMP_END + "?deviceId=$deviceId") {
 
         }
     }
@@ -248,6 +268,10 @@ private object WebBasic {
     const val VERSION_URI = "/api/sportsEquipment/appVersion"
     const val POST_AEROBICS_URI = "/uploadTestData"
     const val POST_NORMAL_SPORTS_URI = "/uploadSportData"
+
+    const val TEMP_START = "/api/sportsEquipment/sportStartServlet"
+    const val TEMP_UPLOAD = "/api/sportsEquipment/sportDataUploadServlet"
+    const val TEMP_END = "/api/sportsEquipment/sportStopServlet"
 
     inline fun doPost(url: String, body: Map<String, String>, callable: (String) -> Unit) {
         val formBody = FormBody.Builder().apply {

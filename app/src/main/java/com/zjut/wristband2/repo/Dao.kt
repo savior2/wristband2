@@ -57,7 +57,7 @@ interface SportsSummaryDao {
     @Query("select * from sports_summary where id = :id")
     fun findById(id: Long): SportsSummary
 
-    @Query("select * from sports_summary where start_utc>= :start and start_utc <= :end and exercise_time>10 order by id")
+    @Query("select * from sports_summary where start_utc>= :start and start_utc <= :end order by id")
     fun findByTime(start: Long, end: Long): List<SportsSummary>
 }
 
