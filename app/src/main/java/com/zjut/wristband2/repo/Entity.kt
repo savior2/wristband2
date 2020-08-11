@@ -4,7 +4,11 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-
+/**
+ * @author qpf
+ * @date 2020-8
+ * @description
+ */
 @Entity(tableName = "daily_heart")
 class DailyHeart {
     @PrimaryKey(autoGenerate = true)

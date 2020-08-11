@@ -13,6 +13,11 @@ import com.zjut.wristband2.activity.*
 import com.zjut.wristband2.util.SpUtil
 import kotlinx.android.synthetic.main.cell_nav_border.view.*
 
+/**
+ * @author qpf
+ * @date 2020-8
+ * @description
+ */
 class NavBorderAdapter(private val context: Context, private val array: List<Item>) :
     RecyclerView.Adapter<MyHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyHolder {
@@ -46,6 +51,9 @@ class NavBorderAdapter(private val context: Context, private val array: List<Ite
                             .setNegativeButton("取消") { _, _ -> }
                             .setPositiveButton("确定") { _, _ -> logout() }
                             .create().show()
+                    }
+                    6 -> {
+                        context.startActivity(Intent(context, TestActivity::class.java))
                     }
                 }
             }

@@ -6,6 +6,11 @@ import com.zjut.wristband2.R
 import kotlinx.android.synthetic.main.activity_about.*
 
 
+/**
+ * @author qpf
+ * @date 2020-8
+ * @description the basic information of the app
+ */
 class AboutActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

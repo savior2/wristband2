@@ -15,6 +15,11 @@ import com.zjut.wristband2.util.SpUtil
 import com.zjut.wristband2.util.toast
 import kotlinx.android.synthetic.main.activity_login.*
 
+/**
+ * @author qpf
+ * @date 2020-8
+ * @description
+ */
 class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

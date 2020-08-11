@@ -5,6 +5,11 @@ import android.os.Bundle
 import com.zjut.wristband2.R
 import kotlinx.android.synthetic.main.activity_daily_sports_outdoor.*
 
+/**
+ * @author qpf
+ * @date 2020-8
+ * @description
+ */
 class DailySportsOutdoorActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

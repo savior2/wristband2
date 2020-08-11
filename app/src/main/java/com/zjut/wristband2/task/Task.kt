@@ -9,7 +9,6 @@ import com.zjut.wristband2.repo.*
 import com.zjut.wristband2.util.SpUtil
 import com.zjut.wristband2.util.TimeTransfer
 import com.zjut.wristband2.util.WebUtil
-import com.zjut.wristband2.util.baiduToGaode
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.File
@@ -17,6 +16,11 @@ import java.io.InputStream
 import java.io.RandomAccessFile
 import java.util.*
 
+/**
+ * @author qpf
+ * @date 2020-8
+ * @description
+ */
 class LoginTask(
     private val listener: TaskListener
 ) : BasicTask(listener) {
@@ -222,19 +226,6 @@ class PostSportsRealTimeTask(
                     detail = details
                 )
 
-                val tt = arrayListOf<Position>()
-                for (i in p0) {
-                    val cc = baiduToGaode(i.longitude.toDouble(), i.latitude.toDouble())
-                    tt.add(
-                        Position(
-                            name = summary.sid,
-                            longitude = cc.longitude,
-                            latitude = cc.latitude,
-                            updateTime = i.utc.toString()
-                        )
-                    )
-                }
-                WebUtil.temp(tt)
                 return WebUtil.postNormalSports(Gson().toJson(info))
             }
         } else {
@@ -348,8 +339,22 @@ class PickDateTask(
 class SummaryOneDayTask(
     private val listener: SummaryOneDayTaskListener
 ) : AsyncTask<Long, Void, List<SportsSummary>>() {
-    override fun doInBackground(vararg p0: Long?) = MyDatabase.instance.getSportsSummaryDao()
-        .findByTime(p0[0]!!, p0[1]!!)
+    override fun doInBackground(vararg p0: Long?): List<SportsSummary> {
+        val all = MyDatabase.instance.getSportsSummaryDao()
+            .findByTime(p0[0]!!, p0[1]!!)
+        val f = arrayListOf<SportsSummary>()
+        for (i in all) {
+            if (i.mode == "indoor") {
+                f.add(i)
+            } else {
+                val time = MyDatabase.instance.getSportsPositionDao().findBySportsId(i.id.toLong())
+                if (time.isNotEmpty()) {
+                    f.add(i)
+                }
+            }
+        }
+        return f
+    }
 
     override fun onPostExecute(result: List<SportsSummary>) {
         super.onPostExecute(result)

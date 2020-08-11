@@ -30,6 +30,11 @@ import com.zjut.wristband2.util.toast
 import com.zjut.wristband2.vm.HomeActivityVM
 import kotlinx.android.synthetic.main.activity_home.*
 
+/**
+ * @author qpf
+ * @date 2020-8
+ * @description
+ */
 class HomeActivity : AppCompatActivity() {
     var binder: DownloadService.DownloadBinder? = null
     private lateinit var url: String

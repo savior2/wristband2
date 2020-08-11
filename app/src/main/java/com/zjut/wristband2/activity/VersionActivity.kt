@@ -7,6 +7,11 @@ import androidx.appcompat.app.AppCompatActivity
 import com.zjut.wristband2.R
 import kotlinx.android.synthetic.main.activity_version.*
 
+/**
+ * @author qpf
+ * @date 2020-8
+ * @description
+ */
 class VersionActivity : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.M)

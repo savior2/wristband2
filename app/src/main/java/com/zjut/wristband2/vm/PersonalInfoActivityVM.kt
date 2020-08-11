@@ -7,6 +7,11 @@ import androidx.lifecycle.SavedStateHandle
 import com.zjut.wristband2.R
 import com.zjut.wristband2.util.SpUtil
 
+/**
+ * @author qpf
+ * @date 2020-8
+ * @description
+ */
 class PersonalInfoActivityVM(private val app: Application, private val handle: SavedStateHandle) :
     AndroidViewModel(app) {
 

@@ -14,6 +14,11 @@ import com.zjut.wristband2.fragment.SportsTraceFragment
 import com.zjut.wristband2.vm.SummaryOnceActivityVM
 import kotlinx.android.synthetic.main.activity_summary_once.*
 
+/**
+ * @author qpf
+ * @date 2020-8
+ * @description
+ */
 class SummaryOnceActivity : FragmentActivity() {
 
     private lateinit var viewmodel: SummaryOnceActivityVM

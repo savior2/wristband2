@@ -28,6 +28,11 @@ import kotlinx.android.synthetic.main.activity_summary_once_indoor.*
 import java.text.SimpleDateFormat
 import java.util.*
 
+/**
+ * @author qpf
+ * @date 2020-8
+ * @description
+ */
 class SummaryOnceIndoorActivity : AppCompatActivity() {
     private var id = 0L
 
@@ -143,6 +148,7 @@ class SummaryOnceIndoorActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun setData() {
         SportsHeartTask(object : SportsHeartListener {
             override fun onSuccess(p: List<SportsHeart>) {
@@ -196,15 +202,19 @@ class SummaryOnceIndoorActivity : AppCompatActivity() {
                     }
                 }
                 barChart.data = BarData(bSet)
-            }
 
-        }).execute(id)
 
-        SportsPositionTask2(object : SportsPositionTask2Listener {
-            @SuppressLint("SetTextI18n")
-            override fun onSuccess(p: SportsSummary) {
-                maxHeart.text = "最高心率：${p.maxHeartRate}次/分"
-                avgHeart.text = "平均心率：${p.avgHeartRate}次/分"
+                var maxHeartRate = 0
+                var sumHeartRate = 0
+                for (i in array.indices) {
+                    sumHeartRate += array[i].rate
+                    if (array[i].rate > maxHeartRate) {
+                        maxHeartRate = array[i].rate
+                    }
+                }
+
+                maxHeart.text = "最高心率：${maxHeartRate}次/分"
+                avgHeart.text = "平均心率：${sumHeartRate / array.size}次/分"
             }
 
         }).execute(id)

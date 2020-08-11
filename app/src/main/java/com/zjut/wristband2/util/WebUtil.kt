@@ -16,6 +16,11 @@ import okhttp3.RequestBody
 import org.json.JSONException
 import org.json.JSONObject
 
+/**
+ * @author qpf
+ * @date 2020-8
+ * @description
+ */
 object WebUtil {
     private const val KEY = "oldShouHuan511ok"
     fun login(sid: String, password: String): WCode {

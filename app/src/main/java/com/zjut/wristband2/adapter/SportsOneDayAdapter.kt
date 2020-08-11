@@ -14,7 +14,11 @@ import com.zjut.wristband2.util.TimeTransfer
 import kotlinx.android.synthetic.main.cell_sports_one_day.view.*
 import java.text.SimpleDateFormat
 
-
+/**
+ * @author qpf
+ * @date 2020-8
+ * @description
+ */
 class SportsOneDayAdapter(
     private val array: List<SportsSummary>,
     private val context: Context

@@ -30,6 +30,11 @@ import kotlinx.android.synthetic.main.module_wheel_weight.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
+/**
+ * @author qpf
+ * @date 2020-8
+ * @description
+ */
 class PersonalInfoActivity : AppCompatActivity() {
 
     private lateinit var viewModel: PersonalInfoActivityVM

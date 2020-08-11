@@ -8,6 +8,11 @@ import com.zjut.wristband2.repo.AerobicsHeart
 import com.zjut.wristband2.repo.AerobicsPosition
 import com.zjut.wristband2.util.SpUtil
 
+/**
+ * @author qpf
+ * @date 2020-8
+ * @description
+ */
 class AerobicsActivityVM(app: Application) : AndroidViewModel(app) {
     val address by lazy {
         SpUtil.getSp(SpUtil.SpAccount.FILE_NAME).getString(SpUtil.SpAccount.MAC_ADDRESS, "")!!

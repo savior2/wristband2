@@ -29,7 +29,11 @@ import com.zjut.wristband2.vm.HomeActivityVM
 import kotlinx.android.synthetic.main.cell_device.view.*
 import java.util.*
 
-
+/**
+ * @author qpf
+ * @date 2020-8
+ * @description
+ */
 class DeviceAdapter(
     private val context: Context,
     private val viewModel: HomeActivityVM,
@@ -109,16 +113,18 @@ class MyDataCallback(
                     putString(SpUtil.SpAccount.MAC_NAME, viewModel.typeName)
                     apply()
                 }
-                DeviceConnectTask(object : TaskListener {
-                    override fun onStart() {}
+                if (MyApplication.isDevicePage) {
+                    DeviceConnectTask(object : TaskListener {
+                        override fun onStart() {}
 
-                    override fun onSuccess() {
-                        listener?.finishConnect()
-                    }
+                        override fun onSuccess() {
+                            listener?.finishConnect()
+                        }
 
-                    override fun onFail(code: WCode) {}
+                        override fun onFail(code: WCode) {}
 
-                }).execute()
+                    }).execute()
+                }
             }
             DeviceConnectState.DISCONNECTED -> {
                 viewModel.isConnected = false

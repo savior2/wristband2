@@ -13,6 +13,11 @@ import com.zjut.wristband2.util.SpUtil
 import com.zjut.wristband2.util.toast
 import kotlinx.android.synthetic.main.activity_modify_password.*
 
+/**
+ * @author qpf
+ * @date 2020-8
+ * @description
+ */
 class ModifyPasswordActivity : AppCompatActivity() {
 
     private lateinit var sid: String

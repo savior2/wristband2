@@ -30,12 +30,19 @@ import com.zjut.wristband2.util.SpUtil
 import com.zjut.wristband2.util.TimeTransfer
 import com.zjut.wristband2.vm.SummaryOnceActivityVM
 import kotlinx.android.synthetic.main.activity_summary_once.*
+import kotlinx.android.synthetic.main.activity_summary_once_indoor.*
 import kotlinx.android.synthetic.main.fragment_sports_heart.*
+import kotlinx.android.synthetic.main.fragment_sports_heart.avgHeart
+import kotlinx.android.synthetic.main.fragment_sports_heart.barChart
+import kotlinx.android.synthetic.main.fragment_sports_heart.lineChart
+import kotlinx.android.synthetic.main.fragment_sports_heart.maxHeart
 import java.text.SimpleDateFormat
 import java.util.*
 
 /**
- * A simple [Fragment] subclass.
+ * @author qpf
+ * @date 2020-8
+ * @description
  */
 class SportsHeartFragment : Fragment() {
 
@@ -154,6 +161,7 @@ class SportsHeartFragment : Fragment() {
 
     private fun setData() {
         SportsHeartTask(object : SportsHeartListener {
+            @SuppressLint("SetTextI18n")
             override fun onSuccess(p: List<SportsHeart>) {
                 for (i in p) {
                     array.add(i)
@@ -205,15 +213,18 @@ class SportsHeartFragment : Fragment() {
                     }
                 }
                 barChart.data = BarData(bSet)
-            }
 
-        }).execute(viewModel.id)
+                var maxHeartRate = 0
+                var sumHeartRate = 0
+                for (i in array.indices) {
+                    sumHeartRate += array[i].rate
+                    if (array[i].rate > maxHeartRate) {
+                        maxHeartRate = array[i].rate
+                    }
+                }
 
-        SportsPositionTask2(object : SportsPositionTask2Listener {
-            @SuppressLint("SetTextI18n")
-            override fun onSuccess(p: SportsSummary) {
-                maxHeart.text = "最高心率：${p.maxHeartRate}次/分"
-                avgHeart.text = "平均心率：${p.avgHeartRate}次/分"
+                maxHeart.text = "最高心率：${maxHeartRate}次/分"
+                avgHeart.text = "平均心率：${sumHeartRate / array.size}次/分"
             }
 
         }).execute(viewModel.id)

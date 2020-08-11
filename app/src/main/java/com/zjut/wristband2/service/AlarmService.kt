@@ -8,6 +8,11 @@ import android.content.Intent
 import android.os.IBinder
 import android.os.SystemClock
 
+/**
+ * @author qpf
+ * @date 2020-8
+ * @description
+ */
 class AlarmService(private val listener: Listener) : Service() {
 
     override fun onBind(intent: Intent): IBinder? = null

@@ -18,6 +18,11 @@ import com.zjut.wristband2.task.DownloadListener
 import com.zjut.wristband2.task.DownloadTask
 import java.io.File
 
+/**
+ * @author qpf
+ * @date 2020-8
+ * @description
+ */
 class DownloadService : Service() {
     override fun onBind(intent: Intent): IBinder = DownloadBinder()
 

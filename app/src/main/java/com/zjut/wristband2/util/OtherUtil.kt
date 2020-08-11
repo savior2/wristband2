@@ -5,6 +5,11 @@ import com.zjut.wristband2.repo.Position
 import java.util.*
 import kotlin.math.*
 
+/**
+ * @author qpf
+ * @date 2020-8
+ * @description
+ */
 object TimeTransfer {
     fun utc2Date(utc: Long) = Date(utc * 1000)
     fun utcMillion2Date(utc: Long) = Date(utc)

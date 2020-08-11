@@ -30,6 +30,11 @@ import com.zjut.wristband2.util.toast
 import com.zjut.wristband2.vm.DailySportsInActivityVM
 import kotlinx.android.synthetic.main.activity_daily_sports_indoor.*
 
+/**
+ * @author qpf
+ * @date 2020-8
+ * @description
+ */
 class DailySportsIndoorActivity : AppCompatActivity() {
 
     private lateinit var viewModel: DailySportsInActivityVM

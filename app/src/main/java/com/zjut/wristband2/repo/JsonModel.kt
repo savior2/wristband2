@@ -3,6 +3,11 @@ package com.zjut.wristband2.repo
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
+/**
+ * @author qpf
+ * @date 2020-8
+ * @description
+ */
 data class AerobicsJson(
     val token: String,
     val studentId: String,

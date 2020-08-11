@@ -13,6 +13,11 @@ import com.zjut.wristband2.task.TaskListener
 import com.zjut.wristband2.util.toast
 import kotlinx.android.synthetic.main.activity_feedback.*
 
+/**
+ * @author qpf
+ * @date 2020-8
+ * @description
+ */
 class FeedbackActivity : AppCompatActivity() {
 
     private var type = 0

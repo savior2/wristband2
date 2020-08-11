@@ -15,6 +15,11 @@ import com.zjut.wristband2.task.VerifyCodeTask
 import com.zjut.wristband2.util.toast
 import kotlinx.android.synthetic.main.activity_forget_password.*
 
+/**
+ * @author qpf
+ * @date 2020-8
+ * @description
+ */
 class ForgetPasswordActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

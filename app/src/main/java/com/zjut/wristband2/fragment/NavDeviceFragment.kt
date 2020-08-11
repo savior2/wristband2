@@ -20,6 +20,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.lifesense.ble.SearchCallback
 import com.lifesense.ble.bean.LsDeviceInfo
+import com.zjut.wristband2.MyApplication
 import com.zjut.wristband2.R
 import com.zjut.wristband2.adapter.DeviceAdapter
 import com.zjut.wristband2.adapter.DeviceItem
@@ -31,6 +32,11 @@ import com.zjut.wristband2.vm.HomeActivityVM
 import kotlinx.android.synthetic.main.fragment_nav_device.*
 import kotlinx.android.synthetic.main.module_connect.view.*
 
+/**
+ * @author qpf
+ * @date 2020-8
+ * @description
+ */
 class NavDeviceFragment : Fragment() {
 
     private lateinit var viewModel: HomeActivityVM
@@ -172,6 +178,7 @@ class NavDeviceFragment : Fragment() {
                 object : DeviceAdapter.ConnectListener {
                     @SuppressLint("SetTextI18n")
                     override fun startConnect(item: DeviceItem) {
+                        MyApplication.isDevicePage = true
                         array.clear()
                         adapter2.notifyDataSetChanged()
                         val dialogView =
@@ -290,6 +297,7 @@ class NavDeviceFragment : Fragment() {
             stopScan()
         } else {
             if (viewModel.isBind) {
+                MyApplication.isDevicePage = true
                 DeviceUtil.stopSearch()
                 val dialogView =
                     LayoutInflater.from(requireContext())
@@ -324,7 +332,7 @@ class NavDeviceFragment : Fragment() {
 
                         override fun finishConnect() {
                             dialog.dismiss()
-                            toast(this@NavDeviceFragment.requireContext(), "连接成功！")
+                            toast(requireActivity(), "连接成功！")
                             viewModel.isBind = true
                             viewModel.isConnecting = false
                             connect()
@@ -368,6 +376,11 @@ class NavDeviceFragment : Fragment() {
                 }
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        MyApplication.isDevicePage = false
     }
 
     companion object {

@@ -31,9 +31,10 @@ import kotlinx.android.synthetic.main.fragment_daily_heart.*
 import java.text.SimpleDateFormat
 
 /**
- * A simple [Fragment] subclass.
+ * @author qpf
+ * @date 2020-8
+ * @description
  */
-
 class DailyHeartFragment : Fragment() {
 
     private lateinit var myViewModel: DailyHeartActivityVM

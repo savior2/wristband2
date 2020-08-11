@@ -7,6 +7,11 @@ import com.lifesense.ble.bean.constant.DeviceType
 import com.lifesense.ble.bean.constant.HeartRateDetectionMode
 import com.zjut.wristband2.MyApplication
 
+/**
+ * @author qpf
+ * @date 2020-8
+ * @description
+ */
 object DeviceUtil {
     private val instance by lazy {
         LsBleManager.getInstance()

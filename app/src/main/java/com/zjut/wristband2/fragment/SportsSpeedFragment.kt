@@ -32,7 +32,9 @@ import kotlinx.android.synthetic.main.fragment_sports_speed.*
 import java.text.SimpleDateFormat
 
 /**
- * A simple [Fragment] subclass.
+ * @author qpf
+ * @date 2020-8
+ * @description
  */
 class SportsSpeedFragment : Fragment() {
 

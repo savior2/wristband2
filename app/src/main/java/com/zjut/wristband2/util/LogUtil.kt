@@ -9,7 +9,11 @@ import java.io.RandomAccessFile
 import java.text.SimpleDateFormat
 import java.util.*
 
-
+/**
+ * @author qpf
+ * @date 2020-8
+ * @description
+ */
 object LogUtil {
 
     private val LOG_PATH =

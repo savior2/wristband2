@@ -7,6 +7,11 @@ import com.mob.MobSDK
 import com.zjut.wristband2.util.DeviceUtil
 import com.zjut.wristband2.util.RunMode
 
+/**
+ * @author qpf
+ * @date 2020-8
+ * @description
+ */
 class MyApplication : Application() {
 
     override fun onCreate() {
@@ -25,5 +30,6 @@ class MyApplication : Application() {
         var num = 0L
         var heartRate = 0
         var isConnect = false
+        var isDevicePage = false
     }
 }

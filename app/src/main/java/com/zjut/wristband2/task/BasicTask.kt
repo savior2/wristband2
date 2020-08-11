@@ -7,6 +7,11 @@ import com.zjut.wristband2.repo.SportsHeart
 import com.zjut.wristband2.repo.SportsPosition
 import com.zjut.wristband2.repo.SportsSummary
 
+/**
+ * @author qpf
+ * @date 2020-8
+ * @description
+ */
 abstract class BasicTask(private val listener: TaskListener) : AsyncTask<String, Void, WCode>() {
     override fun onPreExecute() {
         super.onPreExecute()

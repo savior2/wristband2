@@ -16,7 +16,9 @@ import com.zjut.wristband2.databinding.FragmentNavBorderBinding
 import com.zjut.wristband2.vm.HomeActivityVM
 
 /**
- * A simple [Fragment] subclass.
+ * @author qpf
+ * @date 2020-8
+ * @description
  */
 class NavBorderFragment : Fragment() {
 
@@ -28,6 +30,7 @@ class NavBorderFragment : Fragment() {
         Item(3, "手环管理", R.drawable.ic_nav_border_device),
         Item(4, "关于浙工健行", R.drawable.ic_nav_border_info),
         Item(5, "退出登录", R.drawable.ic_nav_border_exit)
+//        Item(6, "系统测试", R.drawable.ic_nav_border_test)
     )
 
     override fun onCreateView(

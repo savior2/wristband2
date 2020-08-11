@@ -27,7 +27,9 @@ import kotlinx.android.synthetic.main.fragment_to_day.*
 import java.util.*
 
 /**
- * A simple [Fragment] subclass.
+ * @author qpf
+ * @date 2020-8
+ * @description
  */
 class ToDayFragment : Fragment() {
 

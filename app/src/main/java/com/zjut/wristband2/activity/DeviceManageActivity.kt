@@ -10,6 +10,11 @@ import com.zjut.wristband2.util.SpUtil
 import com.zjut.wristband2.util.toast
 import kotlinx.android.synthetic.main.activity_device_manage.*
 
+/**
+ * @author qpf
+ * @date 2020-8
+ * @description
+ */
 class DeviceManageActivity : AppCompatActivity() {
 
     private val address = SpUtil.getSp(SpUtil.SpAccount.FILE_NAME)

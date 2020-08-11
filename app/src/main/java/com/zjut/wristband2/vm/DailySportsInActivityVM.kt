@@ -5,6 +5,11 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.zjut.wristband2.util.SpUtil
 
+/**
+ * @author qpf
+ * @date 2020-8
+ * @description
+ */
 class DailySportsInActivityVM(app: Application) : AndroidViewModel(app) {
 
     val address by lazy {

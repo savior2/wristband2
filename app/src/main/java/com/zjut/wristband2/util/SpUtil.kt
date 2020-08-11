@@ -4,6 +4,11 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.zjut.wristband2.MyApplication
 
+/**
+ * @author qpf
+ * @date 2020-8
+ * @description
+ */
 object SpUtil {
 
     fun getSp(file: String): SharedPreferences =

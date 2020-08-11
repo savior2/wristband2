@@ -7,6 +7,11 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.zjut.wristband2.MyApplication
 
+/**
+ * @author qpf
+ * @date 2020-8
+ * @description
+ */
 @Database(
     entities = [DailyHeart::class,
         AerobicsSummary::class,

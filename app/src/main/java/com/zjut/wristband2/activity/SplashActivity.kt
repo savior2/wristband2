@@ -10,6 +10,11 @@ import com.zjut.wristband2.util.SpUtil
 import com.zjut.wristband2.util.WebUtil
 import com.zjut.wristband2.util.isNetworkConnected
 
+/**
+ * @author qpf
+ * @date 2020-8
+ * @description
+ */
 class SplashActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

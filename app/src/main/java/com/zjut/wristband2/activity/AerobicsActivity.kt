@@ -33,6 +33,11 @@ import com.zjut.wristband2.util.*
 import com.zjut.wristband2.vm.AerobicsActivityVM
 import kotlin.math.abs
 
+/**
+ * @author qpf
+ * @date 2020-8
+ * @description aerobics exercise exhibit and control
+ */
 class AerobicsActivity : AppCompatActivity(), SensorEventListener {
 
     private lateinit var mBaiduMap: BaiduMap
@@ -480,9 +485,24 @@ class AerobicsActivity : AppCompatActivity(), SensorEventListener {
     }
 
     companion object {
-        private const val MAX_DISTANCE = 10
+        /**
+         * maximum distance that the initial points drift
+         */
+        private const val MAX_DISTANCE = 20
+
+        /**
+         * minimum distance between two points on the map
+         */
         private const val MIN_DISTANCE = 5
+
+        /**
+         * minimum number of initial points
+         */
         private const val MIN_NUMBER = 3
-        private const val MIN_ACCURACY = 1000 //40
+
+        /**
+         * minimum precision for each point
+         */
+        private const val MIN_ACCURACY = 80
     }
 }

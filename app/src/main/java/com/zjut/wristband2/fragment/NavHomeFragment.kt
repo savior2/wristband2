@@ -19,7 +19,9 @@ import com.zjut.wristband2.vm.HomeActivityVM
 import kotlinx.android.synthetic.main.fragment_nav_home.*
 
 /**
- * A simple [Fragment] subclass.
+ * @author qpf
+ * @date 2020-8
+ * @description
  */
 class NavHomeFragment : Fragment() {
 

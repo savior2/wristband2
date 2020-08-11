@@ -8,7 +8,11 @@ import com.zjut.wristband2.util.SpUtil
 import com.zjut.wristband2.util.TimeTransfer
 import java.util.*
 
-
+/**
+ * @author qpf
+ * @date 2020-8
+ * @description
+ */
 class HomeActivityVM(private val app: Application, private val handle: SavedStateHandle) :
     AndroidViewModel(app) {
 
