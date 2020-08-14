@@ -12,7 +12,7 @@ import androidx.annotation.RequiresApi
 /**
  * @author qpf
  * @date 2020-8
- * @description
+ * @description foreground notifications
  */
 class NotificationUtil : ContextWrapper {
     private var manager: NotificationManager? = null

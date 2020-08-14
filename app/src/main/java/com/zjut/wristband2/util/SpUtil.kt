@@ -7,7 +7,7 @@ import com.zjut.wristband2.MyApplication
 /**
  * @author qpf
  * @date 2020-8
- * @description
+ * @description manage the sp
  */
 object SpUtil {
 

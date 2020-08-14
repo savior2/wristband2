@@ -19,9 +19,10 @@ import org.json.JSONObject
 /**
  * @author qpf
  * @date 2020-8
- * @description
+ * @description invoke the background service
  */
 object WebUtil {
+    //AES encryption key
     private const val KEY = "oldShouHuan511ok"
     fun login(sid: String, password: String): WCode {
         if (!isNetworkConnected()) {

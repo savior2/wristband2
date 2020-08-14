@@ -12,7 +12,7 @@ import java.util.*
 /**
  * @author qpf
  * @date 2020-8
- * @description
+ * @description print the logs to files on the phone
  */
 object LogUtil {
 

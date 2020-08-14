@@ -57,6 +57,9 @@ class HomeActivityVM(private val app: Application, private val handle: SavedStat
             app.getDrawable(R.drawable.ic_profile_girl)
 
 
+    /**
+     * the status of device
+     */
     var isConnected: Boolean
         get() {
             if (!handle.contains(CONNECT)) {
@@ -69,6 +72,9 @@ class HomeActivityVM(private val app: Application, private val handle: SavedStat
         }
         set(value) = handle.set(CONNECT, value)
 
+    /**
+     * control a failed connection
+     */
     var isConnecting: Boolean
         get() {
             if (!handle.contains(CONNECTING)) {
@@ -95,6 +101,9 @@ class HomeActivityVM(private val app: Application, private val handle: SavedStat
         set(value) = handle.set(BIND, value)
 
 
+    /**
+     * mac address
+     */
     var address: String
         get() {
             if (!handle.contains(ADDRESS)) {
@@ -110,6 +119,9 @@ class HomeActivityVM(private val app: Application, private val handle: SavedStat
         }
         set(value) = handle.set(ADDRESS, value)
 
+    /**
+     * device name
+     */
     var typeName: String
         get() {
             if (!handle.contains(TYPE)) {
@@ -125,6 +137,9 @@ class HomeActivityVM(private val app: Application, private val handle: SavedStat
         }
         set(value) = handle.set(TYPE, value)
 
+    /**
+     * device type
+     */
     var type: String
         get() {
             if (!handle.contains(TYPE_ID)) {

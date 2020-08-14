@@ -11,6 +11,9 @@ import java.util.*
  * @description
  */
 class DailyHeartActivityVM : ViewModel() {
+    /**
+     * the selected date
+     */
     private val _date = MutableLiveData<Date>().also { it.value = Date() }
 
     val date: LiveData<Date>

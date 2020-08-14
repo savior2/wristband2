@@ -9,5 +9,8 @@ import androidx.lifecycle.AndroidViewModel
  * @description
  */
 class SummaryOnceActivityVM(app: Application) : AndroidViewModel(app) {
+    /**
+     *the id of selected sports item
+     */
     var id = 0L
 }

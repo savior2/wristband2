@@ -10,7 +10,7 @@ import com.zjut.wristband2.util.SpUtil
 /**
  * @author qpf
  * @date 2020-8
- * @description
+ * @description the same as AerobicsActivityVM
  */
 class DailySportsActivityVM(app: Application) : AndroidViewModel(app) {
     val address by lazy {
