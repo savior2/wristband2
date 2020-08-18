@@ -119,7 +119,7 @@
 
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="gG4YOUYdPyGZjOMhGGVMlxtG9rmTArGT" />
+            android:value="wzbi6MgIFsIBCKqwj56n8mms8mKPcbTy" />
 
         <service
             android:name=".service.AlarmService"

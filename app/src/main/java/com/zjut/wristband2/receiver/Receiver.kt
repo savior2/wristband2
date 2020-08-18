@@ -12,7 +12,7 @@ import com.zjut.wristband2.util.isNetworkConnected
 /**
  * @author qpf
  * @date 2020-8
- * @description
+ * @description 无网络
  */
 class NetworkReceiver(private val listener: NetworkListener) : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {

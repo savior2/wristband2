@@ -8,7 +8,7 @@ import kotlinx.android.synthetic.main.activity_daily_sports_outdoor.*
 /**
  * @author qpf
  * @date 2020-8
- * @description
+ * @description no network
  */
 class DailySportsOutdoorActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
