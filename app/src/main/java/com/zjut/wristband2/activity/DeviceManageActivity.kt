@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.activity_device_manage.*
 /**
  * @author qpf
  * @date 2020-8
- * @description   右侧的菜单项中的手环管理
+ * @description 左侧隐藏栏的菜单项中的手环管理
  */
 class DeviceManageActivity : AppCompatActivity() {
 
