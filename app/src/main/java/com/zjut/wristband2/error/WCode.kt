@@ -1,5 +1,10 @@
 package com.zjut.wristband2.error
 
+/**
+ * @author qpf
+ * @date 2020-8
+ * @description
+ */
 enum class WCode(val num: Int, val error: String) {
     OK(0, "成功"),
     UnDefinedError(5, "未定义错误"),

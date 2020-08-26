@@ -3,6 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.mob.sdk'
+apply plugin: 'org.jetbrains.dokka'
 
 android {
     compileSdkVersion 29
@@ -23,6 +24,26 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+
+
+    dokka {
+        outputFormat = 'javadoc'
+        outputDirectory = "$buildDir/dokka"
+
+        configuration {
+            // Do not output deprecated members
+            skipDeprecated = true
+            // Emit warnings about not documented members.
+            reportUndocumented = true
+            // Do not create index pages for empty packages
+            skipEmptyPackages = true
+
+            noJdkLink = true
+            noStdlibLink = true
+            noAndroidSdkLink = true
         }
     }
 
@@ -54,6 +75,7 @@ dependencies {
     implementation "androidx.room:room-ktx:$room_version"
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0-alpha'
     implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'cn.aigestudio.wheelpicker:WheelPicker:1.1.3'
 }
 
 

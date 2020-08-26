@@ -19,14 +19,16 @@ import com.zjut.wristband2.vm.HomeActivityVM
 import kotlinx.android.synthetic.main.fragment_nav_home.*
 
 /**
- * A simple [Fragment] subclass.
+ * @author qpf
+ * @date 2020-8
+ * @description
  */
 class NavHomeFragment : Fragment() {
 
     private val array = arrayListOf(
         Item(1, "日常心率", R.drawable.ic_nav_home_heart),
         Item(2, "累计运动", R.drawable.ic_nav_home_all),
-        Item(3, "日常运动", R.drawable.ic_nav_home_one),
+        Item(3, "运动数据", R.drawable.ic_nav_home_one),
         Item(4, "有氧能力", R.drawable.ic_nav_home_health)
     )
 

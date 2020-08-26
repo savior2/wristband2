@@ -17,7 +17,9 @@ import kotlinx.android.synthetic.main.fragment_date_picker.view.*
 import java.util.*
 
 /**
- * A simple [Fragment] subclass.
+ * @author qpf
+ * @date 2020-8
+ * @description
  */
 class DatePickerFragment : DialogFragment() {
 

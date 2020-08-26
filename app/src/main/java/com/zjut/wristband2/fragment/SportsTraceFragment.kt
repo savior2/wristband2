@@ -19,7 +19,9 @@ import kotlinx.android.synthetic.main.activity_summary_once.*
 import kotlinx.android.synthetic.main.fragment_sports_trace.*
 
 /**
- * A simple [Fragment] subclass.
+ * @author qpf
+ * @date 2020-8
+ * @description
  */
 class SportsTraceFragment : Fragment() {
 

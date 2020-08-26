@@ -29,7 +29,11 @@ import com.zjut.wristband2.vm.HomeActivityVM
 import kotlinx.android.synthetic.main.cell_device.view.*
 import java.util.*
 
-
+/**
+ * @author qpf
+ * @date 2020-8
+ * @description
+ */
 class DeviceAdapter(
     private val context: Context,
     private val viewModel: HomeActivityVM,
@@ -66,6 +70,7 @@ class DeviceAdapter(
     private fun connect(item: DeviceItem) {
         viewModel.address = item.address
         viewModel.typeName = item.typeName
+        viewModel.type = item.type
         DeviceUtil.stopSearch()
         DeviceUtil.startDataReceive(
             item.type,
@@ -92,7 +97,7 @@ const val TAG = "MyDataCallback"
 
 class MyDataCallback(
     private val viewModel: HomeActivityVM,
-    private val listener: DeviceAdapter.ConnectListener
+    private val listener: DeviceAdapter.ConnectListener?
 ) :
     ReceiveDataCallback() {
     override fun onDeviceConnectStateChange(p0: DeviceConnectState?, p1: String?) {
@@ -104,18 +109,22 @@ class MyDataCallback(
                 MyApplication.isConnect = true
                 with(SpUtil.getSp(SpUtil.SpAccount.FILE_NAME).edit()) {
                     putString(SpUtil.SpAccount.MAC_ADDRESS, viewModel.address)
+                    putString(SpUtil.SpAccount.MAC_TYPE, viewModel.type)
+                    putString(SpUtil.SpAccount.MAC_NAME, viewModel.typeName)
                     apply()
                 }
-                DeviceConnectTask(object : TaskListener {
-                    override fun onStart() {}
+                if (MyApplication.isDevicePage) {
+                    DeviceConnectTask(object : TaskListener {
+                        override fun onStart() {}
 
-                    override fun onSuccess() {
-                        listener.finishConnect()
-                    }
+                        override fun onSuccess() {
+                            listener?.finishConnect()
+                        }
 
-                    override fun onFail(code: WCode) {}
+                        override fun onFail(code: WCode) {}
 
-                }).execute()
+                    }).execute()
+                }
             }
             DeviceConnectState.DISCONNECTED -> {
                 viewModel.isConnected = false
@@ -187,7 +196,7 @@ class MyDataCallback(
                         )
                     }.start()
                 }
-                RunMode.Normal -> {
+                RunMode.Indoor, RunMode.Outdoor -> {
                     Thread {
                         MyDatabase.instance.getSportsHeartDao().insert(
                             SportsHeart(

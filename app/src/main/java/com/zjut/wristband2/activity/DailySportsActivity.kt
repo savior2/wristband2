@@ -1,15 +1,24 @@
 package com.zjut.wristband2.activity
 
+import android.Manifest
+import android.app.Notification
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.location.LocationManager
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -23,6 +32,7 @@ import com.zjut.wristband2.MyApplication
 import com.zjut.wristband2.R
 import com.zjut.wristband2.databinding.ActivityDailySportsBinding
 import com.zjut.wristband2.error.WCode
+import com.zjut.wristband2.fragment.NavDeviceFragment
 import com.zjut.wristband2.repo.SportsPosition
 import com.zjut.wristband2.task.PostSportsFinalTask
 import com.zjut.wristband2.task.PostSportsRealTimeTask
@@ -32,7 +42,11 @@ import com.zjut.wristband2.util.*
 import com.zjut.wristband2.vm.DailySportsActivityVM
 import kotlin.math.abs
 
-
+/**
+ * @author qpf
+ * @date 2020-8
+ * @description same as AerobicsActivity
+ */
 class DailySportsActivity : AppCompatActivity(), SensorEventListener {
 
     private lateinit var mBaiduMap: BaiduMap
@@ -48,6 +62,11 @@ class DailySportsActivity : AppCompatActivity(), SensorEventListener {
     private val startBD = BitmapDescriptorFactory.fromResource(R.drawable.ic_start)
     private val finishBD = BitmapDescriptorFactory.fromResource(R.drawable.ic_end)
 
+    private lateinit var notificationUtil: NotificationUtil
+    private lateinit var notification: Notification
+
+
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_daily_sports)
@@ -62,9 +81,42 @@ class DailySportsActivity : AppCompatActivity(), SensorEventListener {
         }
         mSensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         mLocationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        if (Build.VERSION.SDK_INT >= 26) {
+            notificationUtil = NotificationUtil(this)
+            val build = notificationUtil.getAndroidChannelNotification("Wristband", "正在后台定位")
+            notification = build.build()
+        } else {
+            val builder = Notification.Builder(this)
+            val intent = Intent(this, DailySportsActivity::class.java)
+            builder.setContentIntent(
+                PendingIntent.getActivity(this, 0, intent, 0)
+            ).setContentTitle("Wristband")
+                .setSmallIcon(R.mipmap.ic_run)
+                .setContentText("正在后台定位")
+                .setWhen(System.currentTimeMillis())
+            notification = builder.build()
+        }
+        notification.defaults = Notification.DEFAULT_SOUND
         initMap()
         initControl()
         initViewModel()
+        getLocationPermission()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    private fun getLocationPermission() {
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_BACKGROUND_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            requestPermissions(
+                arrayOf(Manifest.permission.ACCESS_BACKGROUND_LOCATION),
+                2
+            )
+        } else {
+
+        }
     }
 
     private fun initMap() {
@@ -112,11 +164,13 @@ class DailySportsActivity : AppCompatActivity(), SensorEventListener {
                     background = getDrawable(R.drawable.ic_button_finish)
                     text = "结束"
                 }
+                mLocClient.enableLocInForeground(5, notification)
             } else {
                 binding.button.apply {
                     background = getDrawable(R.drawable.ic_button_start)
                     text = "开始"
                 }
+                mLocClient.disableLocInForeground(true)
             }
         })
         binding.button.setOnClickListener {
@@ -133,7 +187,8 @@ class DailySportsActivity : AppCompatActivity(), SensorEventListener {
                         reset()
                         setProgress(true, "GPS信号搜索中，请留在原地...")
                         mBaiduMap.clear()
-                        SportsSummaryTask().execute()
+                        MyApplication.mode = RunMode.Outdoor
+                        SportsSummaryTask(null).execute()
                     }
                 }
             } else {
@@ -145,7 +200,6 @@ class DailySportsActivity : AppCompatActivity(), SensorEventListener {
                             if (MyApplication.isConnect) {
                                 DeviceUtil.stopRealTime(address)
                             }
-                            MyApplication.mode = RunMode.Stop
                             setProgress(false)
                             if (isFirstLocate) {
                                 points.clear()
@@ -170,11 +224,13 @@ class DailySportsActivity : AppCompatActivity(), SensorEventListener {
                                             }
 
                                             override fun onSuccess() {
+                                                MyApplication.mode = RunMode.Stop
                                                 setProgress(false)
                                                 toast(this@DailySportsActivity, "上传成功!")
                                             }
 
                                             override fun onFail(code: WCode) {
+                                                MyApplication.mode = RunMode.Stop
                                                 setProgress(false)
                                                 toast(
                                                     this@DailySportsActivity,
@@ -307,6 +363,7 @@ class DailySportsActivity : AppCompatActivity(), SensorEventListener {
         if (MyApplication.isConnect) {
             DeviceUtil.stopRealTime(viewModel.address)
         }
+        mLocClient.disableLocInForeground(true)
     }
 
 
@@ -329,7 +386,7 @@ class DailySportsActivity : AppCompatActivity(), SensorEventListener {
                 if (isFirstZoom) isFirstZoom = false
             }
             with(viewModel) {
-                if (isStart.value!! && p0.locType == BDLocation.TypeGpsLocation) {
+                if (isStart.value!!) {  //&& p0.locType == BDLocation.TypeGpsLocation
                     if (p0.radius > MIN_ACCURACY) return
                     if (isFirstLocate) {
                         val location =
@@ -343,7 +400,6 @@ class DailySportsActivity : AppCompatActivity(), SensorEventListener {
                         if (MyApplication.isConnect) {
                             DeviceUtil.startRealtime(viewModel.address)
                         }
-                        MyApplication.mode = RunMode.Normal
                     } else {
                         val distance = getDistance(ll, lastPoint).toFloat()
                         runTime.value = runTime.value!! + 1
@@ -394,10 +450,10 @@ class DailySportsActivity : AppCompatActivity(), SensorEventListener {
     }
 
     companion object {
-        private const val MAX_DISTANCE = 10     //两个点的最大距离(计算数量)
-        private const val MIN_DISTANCE = 5      //两个点的最小距离(计算距离)
-        private const val MIN_NUMBER = 5        //位置点最小数量
-        private const val MIN_ACCURACY = 40     //位置点最小精确度
+        private const val MAX_DISTANCE = 80
+        private const val MIN_DISTANCE = 5
+        private const val MIN_NUMBER = 3
+        private const val MIN_ACCURACY = 50
     }
 }
 

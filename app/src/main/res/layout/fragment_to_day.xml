@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".fragment.ToDayFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <com.github.mikephil.charting.charts.BarChart
         android:id="@+id/barChart"
         android:layout_width="0dp"

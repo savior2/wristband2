@@ -2,9 +2,12 @@ package com.zjut.wristband2.util
 
 import android.content.Context
 import android.net.ConnectivityManager
-import android.util.Log
+import com.google.gson.Gson
 import com.zjut.wristband2.MyApplication
+import com.zjut.wristband2.R
 import com.zjut.wristband2.error.WCode
+import com.zjut.wristband2.repo.Position
+import com.zjut.wristband2.repo.Version
 import okhttp3.FormBody
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -13,7 +16,13 @@ import okhttp3.RequestBody
 import org.json.JSONException
 import org.json.JSONObject
 
+/**
+ * @author qpf
+ * @date 2020-8
+ * @description invoke the background service
+ */
 object WebUtil {
+    //AES encryption key
     private const val KEY = "oldShouHuan511ok"
     fun login(sid: String, password: String): WCode {
         if (!isNetworkConnected()) {
@@ -194,10 +203,39 @@ object WebUtil {
         }
         return WCode.OK
     }
+
+    fun getVersion(): Version? {
+        if (!isNetworkConnected()) {
+            return null
+        }
+        val version = MyApplication.context.resources.getString(R.string.version_num)
+        WebBasic.doPost(
+            WebBasic.DOMAIN + WebBasic.VERSION_URI, mapOf(
+                "version" to version,
+                "type" to "1"
+            )
+        ) {
+            val jsonObject = JSONObject(it)
+            return if (jsonObject.getBoolean("latest")) {
+                null
+            } else {
+                val data = Gson().fromJson(jsonObject.getString("data"), Version::class.java)
+                data
+            }
+        }
+        return null
+    }
+
+    fun temp(pos: List<Position>) {
+        val data = Gson().toJson(pos)
+        WebBasic.doGet("http://www.meetpanda.xyz:8000/insertpos?data=$data") {
+
+        }
+    }
 }
 
 
-private fun isNetworkConnected(): Boolean {
+fun isNetworkConnected(): Boolean {
     val connectivityManager =
         MyApplication.context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     return connectivityManager.activeNetworkInfo != null
@@ -213,6 +251,7 @@ private object WebBasic {
     const val RESET_PASSWORD_URI = "/api/sportsEquipment/resetPassword"
     const val MODIFY_PASSWORD_URI = "/api/sportsEquipment/modifyPSWServlet"
     const val FEEDBACK_URI = "/api/sportsEquipment/feedback"
+    const val VERSION_URI = "/api/sportsEquipment/appVersion"
     const val POST_AEROBICS_URI = "/uploadTestData"
     const val POST_NORMAL_SPORTS_URI = "/uploadSportData"
 
@@ -237,6 +276,17 @@ private object WebBasic {
         val requestBody = RequestBody.create(JSON_TYPE, body)
         val request = Request.Builder().url(url).post(requestBody).build()
         val response = OkHttpClient().newCall(request).execute()
+        callable(response.body?.string() ?: "")
+    }
+
+    inline fun doGet(url: String, callable: (String) -> Unit) {
+        val request = Request.Builder()
+            .url(url)
+            .get()
+            .build()
+        val response = OkHttpClient()
+            .newCall(request)
+            .execute()
         callable(response.body?.string() ?: "")
     }
 }

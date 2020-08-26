@@ -7,11 +7,11 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.location.LocationManager
 import android.media.MediaPlayer
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Vibrator
 import android.view.View
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -25,7 +25,6 @@ import com.zjut.wristband2.MyApplication
 import com.zjut.wristband2.R
 import com.zjut.wristband2.databinding.ActivityAerobicsBinding
 import com.zjut.wristband2.error.WCode
-import com.zjut.wristband2.repo.AerobicsHeart
 import com.zjut.wristband2.repo.AerobicsPosition
 import com.zjut.wristband2.task.AerobicsSummaryTask
 import com.zjut.wristband2.task.PostAerobicsTask
@@ -34,6 +33,11 @@ import com.zjut.wristband2.util.*
 import com.zjut.wristband2.vm.AerobicsActivityVM
 import kotlin.math.abs
 
+/**
+ * @author qpf
+ * @date 2020-8
+ * @description aerobics exercise exhibit and control
+ */
 class AerobicsActivity : AppCompatActivity(), SensorEventListener {
 
     private lateinit var mBaiduMap: BaiduMap
@@ -69,12 +73,20 @@ class AerobicsActivity : AppCompatActivity(), SensorEventListener {
         mSensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         mLocationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
         mVibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-        mSoundSpeedUp = MediaPlayer.create(this, R.raw.speed_up)
-        mSoundSlowDown = MediaPlayer.create(this, R.raw.slow_down)
-        mSoundNormal = MediaPlayer.create(this, R.raw.speed_normal)
+        mSoundSpeedUp = MediaPlayer.create(this, R.raw.quick)
+        mSoundSlowDown = MediaPlayer.create(this, R.raw.slow)
+        mSoundNormal = MediaPlayer.create(this, R.raw.normal)
         initMap()
         initControl()
         initViewModel()
+
+        AlertDialog.Builder(this)
+            .setTitle("有氧耐力跑测试规则")
+            .setMessage(
+                "有氧运动测试分为两个阶段：\n\t\t第一阶段过程中，起始速度为2km/h，以2km/h、4km/h、6km/h、8km/h、10km/h、12km/h的级别进行速度递增，每速度级别保持2分钟。\n\t\t第二阶段过程中，再以12km/h，10km/h、8km/h、6km/h、4km/h、2km/h的级别进行速度递减，同样每速度级别保持两分钟。总过程持续22分钟。\n\t\t在有氧运动测试过程中，APP会对受测者进行速度语音提示以达到速度控制的效果。"
+            )
+            .setPositiveButton("确定") { _, _ -> }
+            .create().show()
     }
 
     private fun initMap() {
@@ -342,7 +354,7 @@ class AerobicsActivity : AppCompatActivity(), SensorEventListener {
                 if (isFirstZoom) isFirstZoom = false
             }
             with(viewModel) {
-                if (isStart.value!! && p0.locType == BDLocation.TypeGpsLocation) {
+                if (isStart.value!!) {  //&& p0.locType == BDLocation.TypeGpsLocation
                     if (p0.radius > MIN_ACCURACY) return
                     if (isFirstLocate) {
                         val location =
@@ -473,9 +485,24 @@ class AerobicsActivity : AppCompatActivity(), SensorEventListener {
     }
 
     companion object {
-        private const val MAX_DISTANCE = 10
+        /**
+         * maximum distance that the initial points drift
+         */
+        private const val MAX_DISTANCE = 20
+
+        /**
+         * minimum distance between two points on the map
+         */
         private const val MIN_DISTANCE = 5
-        private const val MIN_NUMBER = 5
-        private const val MIN_ACCURACY = 40
+
+        /**
+         * minimum number of initial points
+         */
+        private const val MIN_NUMBER = 3
+
+        /**
+         * minimum precision for each point
+         */
+        private const val MIN_ACCURACY = 80
     }
 }

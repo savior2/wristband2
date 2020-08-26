@@ -7,7 +7,7 @@
     tools:context=".fragment.NavDeviceFragment">
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/connectStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -44,7 +44,7 @@
         android:background="?android:attr/listDivider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        app:layout_constraintTop_toBottomOf="@+id/connectStatus" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
@@ -61,10 +61,10 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_marginStart="16dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/textView2"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/connectStatus"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/textView2" />
+        app:layout_constraintTop_toTopOf="@id/connectStatus" />
 
     <TextView
         android:id="@+id/disconnect"
@@ -73,6 +73,7 @@
         android:layout_marginBottom="8dp"
         android:background="@drawable/ic_button_disconnect"
         android:clickable="true"
+        android:focusable="true"
         android:paddingTop="16dp"
         android:paddingBottom="16dp"
         android:text="断开连接"
@@ -90,9 +91,29 @@
         android:layout_marginTop="16dp"
         android:text="当前连接设备：LS Band 5S[EE:C5：2E:A6:D1:39]"
         android:textAlignment="center"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/divider4" />
+
+    <ImageView
+        android:id="@+id/connectTip"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@drawable/ic_disconnect"
+        app:layout_constraintBottom_toBottomOf="@+id/connectStatus"
+        app:layout_constraintEnd_toStartOf="@+id/connectStatus"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/connectStatus" />
+
+    <Button
+        android:id="@+id/unBindButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="解绑"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/deviceTextView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

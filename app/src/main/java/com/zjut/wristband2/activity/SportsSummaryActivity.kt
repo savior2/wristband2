@@ -10,6 +10,11 @@ import com.zjut.wristband2.fragment.ToMonthFragment
 import com.zjut.wristband2.fragment.ToWeekFragment
 import kotlinx.android.synthetic.main.activity_sports_summary.*
 
+/**
+ * @author qpf
+ * @date 2020-8
+ * @description
+ */
 class SportsSummaryActivity : FragmentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

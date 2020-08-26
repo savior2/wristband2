@@ -8,7 +8,13 @@ import com.zjut.wristband2.R
 import com.zjut.wristband2.error.WCode
 import com.zjut.wristband2.util.SpUtil
 import com.zjut.wristband2.util.WebUtil
+import com.zjut.wristband2.util.isNetworkConnected
 
+/**
+ * @author qpf
+ * @date 2020-8
+ * @description
+ */
 class SplashActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,15 +35,19 @@ class SplashActivity : AppCompatActivity() {
             if (TextUtils.isEmpty(sid) || TextUtils.isEmpty(password)) {
                 startActivity(Intent(this, LoginActivity::class.java))
             } else {
-                val code = WebUtil.login(sid, password)
-                if (code != WCode.OK) {
-                    startActivity(Intent(this, LoginActivity::class.java))
-                } else {
+                if (!isNetworkConnected()) {
                     startActivity(Intent(this, HomeActivity::class.java))
+                } else {
+                    val code = WebUtil.login(sid, password)
+                    if (code != WCode.OK) {
+                        startActivity(Intent(this, LoginActivity::class.java))
+                    } else {
+                        startActivity(Intent(this, HomeActivity::class.java))
+                    }
                 }
-
             }
             finish()
         }.start()
     }
+
 }

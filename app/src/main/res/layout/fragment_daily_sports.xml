@@ -24,16 +24,25 @@
         app:layout_constraintGuide_percent="0.65" />
 
     <Button
-        android:id="@+id/enter"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:background="@drawable/ic_button_run"
-        android:text="进入"
-        android:textAlignment="center"
-        android:textSize="18sp"
+        android:id="@+id/outButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="室外"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/inButton"
         app:layout_constraintTop_toBottomOf="@+id/mapView" />
+
+    <Button
+        android:id="@+id/inButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="室内"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/outButton"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline12" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

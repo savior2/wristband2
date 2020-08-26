@@ -1,12 +1,20 @@
 package com.zjut.wristband2.activity
 
-import androidx.appcompat.app.AppCompatActivity
+import android.os.Build
 import android.os.Bundle
+import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import com.zjut.wristband2.R
 import kotlinx.android.synthetic.main.activity_version.*
 
+/**
+ * @author qpf
+ * @date 2020-8
+ * @description
+ */
 class VersionActivity : AppCompatActivity() {
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_version)
