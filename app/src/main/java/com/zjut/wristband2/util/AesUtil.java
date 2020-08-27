@@ -67,7 +67,7 @@ public class AesUtil {
      * 2.将加密后的字符串反纺成byte[]数组
      * 3.将加密内容解密
      */
-    public static String AESDncode(String encodeRules, String content) throws InvalidAlgorithmParameterException {
+    public static String AESDecode(String encodeRules, String content) throws InvalidAlgorithmParameterException {
         try {
             byte[] keyFormat = encodeRules.getBytes("UTF-8");
             byte[] contentFormat = parseHexStr2Byte(content);

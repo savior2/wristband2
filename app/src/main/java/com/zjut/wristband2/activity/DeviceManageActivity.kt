@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.activity_device_manage.*
 /**
  * @author qpf
  * @date 2020-8
- * @description
+ * @description 左侧隐藏栏的菜单项中的手环管理
  */
 class DeviceManageActivity : AppCompatActivity() {
 
@@ -29,9 +29,11 @@ class DeviceManageActivity : AppCompatActivity() {
                 finish()
             }
         }
+        //手环管理中的心率监控的开关
         monitorLayout.setOnClickListener {
             monitorManage()
         }
+        //电量读取的开关
         powerLayout.setOnClickListener {
             readPower()
         }
@@ -41,8 +43,9 @@ class DeviceManageActivity : AppCompatActivity() {
         AlertDialog.Builder(this)
             .setTitle("打开/关闭心率监测？")
             .setSingleChoiceItems(
+                //-1的没有选项选中
                 arrayOf("关闭", "打开"), -1
-            ) { p0, p1 ->
+            ) { _, p1 ->
                 if (p1 == 0) {
                     DeviceUtil.stopHeartRateMonitor(address)
                     toast(this, "心率监测已关闭")
@@ -57,6 +60,7 @@ class DeviceManageActivity : AppCompatActivity() {
 
     private fun readPower() {
         DeviceUtil.readPower(address, OnDeviceReadListener { p0, p1, p2, p3 ->
+            //runOnUiThread读取电量在主线程中实现，避免闪退，报错等现象
             runOnUiThread {
                 AlertDialog.Builder(this)
                     .setTitle("当前剩余电量：$p3%")

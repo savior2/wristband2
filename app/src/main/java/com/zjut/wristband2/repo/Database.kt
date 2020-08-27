@@ -46,5 +46,10 @@ abstract class MyDatabase : RoomDatabase() {
                 database.execSQL("ALTER TABLE sports_summary ADD COLUMN mode TEXT")
             }
         }
+        private val MIGRATION_6_7 = object : Migration(6, 7) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+
+            }
+        }
     }
 }

@@ -18,7 +18,12 @@ import kotlinx.android.synthetic.main.activity_forget_password.*
 /**
  * @author qpf
  * @date 2020-8
- * @description
+ * @description 登录界面忘记密码
+ */
+/**
+ * toolbar设置的是忘记密码最上方的重置密码（标题栏）
+ *setSupportActionBar需要放在setNavigationOnClickListener前面反则设置无效
+ *toolbar.apply的使用是为了减少重复使用toolbar
  */
 class ForgetPasswordActivity : AppCompatActivity() {
 
@@ -26,15 +31,22 @@ class ForgetPasswordActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_forget_password)
         setSupportActionBar(toolbar)
-        toolbar.apply {
+        /*toolbar.apply {
+        //返回的箭头，R.drawable.name是为了防止受当前的主题影响
             navigationIcon = getDrawable(R.drawable.ic_menu_back)
             setNavigationOnClickListener {
                 finish()
             }
+        }*/
+        toolbar.navigationIcon = getDrawable(R.drawable.ic_menu_back)
+        toolbar.setNavigationOnClickListener {
+            finish()
         }
+        //获取验证码，获取之前校验信息
         getCodeButton.setOnClickListener {
             getVerifyCode()
         }
+        //重置密码按钮
         resetButton.setOnClickListener {
             reset()
         }
@@ -45,6 +57,7 @@ class ForgetPasswordActivity : AppCompatActivity() {
         if (TextUtils.isEmpty(sid)) {
             toast(this, "请先输入学号！")
         } else {
+            //第一个参数为总时间，第二个参数为间隔时间
             TimeCount(60000, 1000).start()
             VerifyCodeTask(object : TaskListener {
                 override fun onStart() {
@@ -95,13 +108,9 @@ class ForgetPasswordActivity : AppCompatActivity() {
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            android.R.id.home -> finish()
-        }
-        return super.onOptionsItemSelected(item)
-    }
 
+    /**
+     * 继承CountDownTimer*/
     private inner class TimeCount(
         millisInFuture: Long,
         countDownInterval: Long
@@ -113,6 +122,9 @@ class ForgetPasswordActivity : AppCompatActivity() {
             }
         }
 
+        /**
+         * 注解用途忽略字符串拼接的检查
+         */
         @SuppressLint("SetTextI18n")
         override fun onTick(p0: Long) {
             with(getCodeButton) {

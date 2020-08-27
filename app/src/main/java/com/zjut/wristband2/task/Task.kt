@@ -30,7 +30,7 @@ class LoginTask(
 class VerifyCodeTask(
     private val listener: TaskListener
 ) : BasicTask(listener) {
-    override fun doInBackground(vararg p0: String) = WebUtil.getVerifyCode(p0[0])
+    override fun doInBackground(vararg p5: String) = WebUtil.getVerifyCode(p5[0])
 }
 
 

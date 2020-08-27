@@ -10,6 +10,7 @@ import kotlinx.android.synthetic.main.activity_daily_heart.*
  * @author qpf
  * @date 2020-8
  * @description show daily heart rate by date
+ * 首页中日常心率
  */
 class DailyHeartActivity : AppCompatActivity() {
 
