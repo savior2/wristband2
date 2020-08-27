@@ -12,7 +12,9 @@ import com.zjut.wristband2.R
 import kotlinx.android.synthetic.main.fragment_nav_sports.*
 
 /**
- * A simple [Fragment] subclass.
+ * @author qpf
+ * @date 2020-8
+ * @description
  */
 class NavSportsFragment : Fragment() {
 

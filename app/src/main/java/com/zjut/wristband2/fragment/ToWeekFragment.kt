@@ -20,15 +20,19 @@ import com.zjut.wristband2.task.SportsHeartListener
 import com.zjut.wristband2.task.SportsHeartTask
 import com.zjut.wristband2.task.SummaryOneDayTask
 import com.zjut.wristband2.task.SummaryOneDayTaskListener
+import com.zjut.wristband2.util.SpUtil
 import com.zjut.wristband2.util.TimeTransfer
 import kotlinx.android.synthetic.main.fragment_to_day.*
+import java.util.*
 
 /**
- * A simple [Fragment] subclass.
+ * @author qpf
+ * @date 2020-8
+ * @description
  */
 class ToWeekFragment : Fragment() {
 
-    private var mWeight = 65
+    private var mWeight = 65F
     private var mAge = 24
     private var h0 = 0
     private var h1 = 0
@@ -41,6 +45,13 @@ class ToWeekFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        val ageUtc = SpUtil.getSp(SpUtil.SpAccount.FILE_NAME).getLong(SpUtil.SpAccount.BIRTHDAY, 0)
+        val age = Date().year - TimeTransfer.utcMillion2Date(ageUtc).year
+        if (age in 1..99)
+            mAge = age
+        val weight = SpUtil.getSp(SpUtil.SpAccount.FILE_NAME).getFloat(SpUtil.SpAccount.WEIGHT, 0F)
+        if (weight > 20)
+            mWeight = weight
         return inflater.inflate(R.layout.fragment_to_day, container, false)
     }
 

@@ -14,10 +14,15 @@ import com.baidu.mapapi.map.*
 import com.baidu.mapapi.model.LatLng
 import com.zjut.wristband2.R
 import com.zjut.wristband2.activity.DailySportsActivity
+import com.zjut.wristband2.activity.DailySportsIndoorActivity
+import com.zjut.wristband2.activity.DailySportsOutdoorActivity
+import com.zjut.wristband2.util.isNetworkConnected
 import kotlinx.android.synthetic.main.fragment_daily_sports.*
 
 /**
- * A simple [Fragment] subclass.
+ * @author qpf
+ * @date 2020-8
+ * @description
  */
 class DailySportsFragment : Fragment() {
 
@@ -53,8 +58,15 @@ class DailySportsFragment : Fragment() {
             mLocClient.locOption = this
         }
         mLocClient.registerLocationListener(mLocListener)
-        enter.setOnClickListener {
-            startActivity(Intent(requireContext(), DailySportsActivity::class.java))
+        outButton.setOnClickListener {
+            if (isNetworkConnected()) {
+                startActivity(Intent(requireContext(), DailySportsActivity::class.java))
+            } else {
+                startActivity(Intent(requireContext(), DailySportsOutdoorActivity::class.java))
+            }
+        }
+        inButton.setOnClickListener {
+            startActivity(Intent(requireContext(), DailySportsIndoorActivity::class.java))
         }
     }
 

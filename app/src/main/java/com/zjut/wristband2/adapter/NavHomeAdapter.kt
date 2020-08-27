@@ -19,7 +19,11 @@ import kotlinx.android.synthetic.main.cell_nav_home.view.*
 import kotlinx.android.synthetic.main.module_wheel_date_picker.view.*
 import java.util.*
 
-
+/**
+ * @author qpf
+ * @date 2020-8
+ * @description
+ */
 class NavHomeAdapter(
     private val context: Context,
     private val array: List<Item>,

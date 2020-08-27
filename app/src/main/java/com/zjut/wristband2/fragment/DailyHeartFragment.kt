@@ -31,9 +31,10 @@ import kotlinx.android.synthetic.main.fragment_daily_heart.*
 import java.text.SimpleDateFormat
 
 /**
- * A simple [Fragment] subclass.
+ * @author qpf
+ * @date 2020-8
+ * @description
  */
-
 class DailyHeartFragment : Fragment() {
 
     private lateinit var myViewModel: DailyHeartActivityVM
@@ -42,6 +43,7 @@ class DailyHeartFragment : Fragment() {
 
     @SuppressLint("SimpleDateFormat")
     private val df1 = SimpleDateFormat("yyyy年MM月dd日")
+
     @SuppressLint("SimpleDateFormat")
     private val df2 = SimpleDateFormat("HH:mm")
 
@@ -84,8 +86,13 @@ class DailyHeartFragment : Fragment() {
             setAvoidFirstLastClipping(true)
             setLabelCount(3, false)
             setValueFormatter { value, _ ->
-                val d = TimeTransfer.utc2Date(array[value.toInt()].utc)
-                df2.format(d)
+                val x = value.toInt()
+                if (x >= 0 && x < array.size) {
+                    val d = TimeTransfer.utc2Date(array[value.toInt()].utc)
+                    df2.format(d)
+                } else {
+                    ""
+                }
             }
             textSize = 12f
         }
@@ -112,7 +119,7 @@ class DailyHeartFragment : Fragment() {
             clear()
             animateX(2500)
         }
-        DailyHeartTask(object : SimpleTaskListener {
+        DailyHeartTask(object : SimpleTaskListener<List<DailyHeart>> {
             override fun onSuccess(list: List<DailyHeart>) {
                 if (list.isEmpty()) return
                 array = list
@@ -138,6 +145,7 @@ class DailyHeartFragment : Fragment() {
     private inner class MyMarkerView(context: Context, layoutResource: Int) :
         MarkerView(context, layoutResource) {
         private val mHeartRateTextView: TextView = findViewById(R.id.heart_rate_text_view)
+
         @SuppressLint("SetTextI18n")
         override fun refreshContent(e: Entry?, highlight: Highlight?) {
             val date = TimeTransfer.utc2Date(array[e!!.x.toInt()].utc)

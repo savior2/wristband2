@@ -7,18 +7,19 @@ import android.content.Context
 import android.content.Intent
 import android.os.IBinder
 import android.os.SystemClock
-import android.util.Log
 
-class AlarmService : Service() {
+/**
+ * @author qpf
+ * @date 2020-8
+ * @description crontab
+ */
+class AlarmService(private val listener: Listener) : Service() {
 
     override fun onBind(intent: Intent): IBinder? = null
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        Thread {
-            Log.e("test", "hello")
-        }.start()
         val manager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val trigger = SystemClock.elapsedRealtime() + 5000
+        val trigger = SystemClock.elapsedRealtime() + 1000
         val intent2 = Intent(this, AlarmService::class.java)
         val pi = PendingIntent.getService(this, 0, intent2, 0)
         manager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, trigger, pi)
@@ -32,5 +33,9 @@ class AlarmService : Service() {
             val pi = PendingIntent.getService(context, 0, intent2, 0)
             manager.cancel(pi)
         }
+    }
+
+    interface Listener {
+        fun doWork()
     }
 }

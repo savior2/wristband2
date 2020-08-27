@@ -16,6 +16,11 @@ import com.zjut.wristband2.util.TimeTransfer
 import kotlinx.android.synthetic.main.activity_summary_one_day.*
 import java.text.SimpleDateFormat
 
+/**
+ * @author qpf
+ * @date 2020-8
+ * @description
+ */
 class SummaryOneDayActivity : AppCompatActivity() {
     private var startUtc = 0L
     @SuppressLint("SimpleDateFormat")

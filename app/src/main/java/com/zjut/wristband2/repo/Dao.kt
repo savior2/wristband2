@@ -1,11 +1,15 @@
 package com.zjut.wristband2.repo
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 
+/**
+ * @author qpf
+ * @date 2020-8
+ * @description
+ */
 @Dao
 interface DailyHeartDao {
     @Insert
@@ -57,8 +61,11 @@ interface SportsSummaryDao {
     @Query("select * from sports_summary where id = :id")
     fun findById(id: Long): SportsSummary
 
-    @Query("select * from sports_summary where start_utc>= :start and start_utc <= :end and exercise_time>10 order by id")
+    @Query("select * from sports_summary where start_utc>= :start and start_utc <= :end order by id")
     fun findByTime(start: Long, end: Long): List<SportsSummary>
+
+    @Query("select * from sports_summary order by id desc")
+    fun findAll(): List<SportsSummary>
 }
 
 

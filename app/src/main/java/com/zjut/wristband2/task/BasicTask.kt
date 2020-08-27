@@ -7,6 +7,11 @@ import com.zjut.wristband2.repo.SportsHeart
 import com.zjut.wristband2.repo.SportsPosition
 import com.zjut.wristband2.repo.SportsSummary
 
+/**
+ * @author qpf
+ * @date 2020-8
+ * @description
+ */
 abstract class BasicTask(private val listener: TaskListener) : AsyncTask<String, Void, WCode>() {
     override fun onPreExecute() {
         super.onPreExecute()
@@ -29,8 +34,8 @@ interface TaskListener {
     fun onFail(code: WCode)
 }
 
-interface SimpleTaskListener {
-    fun onSuccess(list: List<DailyHeart>)
+interface SimpleTaskListener<T> {
+    fun onSuccess(p: T)
 }
 
 interface PickDateTaskListener {
@@ -52,4 +57,10 @@ interface SportsPositionTask2Listener {
 
 interface SportsHeartListener {
     fun onSuccess(p: List<SportsHeart>)
+}
+
+interface DownloadListener {
+    fun onSuccess()
+    fun onFail()
+    fun onProgress(p: Int)
 }

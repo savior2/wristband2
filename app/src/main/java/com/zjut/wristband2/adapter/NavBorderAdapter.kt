@@ -7,12 +7,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.zjut.wristband2.MyApplication
 import com.zjut.wristband2.R
-import com.zjut.wristband2.activity.LoginActivity
-import com.zjut.wristband2.activity.ModifyPasswordActivity
+import com.zjut.wristband2.activity.*
 import com.zjut.wristband2.util.SpUtil
 import kotlinx.android.synthetic.main.cell_nav_border.view.*
 
+/**
+ * @author qpf
+ * @date 2020-8
+ * @description
+ */
 class NavBorderAdapter(private val context: Context, private val array: List<Item>) :
     RecyclerView.Adapter<MyHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyHolder {
@@ -22,15 +27,23 @@ class NavBorderAdapter(private val context: Context, private val array: List<Ite
             view.setOnClickListener {
                 when (array[this.adapterPosition].id) {
                     1 -> {
-
+                        context.startActivity(Intent(context, PersonalInfoActivity::class.java))
                     }
                     2 -> {
                         context.startActivity(Intent(context, ModifyPasswordActivity::class.java))
                     }
                     3 -> {
-
+                        if (!MyApplication.isConnect) {
+                            AlertDialog.Builder(context)
+                                .setTitle("请先连接手环！")
+                                .setPositiveButton("确定") { _, _ -> }
+                                .create().show()
+                        } else {
+                            context.startActivity(Intent(context, DeviceManageActivity::class.java))
+                        }
                     }
                     4 -> {
+                        context.startActivity(Intent(context, AboutActivity::class.java))
                     }
                     5 -> {
                         AlertDialog.Builder(context)
@@ -38,6 +51,9 @@ class NavBorderAdapter(private val context: Context, private val array: List<Ite
                             .setNegativeButton("取消") { _, _ -> }
                             .setPositiveButton("确定") { _, _ -> logout() }
                             .create().show()
+                    }
+                    6 -> {
+                        context.startActivity(Intent(context, TestActivity::class.java))
                     }
                 }
             }

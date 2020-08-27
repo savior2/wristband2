@@ -4,9 +4,12 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import androidx.viewpager.widget.ViewPager
-import com.baidu.mapapi.map.BaiduMap
 
-
+/**
+ * @author qpf
+ * @date 2020-8
+ * @description test, not use
+ */
 class MyViewPager(private val context2: Context, private val attributeSet: AttributeSet) :
     ViewPager(context2, attributeSet) {
 

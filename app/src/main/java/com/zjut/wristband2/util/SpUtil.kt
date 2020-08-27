@@ -4,6 +4,11 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.zjut.wristband2.MyApplication
 
+/**
+ * @author qpf
+ * @date 2020-8
+ * @description manage the sp
+ */
 object SpUtil {
 
     fun getSp(file: String): SharedPreferences =
@@ -21,6 +26,8 @@ object SpUtil {
             const val WEIGHT = "weight"                 //Float
             const val TOKEN = "token"                   //String
             const val MAC_ADDRESS = "mac_address"       //String
+            const val MAC_TYPE = "mac_type"             //String
+            const val MAC_NAME = "mac_name"             //String
         }
     }
 
