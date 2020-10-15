@@ -61,6 +61,7 @@ class AerobicsActivity : AppCompatActivity(), SensorEventListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_aerobics)
+        //获取AerobicsActivity的实例
         viewModel = ViewModelProvider(this)[AerobicsActivityVM::class.java]
         binding.data = viewModel
         binding.lifecycleOwner = this
@@ -146,7 +147,7 @@ class AerobicsActivity : AppCompatActivity(), SensorEventListener {
                     !MyApplication.isConnect -> toast(this, "请先连接手环！")
                     !mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) -> toast(
                         this,
-                        "请先开启gps！"
+                        "请先开启GPS！"
                     )
                     else -> {
                         viewModel.isStart.value = true

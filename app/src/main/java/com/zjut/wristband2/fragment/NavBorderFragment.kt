@@ -28,7 +28,7 @@ class NavBorderFragment : Fragment() {
         Item(1, "个人信息", R.drawable.ic_nav_border_person),
         Item(2, "修改密码", R.drawable.ic_nav_border_security),
         Item(3, "手环管理", R.drawable.ic_nav_border_device),
-        Item(4, "关于浙工健行", R.drawable.ic_nav_border_info),
+        Item(4, "关于东南健行", R.drawable.ic_nav_border_info),
         Item(5, "退出登录", R.drawable.ic_nav_border_exit)
 //        Item(6, "系统测试", R.drawable.ic_nav_border_test)
     )

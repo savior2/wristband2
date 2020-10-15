@@ -5,6 +5,7 @@
     android:id="@+id/bottom_nav_graph"
     app:startDestination="@id/navHomeFragment">
 
+    <!--底部导航栏-->
     <fragment
         android:id="@+id/navHomeFragment"
         android:name="com.zjut.wristband2.fragment.NavHomeFragment"

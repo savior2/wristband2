@@ -10,7 +10,7 @@ import kotlinx.android.synthetic.main.activity_about.*
  * @author qpf
  * @date 2020-8
  * @description the basic information of the app
- * 右侧tab页滑出的关于浙工健行的内容
+ * 右侧tab页滑出的关于app的内容
  */
 class AboutActivity : AppCompatActivity() {
 

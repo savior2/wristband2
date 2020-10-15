@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">浙工健行</string>
+    <string name="app_name">东南健行</string>
     <string name="sid_hint">请输入学号：</string>
     <string name="password_hint">请输入密码：</string>
     <string name="login_button">登录</string>
@@ -16,9 +16,9 @@
     <string name="sid_text">学号：%s</string>
     <string name="name_text">姓名：%s</string>
     <string name="sex_text">性别：%s</string>
-    <string name="version_logo">served by zjut\nv2.0.9</string>
-    <string name="version_num">2.0.9</string>
-    <string name="version_info">Version 2.0.9</string>
+    <string name="version_logo">served by zjut\nv2.1.0</string>
+    <string name="version_num">2.1.0</string>
+    <string name="version_info">Version 2.1.0</string>
     <string name="copyright_info">CopyRight © ZJUT justrun.com.cn.\nAll Rights Reserved. </string>
     <string name="run_time">%02d:%02d:%02d</string>
     <string name="run_distance">%.2fm</string>

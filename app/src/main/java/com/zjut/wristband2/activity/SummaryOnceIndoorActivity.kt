@@ -159,7 +159,7 @@ class SummaryOnceIndoorActivity : AppCompatActivity() {
                 for (i in array.indices) {
                     entries.add(Entry((i).toFloat(), array[i].rate.toFloat()))
                 }
-                val set = LineDataSet(entries, "运动速心率曲线")
+                val set = LineDataSet(entries, "运动心率曲线")
                 set.apply {
                     axisDependency = YAxis.AxisDependency.LEFT
                     setDrawCircles(false)

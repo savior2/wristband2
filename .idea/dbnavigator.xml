@@ -2,7 +2,7 @@
 <project version="4">
   <component name="DBNavigator.Project.DataEditorManager">
     <record-view-column-sorting-type value="BY_INDEX" />
-    <value-preview-text-wrapping value="true" />
+    <value-preview-text-wrapping value="false" />
     <value-preview-pinned value="false" />
   </component>
   <component name="DBNavigator.Project.DataExportManager">
@@ -25,13 +25,13 @@
     <show-object-properties value="true" />
     <loaded-nodes>
       <connection connection-id="8f24bdca-099f-482b-bd26-1a4c35576f53">
-        <schema name="main" object-types="view, table" />
+        <schema name="main" object-types="table, view" />
       </connection>
     </loaded-nodes>
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="8f24bdca-099f-482b-bd26-1a4c35576f53">
-      <console name="test1" type="STANDARD" schema="main" session="Main"><![CDATA[select  * from aerobics_position]]></console>
+      <console name="test1" type="STANDARD" schema="main" session="Main">select  * from aerobics_position</console>
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
@@ -42,7 +42,14 @@
   </component>
   <component name="DBNavigator.Project.DatasetFilterManager">
     <filter-actions connection-id="8f24bdca-099f-482b-bd26-1a4c35576f53" dataset="main.aerobics_position" active-filter-id="" />
+    <filter-actions connection-id="8f24bdca-099f-482b-bd26-1a4c35576f53" dataset="main.aerobics_summary" active-filter-id="" />
     <filter-actions connection-id="8f24bdca-099f-482b-bd26-1a4c35576f53" dataset="main.aerobics_heart" active-filter-id="" />
+    <filter-actions connection-id="8f24bdca-099f-482b-bd26-1a4c35576f53" dataset="main.sports_summary" active-filter-id="47cbe2d5-6519-4138-8a22-d243a5820c2f">
+      <filter id="47cbe2d5-6519-4138-8a22-d243a5820c2f" name="243181219700" temporary="false" custom-name="false" type="basic" join-type="AND">
+        <condition column="student_id" operator="=" value="243181219700" active="true" />
+      </filter>
+    </filter-actions>
+    <filter-actions connection-id="8f24bdca-099f-482b-bd26-1a4c35576f53" dataset="main.sports_position" active-filter-id="" />
   </component>
   <component name="DBNavigator.Project.EditorStateManager">
     <last-used-providers />

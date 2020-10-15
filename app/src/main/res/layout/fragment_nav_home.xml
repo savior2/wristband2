@@ -33,7 +33,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:max_value="8000"
+            app:max_value="25000"
             app:string_title="今日已走"
             app:string_unit="步"
             app:total_engle="270" />

@@ -13,7 +13,7 @@ import java.util.*
  * @date 2020-8
  * @description
  */
-class HomeActivityVM(private val app: Application, private val handle: SavedStateHandle) :
+class  HomeActivityVM(private val app: Application, private val handle: SavedStateHandle) :
     AndroidViewModel(app) {
 
     val sid: String

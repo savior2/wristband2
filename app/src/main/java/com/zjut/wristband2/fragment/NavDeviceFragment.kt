@@ -46,6 +46,9 @@ class NavDeviceFragment : Fragment() {
 
     private lateinit var dialog: AlertDialog
 
+    /**
+     * 加载手环连接的布局
+     */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -53,6 +56,9 @@ class NavDeviceFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_nav_device, container, false)
     }
 
+    /**
+     *
+     */
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(

@@ -3,27 +3,38 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.zjut.wristband2">
 
+    <!--允许程序连接配对过的蓝牙设备 -->
     <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!--允许程序进行发现和配对新的蓝牙设备 -->
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <!--通过WiFi或移动基站的方式获取用户错略的经纬度信息-->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!--通过GPS芯片接收卫星的定位信息  -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!--访问网络 -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- 使用振动 -->
     <uses-permission android:name="android.permission.VIBRATE" />
+    <!-- 挂载、反挂载外部文件系统 -->
     <uses-permission
         android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"
         tools:ignore="ProtectedPermissions" />
+    <!-- 读写外部存储 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <!--读电话状态与联系人 -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <!-- 更新安装包 -->
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
-
+    <!--允许程序在手机屏幕关闭后后台进程仍然运行 -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!--调用前台服务 -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <!--程序最小化时GPS仍可使用 -->
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
 
     <application
@@ -38,6 +49,16 @@
         android:usesCleartextTraffic="true"
         tools:replace="android:name"
         tools:targetApi="q">
+
+        <activity
+            android:name=".activity.SplashActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/DarkTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".activity.TestActivity"
             android:screenOrientation="portrait" />
@@ -99,16 +120,9 @@
             android:name=".activity.LoginActivity"
             android:screenOrientation="portrait"
             android:theme="@style/DarkTheme" />
-        <activity
-            android:name=".activity.SplashActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/DarkTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+
+
 
         <service
             android:name="com.baidu.location.f"
@@ -119,7 +133,7 @@
 
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="jcCE7xUHmFE1S3O1vSAErvpu6Zn7L6UK" />
+            android:value="wzbi6MgIFsIBCKqwj56n8mms8mKPcbTy" />
 
         <service
             android:name=".service.AlarmService"
